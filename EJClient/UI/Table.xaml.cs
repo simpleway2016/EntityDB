@@ -170,18 +170,29 @@ namespace EJClient.UI
                     TextBox t1 = new MyTextBox();
                     t1.Tag = Column.id.GetValueOrDefault();
 
-                    if (Column.caption != null)
+                    var caption = Column.caption;
+                    if (caption == null)
+                        caption = "";
+
+                    var text = caption.Split('\n')[0].Trim();
+                    string tooltip = null;
+
+                    if (!string.IsNullOrEmpty(Column.EnumDefine))
                     {
-                        t1.Text = Column.caption.Split('\n')[0].Trim();
-                        if(t1.Text != Column.caption)
-                        {
-                            t1.Text += "...";
-                            t1.ToolTip = Column.caption;
-                        }
+                        caption += "\r\n\r\n" + Column.EnumDefine;
                     }
 
+                    if (text != caption)
+                    {
+                        text += "...";
+                        tooltip = caption;
+                    }
 
-                   
+                    t1.Text = text;
+                    t1.ToolTip = tooltip;
+
+
+
                     setTextBoxStyle(t1 , 0);
                     Grid.SetRow(t1, i);
                     gridColumns.Children.Add(t1);
