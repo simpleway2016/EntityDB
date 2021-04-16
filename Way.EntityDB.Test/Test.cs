@@ -58,16 +58,9 @@ namespace Way.EntityDB.Test
         public void test()
         {
 
-            using (var db = new TradeSystemDB("server=192.168.0.128\\sqlexpress;uid=sa;pwd=123456;Database=tradesystem", DatabaseType.SqlServer))
+            using (var db = new FllowOrderSystem.DBModels.DB.FllowOrders("Server=47.52.0.186;Port=5432;UserId=orders;Password=moniff61384e;Database=fllowordersystem;", DatabaseType.PostgreSql))
             {
-                db.Insert(new AddOrderMarginHistory
-                {
-                    Amount = 100,
-                    Balance = 3,
-                    CreateTime = DateTime.Now,
-                    MoneyAccountId = 2,
-                    UserId = 11
-                });
+
             }
         }
     }

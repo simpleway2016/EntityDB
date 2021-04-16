@@ -171,8 +171,14 @@ namespace EJClient.UI
                     t1.Tag = Column.id.GetValueOrDefault();
 
                     if (Column.caption != null)
+                    {
                         t1.Text = Column.caption.Split('\n')[0].Trim();
-
+                        if(t1.Text != Column.caption)
+                        {
+                            t1.Text += "...";
+                            t1.ToolTip = Column.caption;
+                        }
+                    }
 
 
                    

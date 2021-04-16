@@ -779,19 +779,28 @@ namespace Way.EntityDB
         protected virtual void CreateIfNotExist()
         {
             Type thisType = this.GetType();
+            
             if (CreatedIfNotExist.ContainsKey(thisType) == false || !CreatedIfNotExist[thisType])
             {
                 lock (GlobalLockObj)
                 {
-                    if (CreatedIfNotExist.ContainsKey(thisType) == false || !CreatedIfNotExist[thisType])
+                    try
+                    {
+                        if (CreatedIfNotExist.ContainsKey(thisType) == false || !CreatedIfNotExist[thisType])
+                        {
+                            CreatedIfNotExist[thisType] = true;
+                            Design.Services.IDatabaseDesignService dbservice = Way.EntityDB.Design.DBHelper.CreateDatabaseDesignService((Way.EntityDB.DatabaseType)(int)this.DatabaseType);
+                            dbservice.Create(new EJ.Databases()
+                            {
+                                conStr = this.ConnectionString
+                            });
+                        }
+                    }
+                    catch 
                     {
                         CreatedIfNotExist[thisType] = true;
-                        Design.Services.IDatabaseDesignService dbservice = Way.EntityDB.Design.DBHelper.CreateDatabaseDesignService((Way.EntityDB.DatabaseType)(int)this.DatabaseType);
-                        dbservice.Create(new EJ.Databases()
-                        {
-                            conStr = this.ConnectionString
-                        });
                     }
+                    
                 }
             }
         }
