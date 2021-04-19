@@ -33,6 +33,9 @@ namespace Way.EntityDB.Design.Database.Sqlite
                                             "DATETIME", });
         string getSqlType(EJ.DBColumn column)
         {
+            if (column.IsAutoIncrement == true)
+                return "INTEGER";//只有INTEGER可以自增长
+
             //serial不是一种自增长类型，只是一个宏，所以不要用serial
             string dbtype = column.dbType.ToLower();
             int index = Design.ColumnType.SupportTypes.IndexOf(dbtype);
