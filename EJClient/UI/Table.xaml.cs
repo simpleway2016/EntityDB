@@ -230,7 +230,14 @@ namespace EJClient.UI
                    
 
                     TextBox t3 = new MyTextBox();
-                    t3.Text = Column.dbType;
+                    if (Column.CanNull == true)
+                    {
+                        t3.Text = $"{Column.dbType}?";
+                    }
+                    else
+                    {
+                        t3.Text = Column.dbType;
+                    }
                     setTextBoxStyle(t3, 2);
                     Grid.SetRow(t3, i);
                     gridColumns.Children.Add(t3);
