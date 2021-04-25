@@ -253,8 +253,10 @@ SELECT @NAME
                 CancelPrimaryKey(database, tablename, column);
             }
 
-            if(column.BackupChangedProperties.ContainsKey("defaultValue"))
+            bool tosetDefaultValue = false;
+            if(column.BackupChangedProperties.ContainsKey("defaultValue") || column.BackupChangedProperties.ContainsKey("dbType"))
             {
+                tosetDefaultValue = true;
                 CancelDefaultValue(database, tablename, column);
             }
 
@@ -263,7 +265,7 @@ SELECT @NAME
                 Modify(database, tablename, column);
             }
 
-            if (column.BackupChangedProperties.ContainsKey("defaultValue"))
+            if (tosetDefaultValue&&!string.IsNullOrEmpty(column.defaultValue))
             {
                 SetDefaultValue(database, tablename, column);
             }
