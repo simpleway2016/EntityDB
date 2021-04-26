@@ -115,14 +115,8 @@ namespace Way.EJServer
                 if(discriminatorColumn != null)
                 {
                     var classNames = ParseNames(discriminatorColumn.EnumDefine).ToArray();
-                    if (discriminatorColumn.CanNull == true)
-                    {
-                        modelbuildFunc.AddString($"modelBuilder.Entity<{t.Name}>().HasDiscriminator<{t.Name}_{discriminatorColumn.Name}Enum?>(\"{discriminatorColumn.Name}\")");
-                    }
-                    else
-                    {
-                        modelbuildFunc.AddString($"modelBuilder.Entity<{t.Name}>().HasDiscriminator<{t.Name}_{discriminatorColumn.Name}Enum>(\"{discriminatorColumn.Name}\")");
-                    }
+                    modelbuildFunc.AddString($"modelBuilder.Entity<{t.Name}>().HasDiscriminator<{t.Name}_{discriminatorColumn.Name}Enum>(\"{discriminatorColumn.Name}\")");
+
                     modelbuildFunc.AddString($".HasValue<{t.Name}>(({t.Name}_{discriminatorColumn.Name}Enum)0)");
 
                     foreach (var classnameitem in classNames)
@@ -509,7 +503,7 @@ namespace Way.EJServer
                     caption = caption.Substring(0, caption.IndexOf("，"));
                 }
 
-                string dataType = GetLinqTypeString(column.dbType,column.CanNull.GetValueOrDefault() || column.IsAutoIncrement == true);
+                string dataType = GetLinqTypeString(column.dbType, column.CanNull.GetValueOrDefault() || column.IsAutoIncrement == true);
 
 
                 string eqString = "";
@@ -561,7 +555,13 @@ namespace Way.EJServer
                     }
                 }
 
-            
+
+                if (column.IsDiscriminator == true && !string.IsNullOrEmpty(column.EnumDefine?.Trim()))
+                {
+                    if (dataType.EndsWith("?"))
+                        dataType = dataType.Substring(0, dataType.Length - 1);
+                }
+
                 if (!string.IsNullOrEmpty(column.defaultValue))
                 {
                     if (column.defaultValue.Trim().Length > 0)
