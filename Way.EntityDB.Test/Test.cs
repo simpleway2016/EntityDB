@@ -19,6 +19,7 @@ using FllowOrderSystem.DBModels;
 using Npgsql;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Data.Sqlite;
 
 namespace Way.EntityDB.Test
 {
@@ -53,11 +54,10 @@ namespace Way.EntityDB.Test
             str = Newtonsoft.Json.JsonConvert.SerializeObject(dataitem);
         }
 
-        
+
         [TestMethod]
         public void test()
         {
-
             using (var db = new FllowOrderSystem.DBModels.DB.FllowOrders("Server=47.52.0.186;Port=5432;UserId=orders;Password=moniff61384e;Database=fllowordersystem;", DatabaseType.PostgreSql))
             {
 

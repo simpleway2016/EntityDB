@@ -796,7 +796,7 @@ namespace Way.EntityDB
                             });
                         }
                     }
-                    catch 
+                    catch(Exception ex)
                     {
                         CreatedIfNotExist[thisType] = true;
                     }

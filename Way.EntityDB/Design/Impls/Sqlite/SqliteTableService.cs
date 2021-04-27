@@ -141,6 +141,9 @@ CREATE TABLE [" + table.Name.ToLower() + @"] (
             {
                 foreach (var drow in dt.Rows)
                 {
+                    if (drow["sql"] == null)
+                        continue;
+
                     bool isUnique = drow["sql"].ToString().Contains(" UNIQUE ");
                     string name = drow["name"].ToString().ToLower();
                     var exitsItem = indexInfos.FirstOrDefault(m => tablename + "_ej_" + m.ColumnNames.OrderBy(p => p).ToArray().ToSplitString("_").ToLower() == name && m.IsUnique == isUnique);

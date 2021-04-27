@@ -80,6 +80,9 @@ namespace Way.EntityDB.Design.Database.Sqlite
                 foreach (var drow in dtable.Rows)
                 {
                     var sql = drow["sql"].ToSafeString();
+                    if (sql == null)
+                        continue;
+
                     sql = sql.Substring(sql.LastIndexOf("(")).Trim();
                     var columnNames = sql.Substring(1, sql.Length - 2).Trim().Split(',');
                     columnNames = (from m in columnNames
