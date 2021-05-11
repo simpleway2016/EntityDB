@@ -1000,6 +1000,33 @@ namespace Way.EntityDB
         }
 
         /// <summary>
+        /// 对第一条记录开启更新锁，并返回这条记录的对象
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="items"></param>
+        /// <returns></returns>
+        public T UpdateLockFirstOrDefault<T>(System.Linq.IQueryable<T> items)
+        {
+            if (this.Database.Connection.State != System.Data.ConnectionState.Open)
+                throw new Exception("没有开启事务");
+
+            Type dataType = items.GetType().GetGenericArguments()[0];
+
+            var tableSchema = SchemaManager.GetSchemaTable(dataType);
+
+            if (tableSchema.KeyColumn == null)
+                throw new Exception(dataType.Name + "没有定义主键");
+
+            var query = InvokeSelect(items, tableSchema.KeyColumn.PropertyName);
+            var idvalue = InvokeFirstOrDefault(query);
+            if (idvalue == null)
+                return default(T);
+
+            this.Database.UpdateLock(dataType, idvalue);
+            return (T)InvokeFirstOrDefault(items);
+        }
+
+        /// <summary>
         /// 删除对象
         /// </summary>
         /// <param name="items"></param>
