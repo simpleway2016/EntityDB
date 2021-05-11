@@ -1000,17 +1000,47 @@ namespace Way.EntityDB
         }
 
         /// <summary>
+        /// 锁住一条数据，并从数据库重新读取这条数据返回
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="dataitem"></param>
+        public T UpdateLockDataItem<T>(T dataitem) where T : DataItem
+        {
+            if (this.Database.Connection.State != System.Data.ConnectionState.Open)
+                throw new Exception("没有开启事务");
+
+            Type dataType = typeof(T);
+
+            var tableSchema = SchemaManager.GetSchemaTable(dataType);
+
+            if (tableSchema.KeyColumn == null)
+                throw new Exception(dataType.Name + "没有定义主键");
+
+
+            var idvalue = dataitem.PKValue;
+
+            if (idvalue == null)
+                return default(T);
+
+            this.Database.UpdateLock(dataType, idvalue);
+
+            object query = this.Set<T>();
+            query = InvokeWhereEquals(query, tableSchema.KeyColumn.PropertyName, idvalue);
+            return  (T)InvokeFirstOrDefault(query);
+        }
+
+        /// <summary>
         /// 对第一条记录开启更新锁，并返回这条记录的对象
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="items"></param>
         /// <returns></returns>
-        public T UpdateLockFirstOrDefault<T>(System.Linq.IQueryable<T> items)
+        public T UpdateLockFirstOrDefault<T>(System.Linq.IQueryable<T> items) where T : class
         {
             if (this.Database.Connection.State != System.Data.ConnectionState.Open)
                 throw new Exception("没有开启事务");
 
-            Type dataType = items.GetType().GetGenericArguments()[0];
+            Type dataType = typeof(T);
 
             var tableSchema = SchemaManager.GetSchemaTable(dataType);
 
@@ -1023,7 +1053,10 @@ namespace Way.EntityDB
                 return default(T);
 
             this.Database.UpdateLock(dataType, idvalue);
-            return (T)InvokeFirstOrDefault(items);
+
+            query = this.Set<T>();
+            query = InvokeWhereEquals(query, tableSchema.KeyColumn.PropertyName, idvalue);
+            return (T)InvokeFirstOrDefault(query);
         }
 
         /// <summary>
