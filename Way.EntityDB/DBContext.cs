@@ -61,6 +61,9 @@ namespace Way.EntityDB
         public static event DatabaseEventHandler AfterDelete;
         public static event DatabaseEventHandler AfterInsert;
         public static event DatabaseEventHandler AfterUpdate;
+
+        public event EventHandler AfterCommitTransaction;
+        public event EventHandler AfterRollbackTransaction;
         #endregion
 
         #region 静态变量
@@ -1132,16 +1135,28 @@ namespace Way.EntityDB
         }
 
      
-        public void CommitTransaction()
+        public virtual void CommitTransaction()
         {
             if (((Microsoft.EntityFrameworkCore.DbContext)this).Database.CurrentTransaction != null)
+            {
                 ((Microsoft.EntityFrameworkCore.DbContext)this).Database.CommitTransaction();
+                if (this.AfterCommitTransaction != null)
+                {
+                    this.AfterCommitTransaction(this, null);
+                }
+            }
         }
 
-        public void RollbackTransaction()
+        public virtual void RollbackTransaction()
         {
-            if(((Microsoft.EntityFrameworkCore.DbContext)this).Database.CurrentTransaction != null)
+            if (((Microsoft.EntityFrameworkCore.DbContext)this).Database.CurrentTransaction != null)
+            {
                 ((Microsoft.EntityFrameworkCore.DbContext)this).Database.RollbackTransaction();
+                if (this.AfterRollbackTransaction != null)
+                {
+                    this.AfterRollbackTransaction(this, null);
+                }
+            }
         }
 
         /// <summary>
