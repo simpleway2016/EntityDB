@@ -1002,6 +1002,54 @@ namespace Way.EntityDB
             
         }
 
+
+        /// <summary>
+        /// 开启更新锁，并返回锁住后的数据集
+        /// </summary>
+        /// <param name="dataQuery"></param>
+        public T[] UpdateLockToArray<T>(System.Linq.IQueryable<T> dataQuery) where T:DataItem
+        {
+            if (this.Database.Connection.State != System.Data.ConnectionState.Open)
+                throw new Exception("没有开启事务");
+
+            var dset = this.Set<T>();
+            Type dataType = dataQuery.GetType().GetGenericArguments()[0];
+
+            var tableSchema = SchemaManager.GetSchemaTable(dataType);
+
+            if (tableSchema.KeyColumn == null)
+                throw new Exception(dataType.Name + "没有定义主键");
+
+            List<T> result = new List<T>();
+            int pagesize = 100;
+            object query = InvokeSelect(dataQuery, tableSchema.KeyColumn.PropertyName);
+            int skip = 0;
+            while (true)
+            {
+                var skipQuery = InvokeSkip(query, skip);
+                var data1 = InvokeTake(skipQuery, pagesize);
+                var dataitems = (System.Array)InvokeToArray(data1);
+
+                foreach (var idvalue in dataitems)
+                {
+                    this.Database.UpdateLock(dataType, idvalue);
+                    var data = InvokeFirstOrDefault(InvokeWhereEquals(dset, tableSchema.KeyColumn.PropertyName, idvalue));
+                    if(data != null)
+                    {
+                        result.Add((T)data);
+                    }
+                }
+
+                if (dataitems.Length < pagesize)
+                    break;
+
+                skip += pagesize;
+            }
+
+            return result.ToArray();
+
+        }
+
         /// <summary>
         /// 锁住一条数据，并从数据库重新读取这条数据返回
         /// </summary>

@@ -61,7 +61,8 @@ namespace Way.EntityDB.Test
             using (var db = new FllowOrderSystem.DBModels.DB.FllowOrders("Server=47.52.0.186;Port=5432;UserId=orders;Password=moniff61384e;Database=fllowordersystem;", DatabaseType.PostgreSql))
             {
                 db.BeginTransaction();
-                var cc = db.UpdateLockFirstOrDefault(db.TradeUser);
+                var query = db.TradeUser.Take(2);
+                var cc = db.UpdateLockToArray(query);
             }
         }
     }
