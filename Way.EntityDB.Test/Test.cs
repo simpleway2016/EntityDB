@@ -58,6 +58,10 @@ namespace Way.EntityDB.Test
         [TestMethod]
         public void test()
         {
+            using (var db = new TradeSystem.DBModels.DB.TradeSystemDB("Server=.\\sqlexpress;uid=sa;Password=123456;Database=fllowordersystem22;", DatabaseType.SqlServer))
+            {
+                
+            }
             using (var db = new FllowOrderSystem.DBModels.DB.FllowOrders("Server=47.52.0.186;Port=5432;UserId=orders;Password=moniff61384e;Database=fllowordersystem;", DatabaseType.PostgreSql))
             {
                 db.BeginTransaction();

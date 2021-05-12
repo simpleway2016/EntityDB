@@ -141,8 +141,9 @@ namespace Way.EntityDB.Design
                         int? lastid = Convert.ToInt32(query.Last()["id"]);
                         var assembly = typeof(Way.EntityDB.Design.Actions.CreateTableAction).GetTypeInfo().Assembly;
                         db.DBContext.BeginTransaction();
-                        foreach (var datarow in query)
+                        for(int i = 0; i < query.Count; i ++)
                         {
+                            var datarow = query[i];
                             currentRowId = Convert.ToInt32(datarow["id"]);
                             var actionItem = dataRowToAction(assembly, datarow);
 
@@ -209,6 +210,54 @@ namespace Way.EntityDB.Design
                                     }
                                     return allcolumns;
                                 };
+                            }
+                            else if(actionItem is EntityDB.Design.Actions.CreateTableAction)
+                            {
+                                //往下查找表的变更
+                                var createAction = (EntityDB.Design.Actions.CreateTableAction)actionItem;
+                                var curTableName = createAction.Table.Name;
+
+                                for(int j = i + 1; j < query.Count; j ++)
+                                {
+                                    var nextAction = dataRowToAction(assembly, query[j]);
+                                    if(nextAction is EntityDB.Design.Actions.ChangeTableAction)
+                                    {
+                                        var changeAction = (EntityDB.Design.Actions.ChangeTableAction)nextAction;
+                                        if(changeAction.OldTableName == curTableName)
+                                        {
+                                            curTableName = changeAction.NewTableName;
+                                            createAction.Columns = (from m in createAction.Columns
+                                                                    where changeAction.deletedColumns.Any(n => n.id == m.id) == false
+                                                                    && changeAction.changedColumns.Any(n => n.id == m.id) == false
+                                                                    select m).ToArray();
+
+                                            createAction.Columns = createAction.Columns.Concat(changeAction.changedColumns).ToArray();
+                                            createAction.Columns = createAction.Columns.Concat(changeAction.newColumns).ToArray();
+                                            createAction.IDXConfigs = changeAction.IDXConfigs;
+                                            query.RemoveAt(j);
+                                            j--;
+                                            continue;
+                                        }
+                                    }
+                                    else if (nextAction is EntityDB.Design.Actions.DeleteTableAction)
+                                    {
+                                        var deleteAction = (EntityDB.Design.Actions.DeleteTableAction)nextAction;
+                                        if(deleteAction.TableName == curTableName)
+                                        {
+                                            query.RemoveAt(j);
+                                            curTableName = null;
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                if(curTableName == null)
+                                {
+                                    //表后来删除了
+                                    query.RemoveAt(i);
+                                    i--;
+                                    continue;
+                                }
                             }
 
                             actionItem.Invoke(db);
