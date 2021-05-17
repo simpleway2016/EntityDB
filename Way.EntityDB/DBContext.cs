@@ -863,6 +863,7 @@ namespace Way.EntityDB
                         DataItem = dataitem,
                     });
                 }
+                dataitem.UpdateExpression = null;
                 dataitem.ChangedProperties.Clear();
                 return ret;
             }
