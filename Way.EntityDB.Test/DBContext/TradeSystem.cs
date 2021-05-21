@@ -39,14 +39,14 @@ namespace TradeSystem.DBModels
                 }
             }
         }
-        double _Balance = 0;
+        Decimal _Balance = 0m;
         /// <summary>
         /// 可用余额
         /// </summary>
         [DisallowNull]
         [Display(Name = "可用余额")]
         [Column("balance")]
-        public virtual double Balance
+        public virtual Decimal Balance
         {
             get
             {
@@ -59,29 +59,6 @@ namespace TradeSystem.DBModels
                     SendPropertyChanging("Balance", _Balance, value);
                     _Balance = value;
                     SendPropertyChanged("Balance");
-                }
-            }
-        }
-        double _OrderMargin = 0;
-        /// <summary>
-        /// 持仓保证金
-        /// </summary>
-        [DisallowNull]
-        [Display(Name = "持仓保证金")]
-        [Column("ordermargin")]
-        public virtual double OrderMargin
-        {
-            get
-            {
-                return _OrderMargin;
-            }
-            set
-            {
-                if ((_OrderMargin != value))
-                {
-                    SendPropertyChanging("OrderMargin", _OrderMargin, value);
-                    _OrderMargin = value;
-                    SendPropertyChanged("OrderMargin");
                 }
             }
         }
@@ -129,14 +106,14 @@ namespace TradeSystem.DBModels
                 }
             }
         }
-        double _WithdrawFrozen = 0;
+        Decimal _WithdrawFrozen = 0m;
         /// <summary>
         /// 提现冻结金额
         /// </summary>
         [DisallowNull]
         [Display(Name = "提现冻结金额")]
         [Column("withdrawfrozen")]
-        public virtual double WithdrawFrozen
+        public virtual Decimal WithdrawFrozen
         {
             get
             {
@@ -220,6 +197,30 @@ namespace TradeSystem.DBModels
                 }
             }
         }
+        Int32 _Priority = 0;
+        /// <summary>
+        /// 优先级
+        /// 数值越大，优先级越高，如赠金，应该把优先级设高一点
+        /// </summary>
+        [DisallowNull]
+        [Display(Name = "优先级  数值越大，优先级越高，如赠金，应该把优先级设高一点")]
+        [Column("priority")]
+        public virtual Int32 Priority
+        {
+            get
+            {
+                return _Priority;
+            }
+            set
+            {
+                if ((_Priority != value))
+                {
+                    SendPropertyChanging("Priority", _Priority, value);
+                    _Priority = value;
+                    SendPropertyChanged("Priority");
+                }
+            }
+        }
     }
     public enum MoneyAccount_PositionTypeEnum : int
     {
@@ -235,13 +236,21 @@ namespace TradeSystem.DBModels
     public enum MoneyAccount_AccountTypeEnum : int
     {
         /// <summary>
-        /// 余额账户
-        /// </summary>
-        BalanceMoney = 1,
-        /// <summary>
         /// 抵扣手续费
         /// </summary>
-        Fee = 1 << 1,
+        Fee = 1,
+        /// <summary>
+        /// 交易账户
+        /// </summary>
+        Trade = 1 << 10 | Fee,
+        /// <summary>
+        /// 可提现账户
+        /// </summary>
+        Withdraw = 1 << 11,
+        /// <summary>
+        /// 交易+可提现
+        /// </summary>
+        TradeWithdraw = Trade | Withdraw,
     }
     [TableConfig]
     [Table("symbolinfo")]
@@ -657,13 +666,13 @@ namespace TradeSystem.DBModels
                 }
             }
         }
-        System.Nullable<Decimal> _StopProfit;
+        System.Nullable<double> _StopProfit;
         /// <summary>
         /// 止盈价格
         /// </summary>
         [Display(Name = "止盈价格")]
         [Column("stopprofit")]
-        public virtual System.Nullable<Decimal> StopProfit
+        public virtual System.Nullable<double> StopProfit
         {
             get
             {
@@ -679,13 +688,13 @@ namespace TradeSystem.DBModels
                 }
             }
         }
-        System.Nullable<Decimal> _StopLoss;
+        System.Nullable<double> _StopLoss;
         /// <summary>
         /// 止损价格
         /// </summary>
         [Display(Name = "止损价格")]
         [Column("stoploss")]
-        public virtual System.Nullable<Decimal> StopLoss
+        public virtual System.Nullable<double> StopLoss
         {
             get
             {
@@ -701,13 +710,13 @@ namespace TradeSystem.DBModels
                 }
             }
         }
-        System.Nullable<Decimal> _StopProfitAmount;
+        System.Nullable<double> _StopProfitAmount;
         /// <summary>
         /// 止盈金额
         /// </summary>
         [Display(Name = "止盈金额")]
         [Column("stopprofitamount")]
-        public virtual System.Nullable<Decimal> StopProfitAmount
+        public virtual System.Nullable<double> StopProfitAmount
         {
             get
             {
@@ -723,13 +732,13 @@ namespace TradeSystem.DBModels
                 }
             }
         }
-        System.Nullable<Decimal> _StopLossAmount;
+        System.Nullable<double> _StopLossAmount;
         /// <summary>
         /// 止损金额
         /// </summary>
         [Display(Name = "止损金额")]
         [Column("stoplossamount")]
-        public virtual System.Nullable<Decimal> StopLossAmount
+        public virtual System.Nullable<double> StopLossAmount
         {
             get
             {
@@ -745,13 +754,13 @@ namespace TradeSystem.DBModels
                 }
             }
         }
-        System.Nullable<Decimal> _PriceOnSetPL;
+        System.Nullable<double> _PriceOnSetPL;
         /// <summary>
         /// 设置止盈止损时的市价
         /// </summary>
         [Display(Name = "设置止盈止损时的市价")]
         [Column("priceonsetpl")]
-        public virtual System.Nullable<Decimal> PriceOnSetPL
+        public virtual System.Nullable<double> PriceOnSetPL
         {
             get
             {
@@ -928,7 +937,7 @@ namespace TradeSystem.DBModels
                 }
             }
         }
-        double _TradeCoinAmount = 0;
+        Decimal _TradeCoinAmount = 0m;
         /// <summary>
         /// 交易币现存金额
         /// 负数表示是问平台借的
@@ -936,7 +945,7 @@ namespace TradeSystem.DBModels
         [DisallowNull]
         [Display(Name = "交易币现存金额  负数表示是问平台借的")]
         [Column("tradecoinamount")]
-        public virtual double TradeCoinAmount
+        public virtual Decimal TradeCoinAmount
         {
             get
             {
@@ -1040,10 +1049,9 @@ namespace TradeSystem.DBModels
         Position_StatusEnum _Status = (Position_StatusEnum)(1);
         /// <summary>
         /// 状态
-        /// 当状态要变为closing时，所有挂单应该也要设为canceling
         /// </summary>
         [DisallowNull]
-        [Display(Name = "状态  当状态要变为closing时，所有挂单应该也要设为canceling")]
+        [Display(Name = "状态")]
         [Column("status")]
         public virtual Position_StatusEnum Status
         {
@@ -1061,7 +1069,7 @@ namespace TradeSystem.DBModels
                 }
             }
         }
-        double _CommodityQuantity = 0;
+        Decimal _CommodityQuantity = 0m;
         /// <summary>
         /// 现存物品数量
         /// 负数表示是问平台借的
@@ -1069,7 +1077,7 @@ namespace TradeSystem.DBModels
         [DisallowNull]
         [Display(Name = "现存物品数量  负数表示是问平台借的")]
         [Column("commodityquantity")]
-        public virtual double CommodityQuantity
+        public virtual Decimal CommodityQuantity
         {
             get
             {
@@ -1105,28 +1113,6 @@ namespace TradeSystem.DBModels
                     SendPropertyChanging("Direction", _Direction, value);
                     _Direction = value;
                     SendPropertyChanged("Direction");
-                }
-            }
-        }
-        System.Nullable<double> _Fee;
-        /// <summary>
-        /// 手续费
-        /// </summary>
-        [Display(Name = "手续费")]
-        [Column("fee")]
-        public virtual System.Nullable<double> Fee
-        {
-            get
-            {
-                return _Fee;
-            }
-            set
-            {
-                if ((_Fee != value))
-                {
-                    SendPropertyChanging("Fee", _Fee, value);
-                    _Fee = value;
-                    SendPropertyChanged("Fee");
                 }
             }
         }
@@ -1351,30 +1337,6 @@ namespace TradeSystem.DBModels
                 }
             }
         }
-        double _PlanQuantity;
-        /// <summary>
-        /// 计划交易数量
-        /// 也就是交易手数
-        /// </summary>
-        [DisallowNull]
-        [Display(Name = "计划交易数量  也就是交易手数")]
-        [Column("planquantity")]
-        public virtual double PlanQuantity
-        {
-            get
-            {
-                return _PlanQuantity;
-            }
-            set
-            {
-                if ((_PlanQuantity != value))
-                {
-                    SendPropertyChanging("PlanQuantity", _PlanQuantity, value);
-                    _PlanQuantity = value;
-                    SendPropertyChanged("PlanQuantity");
-                }
-            }
-        }
         System.Nullable<double> _MovingMaxPrice;
         /// <summary>
         /// 移动的历史最高价格
@@ -1398,6 +1360,51 @@ namespace TradeSystem.DBModels
                 }
             }
         }
+        Position_CloseTypeEnum? _CloseType = (Position_CloseTypeEnum?)(1);
+        /// <summary>
+        /// 平仓类型
+        /// </summary>
+        [Display(Name = "平仓类型")]
+        [Column("closetype")]
+        public virtual Position_CloseTypeEnum? CloseType
+        {
+            get
+            {
+                return _CloseType;
+            }
+            set
+            {
+                if ((_CloseType != value))
+                {
+                    SendPropertyChanging("CloseType", _CloseType, value);
+                    _CloseType = value;
+                    SendPropertyChanged("CloseType");
+                }
+            }
+        }
+        Boolean _IsLocked = false;
+        /// <summary>
+        /// 仓位是否已被锁
+        /// </summary>
+        [DisallowNull]
+        [Display(Name = "仓位是否已被锁")]
+        [Column("islocked")]
+        public virtual Boolean IsLocked
+        {
+            get
+            {
+                return _IsLocked;
+            }
+            set
+            {
+                if ((_IsLocked != value))
+                {
+                    SendPropertyChanging("IsLocked", _IsLocked, value);
+                    _IsLocked = value;
+                    SendPropertyChanged("IsLocked");
+                }
+            }
+        }
     }
     /// <summary>
     /// 合约交易
@@ -1405,14 +1412,14 @@ namespace TradeSystem.DBModels
     [TableConfig(AutoSetPropertyNameOnInsert = "Type", AutoSetPropertyValueOnInsert = Position_TypeEnum.ContractPosition)]
     public class ContractPosition : Position
     {
-        double _Margin = 0;
+        Decimal _Margin = 0m;
         /// <summary>
         /// 保证金
         /// </summary>
         [DisallowNull]
         [Display(Name = "保证金")]
         [Column("margin")]
-        public virtual double Margin
+        public virtual Decimal Margin
         {
             get
             {
@@ -1451,13 +1458,13 @@ namespace TradeSystem.DBModels
                 }
             }
         }
-        System.Nullable<double> _AdditionalMargin;
+        System.Nullable<Decimal> _AdditionalMargin;
         /// <summary>
         /// 追加的保证金
         /// </summary>
         [Display(Name = "追加的保证金")]
         [Column("additionalmargin")]
-        public virtual System.Nullable<double> AdditionalMargin
+        public virtual System.Nullable<Decimal> AdditionalMargin
         {
             get
             {
@@ -1496,10 +1503,6 @@ namespace TradeSystem.DBModels
         /// </summary>
         SendedClosingOrder = 150,
         /// <summary>
-        /// 变更中，例如正在进行仓位合并
-        /// </summary>
-        Updating = 200,
-        /// <summary>
         /// 已平仓
         /// </summary>
         Closed = 300
@@ -1513,12 +1516,31 @@ namespace TradeSystem.DBModels
         /// <summary>
         /// 卖出
         /// </summary>
-        Sell = 2
+        Sell = ~Buy
+    }
+    public enum Position_CloseTypeEnum : int
+    {
+        /// <summary>
+        /// 手动平仓
+        /// </summary>
+        Manual = 1,
+        /// <summary>
+        /// 系统强平
+        /// </summary>
+        SysClose = 2,
+        /// <summary>
+        /// 止盈止损
+        /// </summary>
+        StopProfitLoss = 3,
+        /// <summary>
+        /// 移动止盈
+        /// </summary>
+        MovingStop = 4
     }
     /// <summary>
     /// 市场挂单
     /// </summary>
-    [TableConfig]
+    [TableConfig(AutoSetPropertyNameOnInsert = "Type", AutoSetPropertyValueOnInsert = (MarketOrder_TypeEnum)0)]
     [Table("marketorder")]
     [Way.EntityDB.DataItemJsonConverter]
     public class MarketOrder : Way.EntityDB.DataItem
@@ -1547,8 +1569,11 @@ namespace TradeSystem.DBModels
         System.Nullable<Int64> _PositionId;
         /// <summary>
         /// 仓位id
+        /// 成交后指向的仓位，
+        /// 开仓单这个id应该是null，只有部分成交后，才有值
+        /// 平仓单这个肯定有值
         /// </summary>
-        [Display(Name = "仓位id")]
+        [Display(Name = "仓位id  成交后指向的仓位， 开仓单这个id应该是null，只有部分成交后，才有值 平仓单这个肯定有值")]
         [Column("positionid")]
         public virtual System.Nullable<Int64> PositionId
         {
@@ -1566,14 +1591,14 @@ namespace TradeSystem.DBModels
                 }
             }
         }
-        MarketOrder_DirectionEnum _Direction = (MarketOrder_DirectionEnum)(1);
+        Position_DirectionEnum _Direction = (Position_DirectionEnum)(1);
         /// <summary>
         /// 方向
         /// </summary>
         [DisallowNull]
         [Display(Name = "方向")]
         [Column("direction")]
-        public virtual MarketOrder_DirectionEnum Direction
+        public virtual Position_DirectionEnum Direction
         {
             get
             {
@@ -1589,14 +1614,14 @@ namespace TradeSystem.DBModels
                 }
             }
         }
-        double _Quantity;
+        Decimal _Quantity;
         /// <summary>
         /// 数量
         /// </summary>
         [DisallowNull]
         [Display(Name = "数量")]
         [Column("quantity")]
-        public virtual double Quantity
+        public virtual Decimal Quantity
         {
             get
             {
@@ -1635,14 +1660,14 @@ namespace TradeSystem.DBModels
                 }
             }
         }
-        double _DealQuantity = 0;
+        Decimal _DealQuantity = 0m;
         /// <summary>
         /// 已成交数量
         /// </summary>
         [DisallowNull]
         [Display(Name = "已成交数量")]
         [Column("dealquantity")]
-        public virtual double DealQuantity
+        public virtual Decimal DealQuantity
         {
             get
             {
@@ -1772,50 +1797,6 @@ namespace TradeSystem.DBModels
                 }
             }
         }
-        System.Nullable<double> _FixPrice;
-        /// <summary>
-        /// 固定成交价格
-        /// </summary>
-        [Display(Name = "固定成交价格")]
-        [Column("fixprice")]
-        public virtual System.Nullable<double> FixPrice
-        {
-            get
-            {
-                return _FixPrice;
-            }
-            set
-            {
-                if ((_FixPrice != value))
-                {
-                    SendPropertyChanging("FixPrice", _FixPrice, value);
-                    _FixPrice = value;
-                    SendPropertyChanged("FixPrice");
-                }
-            }
-        }
-        System.Nullable<DateTime> _FixTime;
-        /// <summary>
-        /// 固定成交时间
-        /// </summary>
-        [Display(Name = "固定成交时间")]
-        [Column("fixtime")]
-        public virtual System.Nullable<DateTime> FixTime
-        {
-            get
-            {
-                return _FixTime;
-            }
-            set
-            {
-                if ((_FixTime != value))
-                {
-                    SendPropertyChanging("FixTime", _FixTime, value);
-                    _FixTime = value;
-                    SendPropertyChanged("FixTime");
-                }
-            }
-        }
         Int64 _UserId;
         [DisallowNull]
         [Column("userid")]
@@ -1835,17 +1816,147 @@ namespace TradeSystem.DBModels
                 }
             }
         }
+        MarketOrder_TypeEnum _Type = (MarketOrder_TypeEnum)(0);
+        /// <summary>
+        /// 类型
+        /// </summary>
+        [DisallowNull]
+        [Display(Name = "类型")]
+        [Column("type")]
+        public virtual MarketOrder_TypeEnum Type
+        {
+            get
+            {
+                return _Type;
+            }
+            set
+            {
+                if ((_Type != value))
+                {
+                    SendPropertyChanging("Type", _Type, value);
+                    _Type = value;
+                    SendPropertyChanged("Type");
+                }
+            }
+        }
+        Int32 _PriceType = 2;
+        /// <summary>
+        /// 2:市价 1:限价
+        /// </summary>
+        [DisallowNull]
+        [Display(Name = "2:市价 1:限价")]
+        [Column("pricetype")]
+        public virtual Int32 PriceType
+        {
+            get
+            {
+                return _PriceType;
+            }
+            set
+            {
+                if ((_PriceType != value))
+                {
+                    SendPropertyChanging("PriceType", _PriceType, value);
+                    _PriceType = value;
+                    SendPropertyChanged("PriceType");
+                }
+            }
+        }
+        System.Nullable<Decimal> _Fee;
+        /// <summary>
+        /// 手续费
+        /// </summary>
+        [Display(Name = "手续费")]
+        [Column("fee")]
+        public virtual System.Nullable<Decimal> Fee
+        {
+            get
+            {
+                return _Fee;
+            }
+            set
+            {
+                if ((_Fee != value))
+                {
+                    SendPropertyChanging("Fee", _Fee, value);
+                    _Fee = value;
+                    SendPropertyChanged("Fee");
+                }
+            }
+        }
+        System.Nullable<Int64> _MoneyAccountId;
+        /// <summary>
+        /// 用户结算账户id
+        /// </summary>
+        [Display(Name = "用户结算账户id")]
+        [Column("moneyaccountid")]
+        public virtual System.Nullable<Int64> MoneyAccountId
+        {
+            get
+            {
+                return _MoneyAccountId;
+            }
+            set
+            {
+                if ((_MoneyAccountId != value))
+                {
+                    SendPropertyChanging("MoneyAccountId", _MoneyAccountId, value);
+                    _MoneyAccountId = value;
+                    SendPropertyChanged("MoneyAccountId");
+                }
+            }
+        }
     }
-    public enum MarketOrder_DirectionEnum : int
+    /// <summary>
+    /// 合约交易里的市场挂单
+    /// </summary>
+    [TableConfig(AutoSetPropertyNameOnInsert = "Type", AutoSetPropertyValueOnInsert = MarketOrder_TypeEnum.ContractMarketOrder)]
+    public class ContractMarketOrder : MarketOrder
     {
+        System.Nullable<Decimal> _Margin;
         /// <summary>
-        /// 买入
+        /// 保证金
         /// </summary>
-        Buy = 1,
+        [Display(Name = "保证金")]
+        [Column("margin")]
+        public virtual System.Nullable<Decimal> Margin
+        {
+            get
+            {
+                return _Margin;
+            }
+            set
+            {
+                if ((_Margin != value))
+                {
+                    SendPropertyChanging("Margin", _Margin, value);
+                    _Margin = value;
+                    SendPropertyChanged("Margin");
+                }
+            }
+        }
+        System.Nullable<Int32> _Leverage;
         /// <summary>
-        /// 卖出
+        /// 杠杆
         /// </summary>
-        Sell = 2
+        [Display(Name = "杠杆")]
+        [Column("leverage")]
+        public virtual System.Nullable<Int32> Leverage
+        {
+            get
+            {
+                return _Leverage;
+            }
+            set
+            {
+                if ((_Leverage != value))
+                {
+                    SendPropertyChanging("Leverage", _Leverage, value);
+                    _Leverage = value;
+                    SendPropertyChanged("Leverage");
+                }
+            }
+        }
     }
     public enum MarketOrder_StatusEnum : int
     {
@@ -1854,17 +1965,20 @@ namespace TradeSystem.DBModels
         /// </summary>
         Open = 1,
         /// <summary>
-        /// 撤销中
-        /// </summary>
-        Canceling = 100,
-        /// <summary>
         /// 已经撤销
         /// </summary>
-        Canceled = 200,
+        Canceled = 100,
         /// <summary>
         /// 关闭
         /// </summary>
-        Closed = 300
+        Closed = 200
+    }
+    public enum MarketOrder_TypeEnum : int
+    {
+        /// <summary>
+        /// 合约交易里的市场挂单
+        /// </summary>
+        ContractMarketOrder = 1
     }
     /// <summary>
     /// 市场成交历史
@@ -2027,14 +2141,14 @@ namespace TradeSystem.DBModels
                 }
             }
         }
-        MarketDealHistory_DirectionEnum _Direction = (MarketDealHistory_DirectionEnum)(1);
+        Position_DirectionEnum _Direction = (Position_DirectionEnum)(1);
         /// <summary>
         /// 方向
         /// </summary>
         [DisallowNull]
         [Display(Name = "方向")]
         [Column("direction")]
-        public virtual MarketDealHistory_DirectionEnum Direction
+        public virtual Position_DirectionEnum Direction
         {
             get
             {
@@ -2050,17 +2164,28 @@ namespace TradeSystem.DBModels
                 }
             }
         }
-    }
-    public enum MarketDealHistory_DirectionEnum : int
-    {
+        System.Nullable<DateTime> _CreateTime;
         /// <summary>
-        /// 买入
+        /// 数据生成时间
         /// </summary>
-        Buy = 1,
-        /// <summary>
-        /// 卖出
-        /// </summary>
-        Sell = 2
+        [Display(Name = "数据生成时间")]
+        [Column("createtime")]
+        public virtual System.Nullable<DateTime> CreateTime
+        {
+            get
+            {
+                return _CreateTime;
+            }
+            set
+            {
+                if ((_CreateTime != value))
+                {
+                    SendPropertyChanging("CreateTime", _CreateTime, value);
+                    _CreateTime = value;
+                    SendPropertyChanged("CreateTime");
+                }
+            }
+        }
     }
     /// <summary>
     /// 资金明细
@@ -2247,31 +2372,56 @@ namespace TradeSystem.DBModels
         }
     }
     /// <summary>
+    /// 与挂单相关的明细
+    /// </summary>
+    [TableConfig(AutoSetPropertyNameOnInsert = "Type", AutoSetPropertyValueOnInsert = MoneyDetail_TypeEnum.MarketOrderMoneyDetail)]
+    public class MarketOrderMoneyDetail : MoneyDetail
+    {
+        System.Nullable<Int64> _MarketOrderId;
+        [Column("marketorderid")]
+        public virtual System.Nullable<Int64> MarketOrderId
+        {
+            get
+            {
+                return _MarketOrderId;
+            }
+            set
+            {
+                if ((_MarketOrderId != value))
+                {
+                    SendPropertyChanging("MarketOrderId", _MarketOrderId, value);
+                    _MarketOrderId = value;
+                    SendPropertyChanged("MarketOrderId");
+                }
+            }
+        }
+    }
+    /// <summary>
     /// 扣除订单保证金
     /// </summary>
     [TableConfig(AutoSetPropertyNameOnInsert = "Type", AutoSetPropertyValueOnInsert = MoneyDetail_TypeEnum.AddPositionMarginDetail)]
-    public class AddPositionMarginDetail : PositionMoneyDetail
+    public class AddPositionMarginDetail : MarketOrderMoneyDetail
     {
     }
     /// <summary>
     /// 归还订单保证金
     /// </summary>
     [TableConfig(AutoSetPropertyNameOnInsert = "Type", AutoSetPropertyValueOnInsert = MoneyDetail_TypeEnum.CancelPositionMarginDetail)]
-    public class CancelPositionMarginDetail : PositionMoneyDetail
+    public class CancelPositionMarginDetail : MarketOrderMoneyDetail
     {
     }
     /// <summary>
     /// 扣除手续费
     /// </summary>
     [TableConfig(AutoSetPropertyNameOnInsert = "Type", AutoSetPropertyValueOnInsert = MoneyDetail_TypeEnum.AddTradeFeeDetail)]
-    public class AddTradeFeeDetail : PositionMoneyDetail
+    public class AddTradeFeeDetail : MarketOrderMoneyDetail
     {
     }
     /// <summary>
     /// 归还手续费
     /// </summary>
     [TableConfig(AutoSetPropertyNameOnInsert = "Type", AutoSetPropertyValueOnInsert = MoneyDetail_TypeEnum.CancelTradeFeeDetail)]
-    public class CancelTradeFeeDetail : PositionMoneyDetail
+    public class CancelTradeFeeDetail : MarketOrderMoneyDetail
     {
     }
     /// <summary>
@@ -2302,21 +2452,25 @@ namespace TradeSystem.DBModels
         /// </summary>
         PositionMoneyDetail = 1,
         /// <summary>
+        /// 与挂单相关的明细
+        /// </summary>
+        MarketOrderMoneyDetail = 2,
+        /// <summary>
         /// 扣除订单保证金
         /// </summary>
-        AddPositionMarginDetail = 101 + PositionMoneyDetail,
+        AddPositionMarginDetail = 101 + MarketOrderMoneyDetail,
         /// <summary>
         /// 归还订单保证金
         /// </summary>
-        CancelPositionMarginDetail = 201 + PositionMoneyDetail,
+        CancelPositionMarginDetail = 201 + MarketOrderMoneyDetail,
         /// <summary>
         /// 扣除手续费
         /// </summary>
-        AddTradeFeeDetail = 301 + PositionMoneyDetail,
+        AddTradeFeeDetail = 301 + MarketOrderMoneyDetail,
         /// <summary>
         /// 归还手续费
         /// </summary>
-        CancelTradeFeeDetail = 401 + PositionMoneyDetail,
+        CancelTradeFeeDetail = 401 + MarketOrderMoneyDetail,
         /// <summary>
         /// 订单盈亏
         /// </summary>
@@ -2381,6 +2535,29 @@ namespace TradeSystem.DBModels
                 }
             }
         }
+        Boolean _IsPositionLocked = true;
+        /// <summary>
+        /// 是否锁仓
+        /// </summary>
+        [DisallowNull]
+        [Display(Name = "是否锁仓")]
+        [Column("ispositionlocked")]
+        public virtual Boolean IsPositionLocked
+        {
+            get
+            {
+                return _IsPositionLocked;
+            }
+            set
+            {
+                if ((_IsPositionLocked != value))
+                {
+                    SendPropertyChanging("IsPositionLocked", _IsPositionLocked, value);
+                    _IsPositionLocked = value;
+                    SendPropertyChanged("IsPositionLocked");
+                }
+            }
+        }
     }
 }
 
@@ -2431,11 +2608,16 @@ namespace TradeSystem.DBModels.DB
             .HasValue<ContractPosition>(Position_TypeEnum.ContractPosition)
             ;
             modelBuilder.Entity<MarketOrder>().HasKey(m => m.id);
+            modelBuilder.Entity<MarketOrder>().HasDiscriminator<MarketOrder_TypeEnum>("Type")
+            .HasValue<MarketOrder>((MarketOrder_TypeEnum)0)
+            .HasValue<ContractMarketOrder>(MarketOrder_TypeEnum.ContractMarketOrder)
+            ;
             modelBuilder.Entity<MarketDealHistory>().HasKey(m => m.id);
             modelBuilder.Entity<MoneyDetail>().HasKey(m => m.id);
             modelBuilder.Entity<MoneyDetail>().HasDiscriminator<MoneyDetail_TypeEnum>("Type")
             .HasValue<MoneyDetail>((MoneyDetail_TypeEnum)0)
             .HasValue<PositionMoneyDetail>(MoneyDetail_TypeEnum.PositionMoneyDetail)
+            .HasValue<MarketOrderMoneyDetail>(MoneyDetail_TypeEnum.MarketOrderMoneyDetail)
             .HasValue<AddPositionMarginDetail>(MoneyDetail_TypeEnum.AddPositionMarginDetail)
             .HasValue<CancelPositionMarginDetail>(MoneyDetail_TypeEnum.CancelPositionMarginDetail)
             .HasValue<AddTradeFeeDetail>(MoneyDetail_TypeEnum.AddTradeFeeDetail)
@@ -2614,6 +2796,18 @@ namespace TradeSystem.DBModels.DB
                 return _MarketOrder;
             }
         }
+        System.Linq.IQueryable<ContractMarketOrder> _ContractMarketOrder;
+        public virtual System.Linq.IQueryable<ContractMarketOrder> ContractMarketOrder
+        {
+            get
+            {
+                if (_ContractMarketOrder == null)
+                {
+                    _ContractMarketOrder = this.Set<ContractMarketOrder>();
+                }
+                return _ContractMarketOrder;
+            }
+        }
         System.Linq.IQueryable<MarketDealHistory> _MarketDealHistory;
         public virtual System.Linq.IQueryable<MarketDealHistory> MarketDealHistory
         {
@@ -2648,6 +2842,18 @@ namespace TradeSystem.DBModels.DB
                     _PositionMoneyDetail = this.Set<PositionMoneyDetail>();
                 }
                 return _PositionMoneyDetail;
+            }
+        }
+        System.Linq.IQueryable<MarketOrderMoneyDetail> _MarketOrderMoneyDetail;
+        public virtual System.Linq.IQueryable<MarketOrderMoneyDetail> MarketOrderMoneyDetail
+        {
+            get
+            {
+                if (_MarketOrderMoneyDetail == null)
+                {
+                    _MarketOrderMoneyDetail = this.Set<MarketOrderMoneyDetail>();
+                }
+                return _MarketOrderMoneyDetail;
             }
         }
         System.Linq.IQueryable<AddPositionMarginDetail> _AddPositionMarginDetail;
@@ -2750,74 +2956,86 @@ namespace TradeSystem.DBModels.DB
         {
             var result = new StringBuilder();
             result.Append("\r\n");
-            result.Append("H4sIAAAAAAAACu1dW3PTWLb+K5RfDz1tS7Zsdw0PQJqa1IGGMzCXqjFFKbYSVO3IGVtphumiKukmkAC5DJcmzaWBngzN1AyBBhpCQoY/E8nO0/yFsy+yJUvbdrytLe/t+AVia0uWPq219rqvr2Nn1LGiVol99qev8Z9fqJNa7LPY6T8XT2vlr7Ry7GDst6ULeMGoqU3i");
-            result.Append("v5xVegEc/r1anAYfEunEpYONI+bFKc09Fjta1lRTQz9wOG/qJSPmWZsvGaZmmJ7lX+fwzeRin4E/9QL4X0oczMXy6hQ8GXw0potF8AW8AviUi50sF7RyLga+GlFNdUytaKMj4EAafKEfL+W/BH/HL4EPR0vF6UmjAj7+qXFlpf2l4SLwebRyeNosjRr5sjYJ7hYcMsvT");
-            result.Append("GrykanwBTgFfjKvFCvymMHYGPD46eUyf0OFi8K3znXP5z43pyRFtXDc83xU1Y8I8734uaOPqdNFEqLjfImTQ0yFMRiun/hd9cm6nBJFADxZHR0f0Sr6sT+qGapbKnps8WlQrFech4ZXBC2kAIjUBkotZP922F1arP29ZP1xHz9IAZ0QrahPw1aKHI8LU+MEGTs6demDa");
-            result.Append("A0a52Kef2nde7l5dxneTyxn/N60apm5ePHDoAEAiZ3z66c7WO/vxh8aCU2U9r4GjErp4A95cDH3uDt76Y7j4ZqjxlX34Vq+9tWdmm5E9barmdIU9phisnY3nAK/623QBta5esdau2vMrO5tr4Ivfamrh4pnSySnNgLA6a969sj7M7GzdAp+cI4l4/fz3r8EBfPWjxVJF");
-            result.Append("NybgieDwAXR899tn1vwVvAq+MLVs6moRrtQKYKHcuM7cM7i0vu5w0V2TbKx598q+ubZ7ewb+lmrkwcPA4ynPcWtl3nr/Fnw6oZUn4GOm4vWHQE9grf1ce/MP5zmOqTq+ghJP7IWAcjG8bO8UlKWmoKSfQ5ce4RdpLd6xlt+RmRQJydFCDzRFJ85C4rdEkhqulA+u2vqP");
-            result.Append("ACh74TqQKM1YHS+Ze2c6gsAPDZ5cLN4lNSUUanwUPzkBVkG8RoIIc57IQKWpgUoTd0b77tvdu29a7Iw6/IKa4wrgEmb9En3gOfpNLkOECu/QZKjQdt0LVlpen1SL3UMFnjITDlz0Ej3rhwttSACuZqzgxiQ+ThK1bpqO+3CyH8xYK0s7GzP2v5842oYfMySwBgA0iRq0");
-            result.Append("hF/hvP3Mnn/nWDYNnH5XEVk9oBbqab+5g7VIklDHaqXgIl2mBspvt+x8fFh7Mbt79W/NKJ1Qy4AOelEOQmc2CiUhQQ1TQDnfmK3+tOgz7y5OjpWKPVDRV2o5f14tdw9RKh4OGVHD41fG7YeP7YdXfGq4BnxP6oTGhYbZNTb0HOZXxO3nP1bvz5OUptNmaepUuTSum2Jv");
-            result.Append("atRGXTodxMpefNQKq+OlSkVspFLUSGU66kzEzQ6qTWLvdRI1J2bSRE4Ee93ujw9bceLhydK0I3SEpTJqJ0ImQ+THVohBfhwEvKjVzozf4rNntqCs31xuBqt/Ql4KTZmSqO3irN90sb97b634FM4jla7iD3S6AnKWz96z1u4B//CRaU/UAXxb/ecm+PO0ViwyCzdQb5TZ");
-            result.Append("QDhn+5a1sFi9d9na+CZgLAPl/UvNFN9appZjWb+VU1v/T3V7Hct/LNPAbtkCPYTbSUAI5qnjQsMHeJ8WvyTRk0XSMKAzS3AFg9oMymYJStn8Q8ehTHC7nyxD74paFNnxTqvCynGS22/+4c7GdRjHqbOj9WAz6DB1YBsUuUYPoX8n9YY8Yfzw/uMgd8IYKAj6VtA51Kjt");
-            result.Append("cXetvZ2zrm5iAw64luxra7Ub31r339Qj+UATMrW8CTdeJjtsgtYrLaMzm/aMXy4Dxbf25ikIxvrdrCdKhnbxcB6qvl14W0NLLglL8tFihdzYTV7EzTV7FUYaq1vPa2/eN4N1TNNEdyR2idRZuHzkj0dLxrg+Uc9UGq38ztD/jO6gfuJo5WhxumJqZa3gvRxKcILXQ6e6");
-            result.Append("Tv2zgXSpc/VD6OXQ/4KPngk/5FvhPCJYEL/kTQQrOKlb3rSyNFgMM9BgOoyGkrg65qFJTPPQpLbJYshngh76N3oFvOiLlDlp6ayoOWkSm5y0TLxz/h/HsSuJkTM9E9jUxQ6BdsCJOgKaCdjALdNbutKvqXQdRkRE7+v0W7xi+4QlVn4Uv5InrLdOCtXECFlhaYjys203");
-            result.Append("1nONdYzVCZmpOiETMzMc8+HJM6LlgBQpSsUik2y7j3aZAhK5diGz2kf9QWlr+QV4FTvb3weCF0fUIswC6YtV0gWPy6x20kCI+sYs1DjIqSCISfuYDxIeYLS7qxzP7iEd5GipC4BCTAZJEJNBgBw4PXKmS4CoHVMo06a1SBqN3tbZq6YhM7F1ZJSh1cRiyyvVpZfWla3q");
-            result.Append("1i1SPPUPunm+UFYvHCuX/qqJzmi0+pmMUkmCksl+9sT64NfSShUdLosobLg7s+LeCAgT6sZEUTtRKngLbeaeeZccA1dyFkiUtSdyqPGxTkqeQ/1dOqUO1iXf2VZqjuOkOoeXMVb1kkxVvfaaF04IHDXGS5SaXTYlqssoycZllFXaAoL/4Df/MslI1c2m29NhqdyL+coy");
-            result.Append("uphkpNJmM20R+dzAnEy/TYzpoYGS6BIUuVcxz1bipphK3EDZHzKr7dWl6pYv3xhtOT257GVYSSqm/E2xUWPjMpeuhr0q9yk28leO+9VUkkbfv8zIVop81wDtXfLAN+IFKOCL2Ya+6DB8MTziRG3vxAOeGCTYSG0aIrJzdjaWcGV19f6GNfcaJOXU1l9a23dgQb3Hdeta");
-            result.Append("PfbC33e/X8PnuB6knHG4UPB4jjynxRMH/ueA91qO9bR9s/ZxNXgdXK9FvJTU4lL4ltxsBHQzZ8pqQQOpCO7pcts78Z7u1IwFrpBscYU6gii24ACHowruuanAuXQJMSkaG7G+YbWhzPYqprOzdxNFIrkqGIeRUqzcXVKrXCHg+Hc2RKIpLPBmSZ8sFOhMMPe6NnsbSRbI");
-            result.Append("Jv7cKt7zADrgtPdiAudRG9wfSdqQV0sOOXuInD7U9IP+lYydQQpT00TpmGQOU1qXrljLr5opHKSWo4Kj471ZK6iZipDWisLI6Z4auNJLhZEFgxrNDFLlpcJo90oMahGhwihWmhjMGkKFkQWI2s0MfqmSwkgTR11oRDdTFDZlcPJeGm7ybJF0wCXNYY6bX7WLLMUt3UbV");
-            result.Append("Pa8aE12puieLhUYnWXLW2hfahQ4rDO0CQWlFnRyb5d3Hq/aDR6RE1c//MqWXec9UlUOn0Tx6XQUPePDbglbUzMC3UYXzwe+cm4RvWHVC+nmw5tw0OEcvnGNO2xm+aXv40kgvLcv0pbnNogNvyz20l9fUU/3f/ioABF8dUfNfTk/h91cAts6UVjZ1JEIAjs7Sr92CXTfm");
-            result.Append("7S8fu3SJTqiF4QKDwgxh4BFgzBxgHtWDkXjMoDVD8SjUnpZJsN/TvN5F8p7mXcFuTwuLZ9HLOu/o1RGwLuFXvfQSBZVIomj1gYAYCoXhOPZ/P9ywV19YK0/Bv7VfHgcKDJzrdxXgpm5QUH3wyFr/Ad8e7oZfRA/pBrTxLTZW/F4vm9OeRfE4N8m8Q0vBzy8y3/zC0Us7");
-            result.Append("6OO7aFWWdlnaw/e0x/dEUGGc/yGk0aozTJNAU34fOSxW214k14PQBVMV1CxLxGAqAif8YKqC+v11qnXgOPm+GZfwQqeKHKghX/indWvWWlms/vQSKAzW02/+++HekTNHYQEe0H28h62XPwMlCBxrpt2jpcnJUkE3LwqMJ22EVZEDne0RYHhQVAuc6mOjGCdE0pY5dMKK");
-            result.Append("NriqyOTGS045apD2vIcx7TWqQt3EUpjW2K/i1ZCIjzb8qsiBfvgNxJZeWs9XSWHrBmBdxq1JkcXSdL0upQ9kSBt1VeT2mUcRpSrb36/vztzDLwzQ/helMghi19UAYKrFnXTelfnq5tPGMqBQm2U1b3oWQgHEAl/K3FtFTkU2pKGv9NdNqqT/tXnLDRRZEW0eQdA/0Ams");
-            result.Append("TG9gRVwVllGYWnhNyn7ACm86GqYFzhayNJ+QuVwWSIVbmLF+/gG3u2nmNc4Lw0K2DXgmqoxIfBgBqUVcLRAupXWKwLqPSQjCoot2EXhlS5dZlg4jxW+i48bS9o1vrMU7AR3qS83sYfa0IovqOUIoMfAcyWR3nT+Hoi4d+GXeZoBCdCEl43uYiDECkt8Q+UdgSu28f2nN");
-            result.Append("/SMwFGPxO+tqt0MxgpptJxipPUfJwGARgs+IK1dR1yRG7SlKBiYiIuEHi2tBFnnOgMtrT55V1zZ3trbsy8vOgWB6eS+5lyFal10jR+0SSgZaqb57haenk8hrBASQuSKxoBneCSlqN1DS3waheu2tPTPrL/JQzelKFO4gROB4Tn19hr07NX7u9e7d+gR7rZc4fic0e27K");
-            result.Append("xVTvysaZ6l0Jst6FuIdUCYm1L8hDPZVCKklRG2chxBjoYMlgi0/IHYE8Vlf75VgNYzTGVEkGrExEqKQiSL63QkZzPpRkYAD8i/dAVSXT0hngjRaeluj1rcAsKKwyEOpaoLjju6qlE0rUulUqYPi0VKy6Vqqi7OPfCaAU30oA4+Rj4qYezJUjLhPGXZ+VOHfXpwJ5Fch7");
-            result.Append("Wt26VV2/i9NbQypr4cynSjGsiVcak3mnscBMlvn71tYmcexI96XYke974cVguacsxhm4Pq96C+HfqlTPpS95X+baMfOYppL7M38sZGchz4ydEoOxA62akE0p6sbRib7Sg0NfnCb2uJSl8OSUxgN6iU5pPOVvo+6U1o0J7JZu+KyrW8t4Ud1tXUA9Tyn91p10m+zgkCin");
-            result.Append("iVQ8QyZomlDAxEVJ200FBDnjQO3NI/ABRzuBCrN7dx3wlbX80pqBHRpbqIc8+Z9Yp3YPTl5RNis+7w/JO+zKhWiJEGzRvOtIaY7kJndlCRTExee2LsUTYhiD/jBj9TYgvHnHGASEaL96Ys2/9H4LfRMbi7Vvt2sf74PMNfvmurUyv7v6yJq/20yX4P71gtjG48B4HaW4");
-            result.Append("xDM9Uu3RQw8lkWaHHsr+eyijZGxOA1U8y8LkIEIWduevRvxCzOZ8Upxrd3wf37W3+iPaN6KIoRMHimhwKO4FnEd1oClO53Nt896YJeTgJn80jH7j3CR6z7jP6JSzkH0nJik+kM5vNg0l668lumaSjV+MtpGkFGfcQnvQtqH+svAA+LCHLBw2VSR4dyor+6qoNeSOVEPe");
-            result.Append("6uf2mODaTz7cHptfFqeJ90MW7isLD6QHcmj39EgVQyfr0BoOUoWATtnom54I1L2jU/5a46mIs4mQORHVRCIeHQ4JRex60D6VFwtU0x8tg7Al1rTIwrsvvYXYptOFm740FOW9cUdGFFHe4Il0ZlDaBYbbp4bj3JUEpxEKl6YC3VgWrle3ntfevG8mqmOaxqsCwFWW8tAP");
-            result.Append("0RvDSHEhkk4yAf355tru7RliVa5q5DXe2xjxlFg9cFajlBCDpgM1gmgopa+HQSSzJ2FAEkQfF+/gmKQTgHTikvbzH6v35/HB02ZpCpho47p5SGoctRcfuUePlyqVQzI+Vn29Vd16ZH3YhNU5eMXFCioYPpSkC252bHzcZV/CIec0cw7nY13FGFPJz/hDSZIF9kmELyB7");
-            result.Append("S9nYjxKypwJsyGL72X0tcRrkq3NYOjCeqvZx27r2uHrvcovBXocLBXRRtdjliC/ObNREsvehVUOjtV8pFRLjMCl8mvZuRP8K/lMr0Cs6j285urTypl+NmkoUph3l/Y682i+Xgbi0V5eqW775fgilEc1U9SJdF/m0b+qUQF3k2cyATncYbcT5lLdmVMLrG5+WyUQZak9d");
-            result.Append("3sCiLehOB2YdkUbqHgZCi5tBul1jQ9s0Ph3I5bGWV60b31krSzvb3wdAOqIWodNVWJhou8anfbOM/GJIiAaRjEYxp30ZBX5sorLbN5Zw1LZ6f8Oaew0sG2eHzhl1dd6zPUOTntLsZjNxOR2YZAQeojZ7G1poogajQ5y9THiFkU8UliTGeT8+7ZFsjHgWCNNoQmKcEjK4");
-            result.Append("wLHNchhc4GSuo93DYFTzy0qwtN/TceIQkt25xer2+s7HJ/bsi+adFdqUpzXT1I0JSiu+wyy4fhmtezTlEWAMTPngQLjVF9bKU2tl3nr/Fis5zS8C3EN929fKEz0pkWM6sz64zXCFknMXpaAcvH54+zya6Kz4acu69gw3b8crTpS+AhINXukQFE+8JGUMeGRQ5rQo1JXK");
-            result.Append("gQmUiCpJEyhdGhU2GqhQb17+FHHMnq1ggswqLEhpapCyRFoiuVtdWgKO13oOkIhgZWjBClaKIYpqBRakKMGhylJD5d/Ra+v/Aco7pi4MG0gQBq4ya+Mb8gj5kwbQ6E8dFxU6SZxsx2GrM0nmPRsoMDMRa4uYn/yxw7rWKPbOP+QgkZoFymzzfoatVMSkCrZNAnDb2lFj");
-            result.Append("vESWrL7jrWTr/pwXKiUZRd7367zQToAOzogYOS1iLUqdQKWMf46otfwChBgESJ8J+rIlOcqWH43bI7b8kDIHMzBvtVNrkIKW1ydVmA5wyRUbUiYQbLgxC2MM5Gx35H/uMtGdu5cji/Jy5IR/j7SXV+D8ryvAq32L5AD5g26eL5TVC8fKpb9qAr+iJOevaFhg13qXiiCH");
-            result.Append("ZVgxGWHFpJwdnBdal6ypuN+zgzPCSRHQpqJWajV4r3FQpA3hm4GhUKwIIQQ88dBrv9gLf3f7pOSMY5oGD//619ABTBOx7CSQu4wHRawZJ+N8k6hrpKWYkl0P8XdO6W5wBiomE4O8L7KFrk3uzQi6ua7z3potGsxgzG5fZnf7KJcFPYO3+JLdo3AfsfGbszBFY9PXrLHL");
-            result.Append("CE3k1lHY2RnDKGc/vfFJoWI0TDmJbayTOSP11PoDXTSq3h/D5AIpqfC+VfkTCnESKilTDu3yKD9n/+XKBSbOY5iIjQ4hTHwXl4adJjfc2vu6tXM6wdNlHn+iqfVhpoWMOTmlGftKxAxZp6+sI1z38/T+mprYqUV6pNzGlhQZBziGNbAhvqwU1wXLrqwItIu5v2mt38MD");
-            result.Append("REjb7zH9L1zvvmGXtLkKviK1gYqk5gOo+FbyO2IV6XiJgSsVTAnRzTytyEJ3ZAu/WntIwi4JczoY1yVefzZxbf2JNX8TJw07A7ByxoGd949w7rBzYOE6ONYsrY+XzAq3fdCGXXEH2cZMyUJGXsLjvVMgi4O3qXRR82CnoI1zKjHlE8uuYdAmOo7lNL9g6CvsqxznNILu");
-            result.Append("SuwUsU4YFtovXbGWX9kPZnb/teqY/UB0A0FtL65bm7d2Nhat56v28zVr5gOpnviEyrdXoGM18TBTRSR9iXHdqGai+vjjbV3yxFWt+E4ZuPp8h2PCSsT2uNnad8znv01uJ2QYRs4bBVlSoi2IyCfEsVOnE4QUMZ0I4zQpTqPtQ+WQ4aYFPjpQxyBduJtpnTpg11HIKeAz");
-            result.Append("6O0HCOhXo4apJNEPNa12KCa4/rRZBltD8ASXbPZ+TtMztby1s/Cx4FGw2TknZsckJZ4dj3+SkdOJT5IpdfyTTCqf+kRLF+JKJj+WGEuPxS79PwdNv7JCSAEA");
+            result.Append("H4sIAAAAAAAACu1dbXPTSLb+K1S+XuZiS7ZkT+18gGSom7q87cLu3KrNFKXEIrjGsVlbGZaZoiqZGSAB8nIHZghvE5jNAlNzSRhgICRk+TOR7Hzav3C7W7IlS23LaqvlbkVfILbasnX6nNPn5TnnfD10RhkvqbWhj//6tfnnCWVKHfp46PTfSqfV6pdqdejg0J8qF80F");
+            result.Append("o5o6Zf5lrSoWwOW/KKVp8CItpy8fbF3RLl1Q7WtDw1VV0VT0BYcntGKlPORYO1Epa2pZcyz/esz8MWNDH4M/iwXwv5A+ODY0oVyAHwYvy9OlEngD3gG8Ghs6WS2o1bEh8NaIoinjSk0dHQEXZPBG8Vhl4gvwd+oyeDFcKU1PlWvg5V9bd5a63xouAq9Ha4entcpoeaKq");
+            result.Append("ToFfCy5p1WkV3lIpnwAfAW+cU0o1+E5h/Ax4fPTh8eJkES4G71rvWbf/tDw9NaKeK5Yd75XU8qR23n5dUM8p0yUNUcV+F1EGPR2iyWjt1H+jV9bPqUBKoAdLoasjxdpEtThVLCtaper4kcMlpVazHhLeGWxIiyBCG0HGhvSnt435lfpv2/pPN9CztIgzopbUSbi16OGw");
+            result.Append("ZGp9YYtO1i91kKkHGo0NHTpk/PBi79qS+WvGxsp/nFbKWlG7dOCTA4ASY+VDh3a33xqP3rcWnKoWJ1RwVUA3b5F3bAi9Dkbe5mPY9M0R01d00bd+/Y0xM9tO2dOaok3X6NPUJNbu5nNAr+Zu2gTVr13V164Zc8u7W2vgjT+pSuHSmcrJC2oZktVa8/al/n5md/sWeGVd");
+            result.Append("Saean3/3Clww7z5cqtSK5Un4QXD5ALq+9+0zfe6quQpumFLVikoJrlQLYKHYus+VZ3Bpc93hkr0m01rz9qXx/dre7Rn4XUp5AjwMvJ51XNeX5/R3b8Cr42p1Ej5mNtV8CPQE+tpvjdf/tJ7jqFI07yCl0r0w0NiQuax3DsoTc1DGLaGLq+ZG6gs/6Etv8UKKlORooQ+e");
+            result.Append("IlNnIclbOkNMrqyLXI31nwGhjPkbQKO00+pYRetd6DAKPzTyjA2lAnJTWiKmj+RmJyAqSNZwJDIlj2dCycSEkrEno3Hnzd6d1x1OxiJ8g1jiCuAWWvMWA5A58kMuhyWVeULjSYWO635opU4Up5RScFKBp8yFQy5yjZ53kwsdSIBc7bSCBxP/dBKIbVM55aKT8WBGX17c");
+            result.Append("3Zwx/u+xZW24aYYUVgyIJhATLe02OG8/M+beWp5Ni05/rvFsHhArddnt7phWJE6pm2Yl5ypdJCaU22/Z/fCwsTG7d+1/26l0XKkCPujHOAhd2AiMhDQxmTzG+eZs/emCy727NDVeKfXBRV8q1YnzSjU4ibKpcNiImDxuY9x4+Mh4eNVlhqsg9qRMqkxYmIFpQy5hbkPc");
+            result.Append("eP5z/f4czmg6rVUunKpWzhU1vg81YqdOlr20MhZWO9HqWKVW45tSWWJK5XxtJuxhB80mvs86gVgSczJWEsFZt/fzw06SeHiqMm0pHW65jDiIkMth5bETxaA8xoFexGZnzu3xGTPbUNdvLbUTa3BKXgjNmBKI/eK823UxfnynL7sMziO1QPkHMlsBBctn7+lr90B8+Mi0");
+            result.Append("I+sA3q3/sgX+PK2WStTSDcQHZd6Tztm5pc8v1O99p29+43GWgfH+harx7y0T67G828tprP+rvrNu6n9Tp4HTsgP1EN1OAkbQTh3jmnxA9knpl8FGsnAWBgxmcW5gELtB+TzGKJt7aAWUMWH3k1UYXVFKPAfeSU1YMYUL+8093N28AfM4TXHUH2x5A6YW2eKi18hJ6D5J");
+            result.Append("nSlPmD+8/8grnTAHCpK+NfQZYqr1eLo23lzRr22ZDhwILRnX1xo3v9Xvv25m8oElpKkTGjx4qZywadKotIg+2XZm/P4dMHwbr5+AZKw7zHq8UlYvHZ6Apm+AaGto4JKwNB8prVAYuy2KuLVmrMBMY337eeP1u3ZiHVVV3gOJASn1OVw+8j/DlfK54mQTqTRa+3O5+Df0");
+            result.Append("C5ofHK0Nl6ZrmlpVC87bIYATvB/6qB3U/9wDlzrbvIQ2h/wbXPyM+SLXCusRwYLUZScQrGBBt5ywMhkshgg0CIdREYjLF4cmUMWhCV3BYihmgh76v4o1sNGXCDFpcp5XTJpAB5OWS/nj/xjOXQmUguk5z6HOdwrUh07EGdCcxwfuCG8JZF8T2TqUmIg81un2ePmOCQu0");
+            result.Append("4ihuI4/baJ0QqosRssHSUuWfdz1Yz7bWUTYnRKrmhIhFZljuw+NnWM8BGVKEhkUu0/UcDQgBidy6EGmdo+6ktL60AbZid+euJ3lxRClBFMhAvJIAMi7SOkk9Keqbs9DiwENBkJAOEA8SHsFIT1cxle8BDjJcCUCgEMEgaSwYBOiB0yNnAhKIODCFkDadVdJo9L5Or5aG");
+            result.Append("SMXXERFCq03Elpbriy/0q9v17Vu4fOpnRe18oapcPFqtfKXyLmik9pmIoCRezWQ8e6y/d1tplVoRLosobbg3s2z/EJAmLJYnS+rxSsFZaHPlmXPJUXAna4FAWHsihpof8zPyLO4PGJQ62NR8n3cyc6wg1VlzGWVTL0PV1OtueZmAwNHyuQqhZZfP8hoyytAJGeWlrgQx");
+            result.Append("/2AXf5mhZOrm5e58WKn2477SzC5mKJm0+VxXinxaNiWZ/JgYL4ZGlHRAooj9qnm6GjdLVeN6yv6QW22sLNa3XXhjdOT0FbIXYSUpn/o3S8eMTYlMhhp6Ne6zdPSvmHKbqTiLfnDIyE6GfGAC9a554I44CeSJxezAWHQYsRgW6UTs76Q8kRik2HBtGiLyc3Y3F83K6vr9");
+            result.Append("Tf3KKwDKaay/0Hd+gAX1jtCt7fUY8//Yu7tmfsaOII2VDxcKjsiR42Op9IH/OOC8l+U97Xzf+LDivY9Zr4W9ldDhVuZPstEI6MecqSoFFUAR7I+LXX+J8+NWzZjnDpkOd2hSEOUWLMKZWQX7s1nPZ8kAMVkSH7F5YHXhzO4mpnWyB8ki4UIVlNNIWVrhLqETVggE/q0D");
+            result.Append("EesKc3xYkoOFPJ0JrrxqzN5GmgWKiRtbxToOwIdOvRcTWI/akv5IYENOKzlk9BAePtT2he6VlINBElXXRPIFmUNI6+JVfellO4cDaDkqODrWn7eCmqlw6a1IlILu2diVXkqUPBjUaCZOlZcSpdMrHdciQolSrjQdzxpCiZIHiNrNxL9USaJkiaMuNLy7KRKdMjixl4ab");
+            result.Append("LHskPnSRGcS4uU27yCBuchdT97xSngxk6p4sFVqdZPGotRPqRZ8VZfUixmhFnRzb9d2Ha8aDVRxQ9dO/XyhWWUeqiqHz6ATaroKDePDdglpSNc+7UaXzwfecnYI7rFgp/Qmw5uw0+EyxcJY6b+fY5u1k03Cblqe6aXazaM9u2Zd62aa+6v/2VwEgeOuIMvHF9AVz/wrA");
+            result.Append("17mgVrUiUiGAjtbSr+2CXTvn7S4fu3yZTKmFEQKDygzRwKHAqAXAHKYHJfWYQ2sS9cjVmZZL0z/TnNFF/JnmXEHvTAtLZtFmnbfs6ghEF/OtTn6JgksEXqx6T0IMpcLMPPa/3980Vjb05Sfg38bvjzwFBtb9AyW4iRsU1B+s6us/mT/P7IZfQg9pJ7TNn9ha8ZdiVZt2");
+            result.Append("LEqlmAHzJp6CW15EtuWFoU076JK7aE2WbijtZJ963CeMCWP9D0karTlDFQSadcfIYbHazgK+HoQsmSqhZlk8JlMRccJPpkqo359frQPD4Pt2uoSXOpVETw35/C/6rVl9eaH+9AUwGPQn3/z7/b0jZ4ZhAR6wfZyX9Re/ASMIXGvn3eHK1FSlUNQucUxP0gyrJHo62yOC");
+            result.Append("mYOiOtCpOTaKMiCStMzBj1akyVVJxDdesspRvbznvGzyXqsq1AaWQljjoIpXQ2I+0vSrJHr64bcotvhCf76CS1u3CBYwb43LLFamm3UpA2BD0qyrJHZHHkUEVTburu/N3DM3DPD+iUoVJLGbZgBw1VIWnHd5rr71pLUMGNRaVZnQHAuhAqJBX0LsrSRmIxvSMFD+CwKV");
+            result.Append("dG+bs9xAEiXe5hF44wN+xMr1R6yIq8JyElUPr83Y93jhbVfD9MDpkkxmk2S2lHmgcPMz+m8/me1u2mWN8cKwkH0Dlpkqx5McRsBqEVcLhMtpfhlY+zExSVh00wCJV7p8macZMJLcLrrZWNq4+Y2+8IPHhvpC1fqYPS2JvEaOEJUoRI5EfLjOjaFoagd2hbedQCGGkDKp");
+            result.Append("HiZijADwG2L/CFyp3Xcv9Cv/9AzFWPhRvxZ0KIbXsvUjI3HkKOMZLIKJGTEVKgrMYsSRooxnIiJSfrC4FqDIx8pweePxs/ra1u72tvHdknXBCy/vB3sZoncZmHLEIaGMp5Xq25fm9HQce42ABDJTLOZ1w/0oRRwGyrjbINSvvzFmZt1FHoo2XYsiHIQY3JxT35xhb0+N");
+            result.Append("v/Jq705zgr3aTx7fj5p9N+WianflU1TtrjTe7kLSg6uENK0vKEN9lUJKGV4bZyGKUbDBMt4Wn1A6PDhW2/pl2AyjNMZUyni8TMSouCJIto9CSnM+pIxnAPzGO2Cq4nnpDIhGc89L5PaWZxaUaTJg6lqgumO7qsWPSsS2Vdbj+HQ0rAIbVVH28fcjUJZtI4Ay+Bh7qHux");
+            result.Append("cthl3ITr8wLj4fqsB1eBoqf17Vv19TsmvDWkshbGYqoEw5pY5TGRdR7zzGSZu69vb2HHjgQvxY783AsvB8s8Z1FG4Lqi6h2Uf6dSPZu/xH2JtaMWMc1m9id+LORgIcuCneVDsD2tmpBPyevB4cdfcnz4i1Fgj81ZEktBaXNALzYobU7522wGpYvlSTMs3YpZ17eXzEXN");
+            result.Append("sHUB9TwljFv72Tb5+LAoo0AqlknGKUzI4+Ii0HZbAcFY+UDj9Sp4YWY7gQmzd2cdyJW+9EKfgR0aO5iHLMWfaEO744Mryuf5l/2EvcOuXIiWCcERzbqNJDOkN5krSyBgLjaPdSGV5sMZdKcZ67cB481ZziBgROPlY33uhfNdGJvYXGh8u9P4cB8g14zv1/Xlub2VVX3u");
+            result.Append("Tjtfgt9fLPDtPMYm6iikBJb5keiMTiKUWJ5NIpSDj1BGKdiMJqpY1oWZOJIs7M5frfwFn835hBTT4fgB7rWz+iPaHZH4sIk9RTRmKm4DzqM60Janc4W2WW/MEnJykz0eRt9xdgrts9ln9IK1kH4nJiEVy+A3nYaSzW2Jrplk6xujbSQppCi30I7bMTRYEY5BDDsR4bC5");
+            result.Append("Is16UFnaV0WtIXekSmRrkMdjmuk4eXI8tm8Wo8D7RIQHKsKxjEAmfk+fXJEEWRNv2MsVHAZlo296wlH3Dj/8WuupsLOJkDsR1UQiFgMOaYnvetABlRdzVNMfrYDQZVaZZ+U9kN5CdOF04cKXElXen3TkeFHlLZmQc3FpFxhunxqGsStpRjMUNk95urHM36hvP2+8ftfO");
+            result.Append("VEdVlVUDgCmUchKH6E9ghBQXoJOcx37+fm3v9gy2KlcpT6istzFiCVgdO69RSPPB054aQTSU0tXDIJLZkzAhCbKPCz+YOUkrAWnlJY3nP9fvz5kXT2uVC8BFO1fUPhFaV42FVfvqsUqt9oloXqu/2q5vr+rvt2B1jrniUg0VDH+SIUtu+jY+DtiXMJGcdslhfKwrH2Mq");
+            result.Append("2Rl/KAgixzGJ8BVkf5CN/agh+yrAhiK2n8PXAqNJvqaEyZ7xVI0PO/r1R/V733UY7HW4UEA3VUoBR3wx5qOmM/0PrUqc1kFBKgTKaVL4NN3DiO4V7EMr0BadN39ydLDytm+Nmkskqh3l3YG8xu/fAXVprCzWt13z/RCVRlRNKZbIusjLrqlTHHWRpzMDWvYZbcT4lLd2");
+            result.Append("qoTXN14W8UwZak9d1ohFWtAte2Yd4UbqHgZKi5lBuoFpQ9o0XvZgefSlFf3mj/ry4u7OXQ+RjiglGHTllkykXeNl1ywjtxriokEkpVHMsgtR4KZNVH775qKZta3f39SvvAKejXVCj5Wb5rzjeIYuPaHbTWfisuyZZAQeojF7G3povCajQ5y9jNnCyCcKCwJl3I/LesQ7");
+            result.Append("I44F3DSaEChDQuJLOLooh/gSTmQ6250ko9o3K03Tf5dT2CEke1cW6jvrux8eG7Mb7Scr9ClPq5pWLE8SevE+s+AG5bT26MojglFw5b0D4VY29OUn+vKc/u6NaeS0bwT4Dc1jX61O9mVEjhep9cFtJ1comLsoFWX8+uHt82yiteLptn79mdm83VxxvPIl0GjwTp9A9cQK");
+            result.Append("KCPmmUGR0aJQWyt7JlAirsRNoLR5lNtsoER8eLkh4qZ4diITFFZuiSQTEymP5SVcuNXmJRB4bWKAeCRWjpRY3koxxFGdiAU5inNS5YlJ5T7RG+v/Asa7yV0m2QBAGITK9M1v8CPkT5aBRX/qGK+kE/hBOyatzgSRdTSQZ2aiaS2a8uTOHTatRr5P/kSCeGoWKNLF/SSt");
+            result.Append("VPjkCrpNAsy2taPlcxW8ZnVd76Rb9+e8UCFDKfO+X+eF+hE0PiNiRJnHWpQmgwo59xxRfWkDpBg4gM94Y9mCGGXLj9bPw7b8EHIHcxC36tcapKBOFKcUCAe4bKsNIedJNtychTkGPNodxZ8DAt2Z2xyRl80R0+4z0lhahvO/roKo9i1cAOSzona+UFUuHq1WvlI53qIM");
+            result.Append("41uUFNh1PqUiwLAkFZMRVkyK+fhsaFOzZlPuyI6JCMdlQNuKWonN4F7zoMgaMn8MTIWahhCigCMfev13Y/4fdp+UsfJRVYWX//AHGAAmyVj6KeSA+aCILeNMim0WtZ20LFW26yP/zijfxWegYiYd53ORLum6YG9G0I8LjHtr92hMAaP280V6Px9hWdAzOIsv6T0K8xkb");
+            result.Append("tzsLIRpbrmaNATM0kXtHYaMzkiznIKPxGa5yNFQliW6uk7og9dX6A900qt4fCbhAyEisH1VuQKEJQsUh5dApj/A5+w8r55k4b5IJ2+gQkont4tKwYXLJ0T7Qo53RCZ628LiBpvr7mQ465uQFtbyvVEwiOgMVHe66n8v7a2qiX4v0SKWNLitSTnAkNbAhblaW6YJlW1d4");
+            result.Append("2sXc39LX75kDRHDH79Hi35k+fcMuabMNfEnoQiqcmQ9IxbaR70urSMdLxK5UMMtFN3NZErnuyBZ+tXbCwjYLMzoY12ZeN5q4sf5Yn/veBA1bA7DGygd2362a2GHrwvwNcK1dWx+raDVm+6AlXXHj7GNmRS4zL+HJ3imA4mBtKl3UMuiXtLE+ioV8mrorSdpEJ7GM4guS");
+            result.Append("WOFA9TijGXRbY2exdcKw0H7xqr700ngws/friuX2A9UNFLWxsK5v3drdXNCfrxjP1/SZ97h64uMK21EB32riBKnCk71EuW5U1VB9/LGuIXnsqk5yJ8WuPt+SmLCA2I4wW/eO+ey3yfWjDMXMeasgS0h3JSKKCTEc1PEjIUFOJ8I8TZbRbHtiHA700Mqxbhy6AUx7d5c9");
+            result.Append("zZeGQZylMrVf8BfJBCn2bD/G54TLnvFCwsdmF7MD6Y9xEoVkKYLqqV6xySYMI0ECxjPULKUYFx9Pd28TRourPDRhtJGUu4Kgdav7Lmy9q5SnFUfjX2f7XkfvXghqcnYGNjsbtjUHhl0gwbJmG2CnW+js8AuWEE4VTYC8sRJfupCCxLXgkysYzdInDudAuYLDCeL7Fism");
+            result.Append("ZXiBmTMMkJYoTxfebxx/MOzaTkc0lhYLSPtDjmiwQysR04ffa0tA+Dd3lKxEy1OU+1nGmaecKqYAfntzoniYigbPF52+udBcTf9M5690THaXg5gIkPrtVWNuGVvKzMOgXJYqxBIhC1nIGM0HJL7vIH1fOcV3C+pAzY5bQxWTfsc94qXb2kMHgE3T5dkYNd5LOJlhfJIs");
+            result.Append("8AGf7K4kxXQ2RoMO/RBvwcoY+2s0nu6vF7wUm8GKfpsi8LMpcuwGOfptjsjP5uRiNjjSb2sy/GxNPuaDKv22Ksv4VrFhuTOdabWDewIrc9RPVKpgA/0Gp7fBpzyj03tATVnz1zNmuynccPUsYc8pv6YTmTiFFCNJDXq/MKKxIXImLknjRNC5EPREeEMU3tggPvZxR7aA");
+            result.Append("LZr2dUe2YCGHRN+EbSxIcdE3yUkUMmdEARJKOINHByPWgybpko7xkY62x+UegLv7fkW/Mlffemq10dFn3jfeXNfXnsKJ5s1r4J29X1c8QcNKtc82aCFWgwYdiBtpHx2qvJfjEkLCBulihGSImnR0c/OxJh3lKHycSUc5Bhpn0lGOQMWZdJSd6TiTjrK3GWfSJe4YMeli");
+            result.Append("gLVP2l0RtLtKJn6GqYHyfIwGkt3Ypw7lBwHLDjA5lSaeJ2jIwgQMhZBWiVUFWLzhGnmmh+p0h6xLGXeYUH/70spWmuMS2gQL1myGMhWhD/nK9BYWDDnH2x+OsCcMoZXxjmpmQiK3XPUoakms6AnsoyEm+uZsffGF/nzFAmmDIH/j9SoQ4sbjZ/W1LWNlY+/OOkQhLYHI");
+            result.Append("/yrAB7tAllWloA5XiuWAOO4whVvocHgSTKdPsSvcLbCIJGapmDOD0bcDnkVDaYs8k+ZNGavP/6LfmrUHCgWRtOHK1FSlAA5QTg5Sv40NZqkOZh9l0V0C1viwo19/BDang8wdLoAtAouV0kCdiUw4/aWz/MheJLZPR/eh1R0g9m1383xUiOQ8k8MfPjIeXm0X1mPql2pV");
+            result.Append("mewHRTm4caA5AtlsI55DzeXSrNTTHDqkLwNAyRPTON27dtOsSNMfbBk3vzGR8JiHgfU3vcHiA7t7ePPDYoQknsJSPCWZZJecV16uYLquwtbAQrxmLfjq1WDluEmgepCKVYpTsjQZahJlnU3iMQn5GAxRSyZl9++EJQgEGmdTjg/zzp18MeZv1LefN16/c5V1qirTEcME");
+            result.Append("fhAf+AFXELhWZsWD5eFUkvxi71G2K0pC7SyG2sUUH+i6XMYdPL79zJh7W9++VV+/03j9BPwNFzqp6s5uEMsp1dnNfoddsL58SQhjcIedmIqgjm9E1ZRiqUuRgWNBJ1HKdh127ppJwqjUhOgyOR64jYIMV9uKKS7rHu02125wkb60ART67s5dTwvPI0pJKQfo1jMYzJdf");
+            result.Append("nbfAAQ5FTHv8x6VlCCm6ug2OWVx71c+K2vlCVbl4tFr5Si1zvkUi/7YwXZUj8owkxwzq8QDImcS8BTYYJf75OIGO9yWoMYAoJJGYJIEWcRyEaQhHUkI3QLc+aWKYFGnhOYNu0h0mck6rmlYsT+J1hntBp4CPZ8TMyoa+/GTvNhyS1m4CA7vSOsCPVSa+UPuL/4SG+3K3");
+            result.Append("mZZ9TGCCrq+sxnlyLHNYd6crEr7DuGDcMJ6f72U/JcaxggLHTGiA0SyvzYnuSjk4HXJnweRH/e3Lxs+/Aq50syRLKjBo4ZvAT4+GBL0nplM8wiSiESu6Gp6yXEWp4hMh7O8US9NN3yajsVksRQUvLaEagnxh/64md4yAu0A9A16D6TiAgf5ztKxJGfRFbastjvGuP61V");
+            result.Append("gfns/YDNNr1/pu2ZOv60z+FjwavAdLc+mB8XpFT+XOqjnCinP8pklXMf5bIT2Y9UuZCSchPj6XF5fOjy/wP8xlZryuABAA==");
             return result.ToString();
         }
     }
 }
 
 /*<design>
-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
+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
 <design>*/
 
