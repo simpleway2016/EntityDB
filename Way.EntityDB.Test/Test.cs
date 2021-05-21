@@ -60,7 +60,7 @@ namespace Way.EntityDB.Test
         {
             using (var db = new TradeSystem.DBModels.DB.TradeSystemDB("Server=.\\sqlexpress;uid=sa;Password=123456;Database=fllowordersystem22;", DatabaseType.SqlServer))
             {
-                var marketOrder = db.MarketOrder.FirstOrDefault(m => m.Direction == ~TradeSystem.DBModels.Position_DirectionEnum.Buy);
+                var marketOrder = db.MarketOrder.Where(m => m.Direction == ~TradeSystem.DBModels.Position_DirectionEnum.Buy).ToSql();
             }
            
         }
