@@ -57,7 +57,7 @@ namespace Way.EntityDB.Design.Impls.MySql
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseMySql("test");
+            optionsBuilder.UseMySql("test", Microsoft.EntityFrameworkCore.ServerVersion.Parse("5.7.31-mysql"));
             base.OnConfiguring(optionsBuilder);
         }
     }

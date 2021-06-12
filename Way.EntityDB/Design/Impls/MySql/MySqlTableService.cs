@@ -40,80 +40,87 @@ namespace Way.EntityDB.Design.Database.MySql
                 throw new Exception($"不支持字段类型{dbtype}");
             return ColumnType[index];
         }
-        
+
         public void CreateTable(EntityDB.IDatabaseService db, EJ.DBTable table, EJ.DBColumn[] columns, IndexInfo[] indexInfos)
         {
             //db.ExecSqlString("drop table if exists `" + table.Name + "`");
 
-                string sqlstr;
-                sqlstr = @"
+            string sqlstr;
+            sqlstr = @"
 CREATE TABLE `" + table.Name.ToLower() + @"` (
 ";
 
-                for (int i = 0; i < columns.Length; i++)
+            for (int i = 0; i < columns.Length; i++)
+            {
+                var column = columns[i];
+                if (i > 0)
+                    sqlstr += ",\r\n";
+                string sqltype = GetSqlType(column.dbType);
+                if (string.IsNullOrEmpty(column.length) == false)
                 {
-                    var column = columns[i];
-                    if (i > 0)
-                        sqlstr += ",\r\n";
-                    string sqltype = GetSqlType(column.dbType);
-                    if ( string.IsNullOrEmpty( column.length) == false)
-                    {
-                        if (sqltype.Contains("("))
-                            sqltype = sqltype.Substring(0,sqltype.IndexOf("("));
-                        sqltype += "(" + column.length + ")";
-                    }
-                    sqlstr += "`" + column.Name.ToLower() + "` " + sqltype;
-                   
-                    if (column.CanNull == false || column.IsPKID == true || column.IsAutoIncrement == true)
-                        sqlstr += " NOT";
-                    sqlstr += " NULL ";
-                    if (column.IsAutoIncrement == true)
-                    {
-                        sqlstr += "  AUTO_INCREMENT ";
-                    }
+                    if (sqltype.Contains("("))
+                        sqltype = sqltype.Substring(0, sqltype.IndexOf("("));
+                    sqltype += "(" + column.length + ")";
+                }
+                sqlstr += "`" + column.Name.ToLower() + "` " + sqltype;
 
-                    if (!string.IsNullOrEmpty(column.defaultValue))
-                    {
-                        string defaultValue = column.defaultValue.Trim();
-                        sqlstr += " DEFAULT '" + defaultValue.Replace("'","''") + "'";
-                        
-                    }
+                if (column.CanNull == false || column.IsPKID == true || column.IsAutoIncrement == true)
+                    sqlstr += " NOT";
+                sqlstr += " NULL ";
+                if (column.IsAutoIncrement == true)
+                {
+                    sqlstr += "  AUTO_INCREMENT ";
+                }
 
+                if (!string.IsNullOrEmpty(column.defaultValue))
+                {
+                    string defaultValue = column.defaultValue.Trim();
+                    if (column.dbType == "bit")
+                    {
+                        sqlstr += " DEFAULT " + defaultValue;
+                    }
+                    else
+                    {
+                        sqlstr += " DEFAULT '" + defaultValue.Replace("'", "''") + "'";
+                    }
 
                 }
 
-                for (int i = 0; i < columns.Length; i++)
+
+            }
+
+            for (int i = 0; i < columns.Length; i++)
+            {
+                var column = columns[i];
+                if (column.IsPKID == true)
                 {
-                    var column = columns[i];
-                    if (column.IsPKID == true)
-                    {
-                        sqlstr += ",\r\nPRIMARY KEY (`"+ column.Name.ToLower() +"`)";
-                    }
+                    sqlstr += ",\r\nPRIMARY KEY (`" + column.Name.ToLower() + "`)";
                 }
+            }
 
 
-                if (indexInfos != null && indexInfos.Length > 0)
+            if (indexInfos != null && indexInfos.Length > 0)
+            {
+                foreach (var config in indexInfos)
                 {
-                    foreach (var config in indexInfos)
+                    string type = "";
+                    if (config.IsUnique || config.IsClustered)
                     {
-                        string type = "";
-                        if (config.IsUnique || config.IsClustered)
-                        {
-                            type += "UNIQUE ";
-                        }
-                        //if (config.IsClustered)
-                        //    throw new Exception("MySql不支持定义聚集索引");
-                        string keyname = table.Name.ToLower() + "_ej_" + config.ColumnNames.OrderBy(m => m).ToArray().ToSplitString("_").ToLower();
-                        sqlstr += (",\r\n"+type+" KEY `" + keyname + "`(" + config.ColumnNames.OrderBy(m => m).ToArray().ToSplitString(",", "`{0}`").ToLower() + ")");
+                        type += "UNIQUE ";
                     }
+                    //if (config.IsClustered)
+                    //    throw new Exception("MySql不支持定义聚集索引");
+                    string keyname = table.Name.ToLower() + "_ej_" + config.ColumnNames.OrderBy(m => m).ToArray().ToSplitString("_").ToLower();
+                    sqlstr += (",\r\n" + type + " KEY `" + keyname + "`(" + config.ColumnNames.OrderBy(m => m).ToArray().ToSplitString(",", "`{0}`").ToLower() + ")");
                 }
+            }
 
-                sqlstr += ") ENGINE=InnoDB DEFAULT CHARSET=utf8";
+            sqlstr += ") ENGINE=InnoDB DEFAULT CHARSET=utf8";
 
-                db.ExecSqlString(sqlstr);
+            db.ExecSqlString(sqlstr);
 
-               
-            
+
+
         }
 
 
@@ -122,7 +129,7 @@ CREATE TABLE `" + table.Name.ToLower() + @"` (
             tableName = tableName.ToLower();
             database.ExecSqlString(string.Format("DROP TABLE IF EXISTS `{0}`", tableName));
         }
-               
+
 
 
         List<string> checkIfIdxChanged(EntityDB.IDatabaseService database, string tablename, List<IndexInfo> indexInfos)
@@ -138,7 +145,7 @@ CREATE TABLE `" + table.Name.ToLower() + @"` (
             dbname = dbnameMatch.Groups["dname"].Value;
             var db = EntityDB.DBContext.CreateDatabaseService(database.ConnectionString.Replace(dbnameMatch.Value, "database=INFORMATION_SCHEMA"), EntityDB.DatabaseType.MySql);
             {
-                var tableid = db.ExecSqlString("select TABLE_ID from INNODB_SYS_TABLES where Name='" + dbname + "/"+tablename+"'");
+                var tableid = db.ExecSqlString("select TABLE_ID from INNODB_SYS_TABLES where Name='" + dbname + "/" + tablename + "'");
                 using (var INNODB_SYS_INDEXES_table = db.SelectTable("select * from INNODB_SYS_INDEXES where TABLE_ID=" + tableid + " and type<>3"))
                 {
                     foreach (var drow in INNODB_SYS_INDEXES_table.Rows)
@@ -151,7 +158,7 @@ CREATE TABLE `" + table.Name.ToLower() + @"` (
 
                         if (findExistItem == null)
                         {
-                            if(indexName.ToLower() != "GEN_CLUST_INDEX".ToLower())//GEN_CLUST_INDEX好像是表示没有主键的意思
+                            if (indexName.ToLower() != "GEN_CLUST_INDEX".ToLower())//GEN_CLUST_INDEX好像是表示没有主键的意思
                                 needToDels.Add(indexName);
                         }
                         else
@@ -159,7 +166,7 @@ CREATE TABLE `" + table.Name.ToLower() + @"` (
                             indexInfos.Remove(findExistItem);
                         }
                     }
- 
+
                 }
             }
 
@@ -170,12 +177,12 @@ CREATE TABLE `" + table.Name.ToLower() + @"` (
         {
             table = table.ToLower();
             column = column.ToLower();
-            database.ExecSqlString(string.Format("alter table `{0}` drop column `{1}`" , table , column));
+            database.ExecSqlString(string.Format("alter table `{0}` drop column `{1}`", table, column));
         }
         void dropTableIndex(EntityDB.IDatabaseService database, string table, string indexName)
         {
             indexName = indexName.ToLower();
-               table = table.ToLower();
+            table = table.ToLower();
             database.ExecSqlString("ALTER TABLE `" + table + "` DROP INDEX `" + indexName + "`");
         }
         public void ChangeTable(EntityDB.IDatabaseService database, string oldTableName, string newTableName, EJ.DBColumn[] addColumns, EJ.DBColumn[] changed_columns, EJ.DBColumn[] deletedColumns, Func<List<EJ.DBColumn>> getColumnsFunc, IndexInfo[] _indexInfos)
@@ -192,7 +199,7 @@ CREATE TABLE `" + table.Name.ToLower() + @"` (
                 database.ExecSqlString(string.Format("alter table `{0}` rename `{1}`", oldTableName, newTableName));
             }
 
-            var needToDels = checkIfIdxChanged(database, newTableName,indexInfos);
+            var needToDels = checkIfIdxChanged(database, newTableName, indexInfos);
 
             foreach (var column in deletedColumns)
             {
@@ -232,8 +239,8 @@ CREATE TABLE `" + table.Name.ToLower() + @"` (
         void createIndex(EntityDB.IDatabaseService database, string table, IndexInfo indexinfo)
         {
             table = table.ToLower();
-               //alter table table_name add unique key `new_uk_name` (`col1`,`col2`);
-               var columns = indexinfo.ColumnNames.OrderBy(m => m).Select(m=>m.ToLower()).ToArray();
+            //alter table table_name add unique key `new_uk_name` (`col1`,`col2`);
+            var columns = indexinfo.ColumnNames.OrderBy(m => m).Select(m => m.ToLower()).ToArray();
             string columnsStr = "";
             string name = table + "_ej_" + columns.ToSplitString("_");
             for (int i = 0; i < columns.Length; i++)
@@ -249,7 +256,7 @@ CREATE TABLE `" + table.Name.ToLower() + @"` (
             {
                 type += "unique ";
             }
-            database.ExecSqlString(string.Format("alter table `{0}` add {3} key `{1}` ({2})", table, name, columnsStr , type));
+            database.ExecSqlString(string.Format("alter table `{0}` add {3} key `{1}` ({2})", table, name, columnsStr, type));
         }
     }
 }

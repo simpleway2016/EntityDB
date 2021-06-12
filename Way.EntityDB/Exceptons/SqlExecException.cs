@@ -16,5 +16,10 @@ namespace Way.EntityDB.Exceptons
         {
             this.SqlString = sql;
         }
+
+        public override string ToString()
+        {
+            return $"{this.Message}\r\n{this.SqlString}\r\n{this.StackTrace}";
+        }
     }
 }

@@ -813,7 +813,10 @@ namespace Way.EntityDB
         }
         protected override void OnConfiguring(Microsoft.EntityFrameworkCore.DbContextOptionsBuilder optionsBuilder)
         {
-            this.Database.OnConfiguring(optionsBuilder);
+            if (!optionsBuilder.IsConfigured)
+            {
+                this.Database.OnConfiguring(optionsBuilder);
+            }
             // optionsBuilder.UseLazyLoadingProxies()  启用懒加载
         }
 

@@ -26,7 +26,7 @@ namespace Way.EntityDB
         }
         public override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseMySql(this.ConnectionString);
+            optionsBuilder.UseMySql(this.ConnectionString, Microsoft.EntityFrameworkCore.ServerVersion.AutoDetect(this.ConnectionString));
         }
 
         public override void UpdateLock(Type tableType, object pkValue)
@@ -62,9 +62,9 @@ namespace Way.EntityDB
       
         protected override void ThrowSqlException(Type tableType, Exception ex)
         {
-            if (!(ex is MySql.Data.MySqlClient.MySqlException))
+            if (!(ex is Pomelo.Data.MySql.MySqlException))
                 throw ex;
-            if (((MySql.Data.MySqlClient.MySqlException)ex).Number != 1062)
+            if (((Pomelo.Data.MySql.MySqlException)ex).Number != 1062)
                 throw ex;
             throw new RepeatException(ex);
         }

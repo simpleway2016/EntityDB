@@ -58,9 +58,18 @@ namespace Way.EntityDB.Test
         [TestMethod]
         public void test()
         {
-            using (var db = new TradeSystem.DBModels.DB.TradeSystemDB("Server=.\\sqlexpress;uid=sa;Password=123456;Database=fllowordersystem22;", DatabaseType.SqlServer))
+            try
             {
-                var marketOrder = db.MarketOrder.Where(m => m.Direction == ~TradeSystem.DBModels.Position_DirectionEnum.Buy).ToSql();
+                using (var db = new TradeSystem.DBModels.DB.TradeSystemDB("server=localhost;User Id=root;password=;Database=test2", DatabaseType.MySql))
+                {
+                    var marketOrder = db.MarketOrder.Where(m => m.Direction == ~TradeSystem.DBModels.Position_DirectionEnum.Buy).ToSql();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                var str = ex.ToString();
+                throw;
             }
            
         }

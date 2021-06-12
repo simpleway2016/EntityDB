@@ -65,8 +65,15 @@ namespace Way.EntityDB.Design.Impls.MySql.Handles
             string typestr = sqltype;
             if (column.CanNull == false || column.IsPKID == true || column.IsAutoIncrement == true)
                 typestr += " NOT NULL";
-            sql += $"alter table `{tablename}` MODIFY `{column.Name.ToLower()}` {typestr} default '{defaultValue.Replace("'", "''")}'";
 
+            if (column.dbType == "bit")
+            {
+                sql += $"alter table `{tablename}` MODIFY `{column.Name.ToLower()}` {typestr} default {defaultValue}";
+            }
+            else
+            {
+                sql += $"alter table `{tablename}` MODIFY `{column.Name.ToLower()}` {typestr} default '{defaultValue.Replace("'", "''")}'";
+            }
 
             database.ExecSqlString(sql);
 
