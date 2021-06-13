@@ -17,6 +17,8 @@ namespace Way.EntityDB.Design.Database.MySql
                                             "int",
                                             "blob",//image
                                             "text",//text
+                                             "mediumtext",
+                                            "longtext",
                                             "smallint",
                                             "date",//smalldatetime
                                             "real",

@@ -56,18 +56,38 @@ namespace Way.EntityDB.Design.Database.MySql
             }
         }
 
+
+
         public List<EJ.DBColumn> GetCurrentColumns(IDatabaseService db, string tablename)
         {
-            List<EJ.DBColumn> result = new List<EJ.DBColumn>();
             var dbnameMatch = System.Text.RegularExpressions.Regex.Match(db.ConnectionString, @"database=(?<dname>(\w)+)", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
             var dbname = dbnameMatch.Groups["dname"].Value;
+
+            MySqlService mySqlService = (MySqlService)db;
+
+
+            List<EJ.DBColumn> result = new List<EJ.DBColumn>();
+          
             var table = db.SelectTable($"select * from information_schema.COLUMNS where TABLE_SCHEMA='{dbname}' and TABLE_NAME='{tablename}'");
+            //获取主键
+            var pkcolumnName = db.ExecSqlString(@"SELECT
+C.COLUMN_NAME
+FROM
+INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS c
+WHERE
+c.CONSTRAINT_SCHEMA = '" + dbname + @"'
+AND c.CONSTRAINT_NAME = 'PRIMARY'
+AND c.TABLE_NAME = '" + tablename +@"'
+")?.ToString();
+
+
             foreach (var row in table.Rows)
             {
                 EJ.DBColumn column = new EJ.DBColumn();
                 column.Name = row["COLUMN_NAME"].ToSafeString();
                 column.CanNull = row["IS_NULLABLE"].ToSafeString() == "YES";
                 column.dbType = row["DATA_TYPE"].ToSafeString().ToLower();
+                column.caption = row["COLUMN_COMMENT"]?.ToString();
                 int typeindex = -1;
                 for (int i = 0; i < Database.MySql.MySqlTableService.ColumnType.Count; i++)
                 {
@@ -80,6 +100,10 @@ namespace Way.EntityDB.Design.Database.MySql
                 if (typeindex >= 0)
                 {
                     column.dbType = EntityDB.Design.ColumnType.SupportTypes[typeindex];
+                }
+                else if(column.dbType.EndsWith("int"))
+                {
+                    column.dbType = "int";
                 }
                 else
                 {
@@ -103,8 +127,14 @@ namespace Way.EntityDB.Design.Database.MySql
                 }
                 column.defaultValue = row["COLUMN_DEFAULT"].ToSafeString();
                 column.IsAutoIncrement = row["EXTRA"].ToSafeString().Contains("auto_increment");
-                column.IsPKID = row["COLUMN_KEY"].ToSafeString().Contains("PRI");
-                column.length = row["CHARACTER_MAXIMUM_LENGTH"].ToSafeString();
+                if (!string.IsNullOrEmpty(pkcolumnName))
+                {
+                    column.IsPKID = column.Name == pkcolumnName;
+                }
+                if (column.dbType.Contains("char"))
+                {
+                    column.length = row["CHARACTER_MAXIMUM_LENGTH"].ToSafeString();
+                }
                 column.ChangedProperties.Clear();
                 result.Add(column);
             }

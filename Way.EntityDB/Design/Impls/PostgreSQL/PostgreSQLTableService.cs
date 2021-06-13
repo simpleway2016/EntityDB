@@ -17,6 +17,8 @@ namespace Way.EntityDB.Design.Database.PostgreSQL
                                             "integer",
                                             "oid",//image
                                             "text",
+                                             "text",//MediumText
+                                              "text",//longtext
                                             "smallint",
                                             "date",//smalldatetime
                                             "real",

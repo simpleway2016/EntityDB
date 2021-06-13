@@ -11,11 +11,37 @@ namespace Way.EntityDB.Design.Database.SqlServer
     [EntityDB.Attributes.DatabaseTypeAttribute(DatabaseType.SqlServer)]
     class SqlServerTableService : Services.ITableDesignService
     {
+
+        internal static List<string> ColumnType = new List<string>(new string[] {
+                                            "varchar",
+                                            "int",
+                                            "image",
+                                            "text",
+                                            "text",//MediumText
+                                            "text",//longtext
+                                            "smallint",
+                                            "smalldatetime",
+                                            "real",
+                                            "datetime",
+                                             "date",
+                                              "time",
+                                            "float",
+                                            "float",//double
+                                            "bit",
+                                            "decimal",
+                                            "numeric",
+                                            "bigint",
+                                            "varbinary",
+                                            "char",
+                                            "timestamp", });
+
         public static string GetSqlServerType(EJ.DBColumn column)
         {
-            if (column.dbType == "double")
-                return "float";
-            return column.dbType;
+            string dbtype = column.dbType.ToLower();
+            int index = Design.ColumnType.SupportTypes.IndexOf(dbtype);
+            if (index < 0 || ColumnType[index] == null)
+                throw new Exception($"不支持字段类型{dbtype}");
+            return ColumnType[index];
         }
 
         public void CreateTable(EntityDB.IDatabaseService db, EJ.DBTable table, EJ.DBColumn[] columns

@@ -12,6 +12,7 @@ using Way.Lib;
 using Way.Lib.ScriptRemoting;
 using Microsoft.EntityFrameworkCore;
 using System.IO;
+using Way.EntityDB.Exceptons;
 
 namespace Way.EJServer
 {
@@ -1240,11 +1241,19 @@ namespace Way.EJServer
                 }
                 catch (Exception ex)
                 {
+                    while(ex.InnerException != null && !(ex is SqlExecException))
+                    {
+                        ex = ex.InnerException;
+                    }
                     if (invokingDB != null && invokingDB.DBContext != db)
                     {
                         invokingDB.DBContext.RollbackTransaction();
                     }
                     db.RollbackTransaction();
+                    if( ex is SqlExecException o )
+                    {
+                        throw new Exception($"{o.Message}\r\n{o.SqlString}");
+                    }
                     throw ex;
                 }
                 finally

@@ -60,6 +60,18 @@ namespace Way.EntityDB.Test
         {
             try
             {
+                var database = EntityDB.DBContext.CreateDatabaseService("server=localhost;User Id=root;password=;Database=dfd", DatabaseType.MySql);
+                IDatabaseDesignService dbservice = Way.EntityDB.Design.DBHelper.CreateDatabaseDesignService(DatabaseType.MySql);
+                var tables = dbservice.GetCurrentTableNames(database);
+                foreach (var t in tables)
+                {
+                    var columns = dbservice.GetCurrentColumns(database, t);
+                    var c = columns.Where(m => m.IsPKID ==  true).Count();
+                    if(c > 1)
+                    {
+                        var cs = columns.Where(m => m.IsPKID == true).ToArray();
+                    }
+                }
                 using (var db = new TradeSystem.DBModels.DB.TradeSystemDB("server=localhost;User Id=root;password=;Database=test2", DatabaseType.MySql))
                 {
                     var marketOrder = db.MarketOrder.Where(m => m.Direction == ~TradeSystem.DBModels.Position_DirectionEnum.Buy).ToSql();

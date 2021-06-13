@@ -15,6 +15,8 @@ namespace Way.EntityDB.Design
                                             "int",
                                             "image",
                                             "text",
+                                            "mediumtext",
+                                            "longtext",
                                             "smallint",
                                             "smalldatetime",
                                             "real",

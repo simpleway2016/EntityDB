@@ -311,25 +311,17 @@ namespace EJClient.Net
                 parameterJson = "[]";
             }
 
-            System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
-            client.DefaultRequestHeaders.Add("Referer", _Referer);
-            values["m"] = (new InvokeArg
+
+            var responseString = HttpClient.PostQueryString(_ServerUrl, new Dictionary<string, string>() { { "Referer", _Referer } },
+                new Dictionary<string, object>() { { "m", (new InvokeArg
             {
                 ClassFullName = "Way.EJServer.MainController",
                 MethodName = name,
                 ParameterJson = parameterJson,
                 SessionID = SessionID
-            }).ToJsonString();
-            var resultTask = client.PostAsync(_ServerUrl, new FormUrlEncodedContent(values));
-            resultTask.Wait();
-            var result = resultTask.Result;
-            if (result.StatusCode != System.Net.HttpStatusCode.OK)
-            {
-                throw new Exception(result.ReasonPhrase);
-            }
-            var responseStringTask = result.Content.ReadAsStringAsync();
-            responseStringTask.Wait();
-            var responseString = responseStringTask.Result;
+            }).ToJsonString() } }, 8000
+                );
+
             //if (responseString.StartsWith("{") == false)
             //{
                 
