@@ -189,11 +189,13 @@ namespace Way.EntityDB.Design.Database.SqlServer
             }
             return existKeys;
         }
-        public List<string> GetCurrentTableNames(IDatabaseService db)
+        public List<TableInfo> GetCurrentTableNames(IDatabaseService db)
         {
-            List<string> result = new List<string>();
+            List<TableInfo> result = new List<TableInfo>();
             db.ExecuteReader( (reader)=> {
-                result.Add(reader[0].ToSafeString());
+                result.Add(new TableInfo { 
+                    Name = reader[0].ToSafeString()
+                });
                 return true;
             }, "SELECT Name FROM SysObjects Where XType='U' and Name<>'__wayeasyjob' ORDER BY Name");
 

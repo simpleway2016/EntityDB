@@ -231,11 +231,13 @@ namespace Way.EntityDB.Design.Database.Sqlite
             }
             return result;
         }
-        public List<string> GetCurrentTableNames(IDatabaseService db)
+        public List<TableInfo> GetCurrentTableNames(IDatabaseService db)
         {
-            List<string> result = new List<string>();
+            List<TableInfo> result = new List<TableInfo>();
             db.ExecuteReader((reader) => {
-                result.Add(reader[0].ToSafeString());
+                result.Add(new TableInfo { 
+                Name = reader[0].ToSafeString()
+                });
                 return true;
             }, "select name from sqlite_master where type='table' and name<>'__wayeasyjob'  COLLATE NOCASE and name<>'sqlite_sequence' order by name");
 

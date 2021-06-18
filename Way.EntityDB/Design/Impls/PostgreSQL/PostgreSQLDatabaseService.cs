@@ -185,11 +185,13 @@ and pg_constraint.contype='p'");
             }
             return result;
         }
-        public List<string> GetCurrentTableNames(IDatabaseService db)
+        public List<TableInfo> GetCurrentTableNames(IDatabaseService db)
         {
-            List<string> result = new List<string>();
+            List<TableInfo> result = new List<TableInfo>();
             db.ExecuteReader((reader) => {
-                result.Add(reader[0].ToSafeString());
+                result.Add(new TableInfo { 
+                Name = reader[0].ToSafeString()
+                });
                 return true;
             }, "SELECT   tablename   FROM   pg_tables WHERE schemaname='public' and tablename<>'__wayeasyjob'  ORDER  BY  tablename");
 

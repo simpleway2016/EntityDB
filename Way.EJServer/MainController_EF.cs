@@ -1181,7 +1181,7 @@ namespace Way.EJServer
         {
             var dbservice = Way.EntityDB.Design.DBHelper.CreateDatabaseDesignService((Way.EntityDB.DatabaseType)(int)config.dbType);
             var db = Way.EntityDB.DBContext.CreateDatabaseService(config.conStr, (Way.EntityDB.DatabaseType)(int)config.dbType);
-            return dbservice.GetCurrentTableNames(db).ToArray();
+            return dbservice.GetCurrentTableNames(db).Select(m=>m.Name).ToArray();
         }
 
         [RemotingMethod]

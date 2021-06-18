@@ -62,16 +62,22 @@ namespace Way.EntityDB.Test
             {
                 var database = EntityDB.DBContext.CreateDatabaseService("server=localhost;User Id=root;password=;Database=dfd", DatabaseType.MySql);
                 IDatabaseDesignService dbservice = Way.EntityDB.Design.DBHelper.CreateDatabaseDesignService(DatabaseType.MySql);
-                var tables = dbservice.GetCurrentTableNames(database);
+                var tables = dbservice.GetCurrentTableNames(database).OrderBy(m=>m.Name).ToArray();
+
+                StringBuilder output = new StringBuilder();
+
                 foreach (var t in tables)
                 {
-                    var columns = dbservice.GetCurrentColumns(database, t);
-                    var c = columns.Where(m => m.IsPKID ==  true).Count();
-                    if(c > 1)
+                    output.AppendLine($"<div class='divtable' onclick='tableClick(this)'><span class=ts>{t.Name}</span> {t.Comment}</div>");
+                    output.AppendLine($"<div class='divChild' style='display:none;'>");
+                    var columns = dbservice.GetCurrentColumns(database, t.Name);
+                    foreach( var column in columns )
                     {
-                        var cs = columns.Where(m => m.IsPKID == true).ToArray();
+                        output.AppendLine($"<div><span class=cs>{column.Name}</span> {column.caption}</div>");
                     }
+                    output.AppendLine($"</div>");
                 }
+                var html = output.ToString();
                 using (var db = new TradeSystem.DBModels.DB.TradeSystemDB("server=localhost;User Id=root;password=;Database=test2", DatabaseType.MySql))
                 {
                     var marketOrder = db.MarketOrder.Where(m => m.Direction == ~TradeSystem.DBModels.Position_DirectionEnum.Buy).ToSql();

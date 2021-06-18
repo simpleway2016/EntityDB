@@ -12,7 +12,7 @@ namespace Way.EJServer
         {
             get
             {
-                if (LoginUser.Role.GetValueOrDefault().HasFlag(EJ.User_RoleEnum.数据库设计师))
+                if (LoginUser.Role.GetValueOrDefault().HasFlag(EJ.User_RoleEnum.开发人员))
                 {
                     return base.DBTable;
                 }
@@ -47,7 +47,7 @@ namespace Way.EJServer
         {
             get
             {
-                if (LoginUser.Role.GetValueOrDefault().HasFlag(EJ.User_RoleEnum.数据库设计师))
+                if (LoginUser.Role.GetValueOrDefault().HasFlag(EJ.User_RoleEnum.管理员))
                 {
                     return base.Databases;
                 }
@@ -60,62 +60,6 @@ namespace Way.EJServer
                 }
             }
         }
-        public override IQueryable<EJ.TableInModule> TableInModule
-        {
-            get
-            {
-                if (LoginUser.Role.GetValueOrDefault().HasFlag(EJ.User_RoleEnum.数据库设计师))
-                {
-                    return base.TableInModule;
-                }
-                else
-                {
-                    return from m in base.TableInModule
-                           join p in TablePower on m.TableID equals p.TableID
-                           where p.UserID == LoginUser.id
-                           select m;
-                }
-            }
-        }
-
-        public override IQueryable<EJ.InterfaceModule> InterfaceModule
-        {
-            get
-            {
-                if (LoginUser.Role.GetValueOrDefault().HasFlag(EJ.User_RoleEnum.数据库设计师))
-                {
-                    return base.InterfaceModule;
-                }
-                else
-                {
-                    return from m in base.InterfaceModule
-                           join p in InterfaceModulePower on m.id equals p.ModuleID
-                           where p.UserID == LoginUser.id
-                           select m;
-                }
-               
-            }
-        }
-
-        public override IQueryable<EJ.InterfaceInModule> InterfaceInModule
-        {
-            get
-            {
-                if (LoginUser.Role.GetValueOrDefault().HasFlag(EJ.User_RoleEnum.数据库设计师))
-                {
-                    return base.InterfaceInModule;
-                }
-                else
-                {
-                    var mids = this.InterfaceModule.Select(m=>m.id);
-                    return from m in base.InterfaceInModule
-                           where mids.Contains(m.ModuleID)
-                           select m;
-
-                }
-            }
-        }
-
         public IQueryable<EJ.Bug> MyBugList
         {
             get

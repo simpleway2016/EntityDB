@@ -30,7 +30,13 @@ namespace Way.EntityDB.Design.Services
         /// </summary>
         /// <param name="db"></param>
         /// <returns></returns>
-        List<string> GetCurrentTableNames(IDatabaseService db);
+        List<TableInfo> GetCurrentTableNames(IDatabaseService db);
         string GetObjectFormat();
+    }
+
+    public class TableInfo
+    {
+        public string Name { get; set; }
+        public string Comment { get; set; }
     }
 }

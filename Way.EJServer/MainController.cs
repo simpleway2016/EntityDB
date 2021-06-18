@@ -1170,7 +1170,7 @@ namespace Way.EJServer
         {
             var dbservice = Way.EntityDB.Design.DBHelper.CreateDatabaseDesignService((Way.EntityDB.DatabaseType)(int)config.dbType);
             var db = Way.EntityDB.DBContext.CreateDatabaseService(config.conStr, (Way.EntityDB.DatabaseType)(int)config.dbType);
-            return dbservice.GetCurrentTableNames(db).ToArray();
+            return dbservice.GetCurrentTableNames(db).Select(m=>m.Name).ToArray();
         }
 
         [RemotingMethod]
@@ -1187,12 +1187,17 @@ namespace Way.EJServer
                     database.iLock++;
                     db.Update(database);
 
+
                     invokingDB = DBHelper.CreateInvokeDatabase(database);
+                    var designService = DBHelper.CreateDatabaseDesignService((EntityDB.DatabaseType)Enum.Parse(typeof(EntityDB.DatabaseType), database.dbType.ToString()));
+                    var originalTables = designService.GetCurrentTableNames(invokingDB);
                     invokingDB.DBContext.BeginTransaction();
 
                     object lastActionID = null;
                     foreach (var tableinfo in tableinfos)
                     {
+                        bool tableExist = originalTables.Any(m => m.Name == tableinfo.TableName);
+
                         var table = new EJ.DBTable() {
                             Name = tableinfo.TableName,
                             DatabaseID = databaseid,
@@ -1200,8 +1205,12 @@ namespace Way.EJServer
                         if (db.DBTable.Where(m => m.DatabaseID == databaseid && m.Name == table.Name).Any())
                             throw new Exception("数据表名称重复");
 
-                        var action = new CreateTableAction(table, tableinfo.Columns, tableinfo.Indexes);
-                        action.Invoke(invokingDB);
+                        CreateTableAction action = null;
+                        if (!tableExist)
+                        {
+                            action = new CreateTableAction(table, tableinfo.Columns, tableinfo.Indexes);
+                            action.Invoke(invokingDB);
+                        }
 
                         db.Update(table);
                         foreach (EJ.DBColumn column in tableinfo.Columns)
@@ -1220,10 +1229,11 @@ namespace Way.EJServer
                             db.Update(idxIndex);
                         }
 
-
-                        lastActionID = action.Save(db, database.id.GetValueOrDefault());
-                        action.AddLog(db, this.User.id.Value, database.id.Value);
-
+                        if (action != null)
+                        {
+                            lastActionID = action.Save(db, database.id.GetValueOrDefault());
+                            action.AddLog(db, this.User.id.Value, database.id.Value);
+                        }
                     }
                     if (lastActionID != null)
                     {

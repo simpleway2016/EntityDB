@@ -169,15 +169,18 @@ AND c.TABLE_NAME = '" + tablename +@"'
 
             return result;
         }
-        public List<string> GetCurrentTableNames(IDatabaseService db)
+        public List<TableInfo> GetCurrentTableNames(IDatabaseService db)
         {
             var dbnameMatch = System.Text.RegularExpressions.Regex.Match(db.ConnectionString, @"database=(?<dname>(\w)+)", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
             var dbname = dbnameMatch.Groups["dname"].Value;
-            List<string> result = new List<string>();
+            List<TableInfo> result = new List<TableInfo>();
             db.ExecuteReader((reader) => {
-                result.Add(reader[0].ToSafeString());
+                result.Add(new TableInfo { 
+                Name = reader[0].ToSafeString(),
+                Comment = reader[1].ToSafeString()
+                });
                 return true;
-            }, $"SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='{dbname}' and TABLE_NAME<>'__wayeasyjob'  ORDER  BY  TABLE_NAME");
+            }, $"SELECT TABLE_NAME,TABLE_COMMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='{dbname}' and TABLE_NAME<>'__wayeasyjob'  ORDER  BY  TABLE_NAME");
 
             return result;
         }
