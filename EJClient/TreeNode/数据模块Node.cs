@@ -105,6 +105,16 @@ namespace EJClient.TreeNode
         {
             if (_binded)
                 return;
+
+            if (this.Parent is DatabaseItemNode)
+            {
+                DatabaseItemNode databaseItemNode = (DatabaseItemNode)this.Parent;
+                var tabenode = (数据表Node)databaseItemNode.Children.FirstOrDefault(m => m is 数据表Node);
+                if (tabenode != null && tabenode.Children.Count == 1 && tabenode.Children[0].Name == "Loading...")
+                {
+                    tabenode.OnExpandChanged(true);
+                }
+            }
             try
             {
                 var modules = await Helper.Client.InvokeAsync<EJ.DBModule[]>("GetDBModuleList", this.Module.DatabaseID.Value, this.Module.id.Value);
