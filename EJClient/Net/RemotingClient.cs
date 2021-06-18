@@ -290,6 +290,14 @@ namespace EJClient.Net
            
         }
 
+        public async Task<T> InvokeAsync<T>(string name, params object[] methodParams)
+        {
+            T result = await Task.Run<T>(()=> {
+                return InvokeSync<T>(name, methodParams);
+            });
+            return result;
+        }
+
          public T InvokeSync<T>(string name,params object[] methodParams)
         {
             Dictionary<string, string> values = new Dictionary<string, string>();

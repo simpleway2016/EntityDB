@@ -53,6 +53,7 @@ namespace EJClient.TreeNode
                 if (_IsSelected != value)
                 {
                     _IsSelected = value;
+                    OnSelectChanged(value);
                     if (PropertyChanged != null)
                         PropertyChanged(this, new PropertyChangedEventArgs("IsSelected"));
                 }
@@ -70,6 +71,7 @@ namespace EJClient.TreeNode
                 if (_IsExpanded != value)
                 {
                     _IsExpanded = value;
+                    OnExpandChanged(value);
                     if (PropertyChanged != null)
                         PropertyChanged(this, new PropertyChangedEventArgs("IsExpanded"));
                 }
@@ -102,6 +104,14 @@ namespace EJClient.TreeNode
         public TreeNodeBase(TreeNodeBase parent)
         {
             Parent = parent;
+        }
+        public virtual void OnSelectChanged(bool select)
+        {
+
+        }
+        public virtual void OnExpandChanged(bool expanded)
+        {
+
         }
 
         //必须用ObservableCollection，因为只有它可以令tree刷新ui

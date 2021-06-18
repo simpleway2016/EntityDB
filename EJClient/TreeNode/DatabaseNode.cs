@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace EJClient.TreeNode
@@ -42,33 +43,63 @@ namespace EJClient.TreeNode
         {
 
         }
+
+        bool _binded = false;
         public override void ReBindItems()
         {
-            ProjectNode parentNode = this.Parent as ProjectNode;
-            var mydatabases = Helper.Client.InvokeSync<EJ.Databases[]>("GetDatabaseList", parentNode.Project.id);
-            foreach (var dbitem in mydatabases)
+            this.Children.Add(new TreeNodeBase(this)
             {
-                DatabaseItemNode dbnode = this.Children.Where(m => ((DatabaseItemNode)m).Database.id == dbitem.id).FirstOrDefault() as DatabaseItemNode;
-                if (dbnode == null)
+                Name = "Loading..."
+            });
+        }
+
+        public override void OnSelectChanged(bool select)
+        {
+            OnExpandChanged(true);
+        }
+
+        public override async void OnExpandChanged(bool expanded)
+        {
+            if (_binded)
+                return;
+            try
+            {
+                ProjectNode parentNode = this.Parent as ProjectNode;
+                var mydatabases = await Helper.Client.InvokeAsync<EJ.Databases[]>("GetDatabaseList", parentNode.Project.id);
+                this.Children.Clear();
+                _binded = true;
+
+                foreach (var dbitem in mydatabases)
                 {
-                    dbnode = new DatabaseItemNode(this, dbitem);
-                    this.Children.Add(dbnode);
+                    DatabaseItemNode dbnode = this.Children.Where(m => ((DatabaseItemNode)m).Database.id == dbitem.id).FirstOrDefault() as DatabaseItemNode;
+                    if (dbnode == null)
+                    {
+                        dbnode = new DatabaseItemNode(this, dbitem);
+                        this.Children.Add(dbnode);
+                    }
+                    else
+                    {
+                        dbnode.Database = dbitem;
+                    }
                 }
-                else
+
+                for (int i = 0; i < Children.Count; i++)
                 {
-                    dbnode.Database = dbitem;
+                    if (mydatabases.Where(m => m.id == ((DatabaseItemNode)Children[i]).Database.id).Count() == 0)
+                    {
+                        //删除
+                        this.Children.RemoveAt(i);
+                        i--;
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
 
-            for (int i = 0; i < Children.Count; i++)
-            {
-                if (mydatabases.Where(m => m.id == ((DatabaseItemNode)Children[i]).Database.id).Count() == 0)
-                {
-                    //删除
-                    this.Children.RemoveAt(i);
-                    i--;
-                }
-            }
         }
+
+
     }
 }

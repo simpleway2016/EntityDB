@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace EJClient.TreeNode
@@ -42,39 +43,65 @@ namespace EJClient.TreeNode
             DatabaseItemNode = parent;
         }
 
+        bool _binded = false;
         public override void ReBindItems()
         {
-            EJ.DBTable[] tables = Helper.Client.InvokeSync<EJ.DBTable[]>("GetTableList", this.DatabaseItemNode.Database.id.Value);
-            //检查已经删除的
-            for (int i = 0; i < this.Children.Count; i++)
+            this.Children.Add(new TreeNodeBase(this) { 
+                Name = "Loading..."
+            });
+        }
+
+        public override void OnSelectChanged(bool select)
+        {
+            OnExpandChanged(true);
+        }
+
+        public override async void OnExpandChanged(bool expanded)
+        {
+            if (_binded)
+                return;
+            try
             {
-                DBTableNode node = this.Children[i] as DBTableNode;
-                if (node != null)
+                EJ.DBTable[] tables = await Helper.Client.InvokeAsync<EJ.DBTable[]>("GetTableList", this.DatabaseItemNode.Database.id.Value);
+                this.Children.Clear();
+                _binded = true;
+
+                //检查已经删除的
+                for (int i = 0; i < this.Children.Count; i++)
                 {
-                    if (tables.Count(m => m.id == node.Table.id) == 0)
+                    DBTableNode node = this.Children[i] as DBTableNode;
+                    if (node != null)
                     {
-                        //已经删除
-                        this.Children.RemoveAt(i);
-                        i--;
+                        if (tables.Count(m => m.id == node.Table.id) == 0)
+                        {
+                            //已经删除
+                            this.Children.RemoveAt(i);
+                            i--;
+                        }
+                    }
+                }
+                foreach (EJ.DBTable t in tables)
+                {
+                    if (this.Children.Count(m => ((DBTableNode)m).Table.id == t.id) == 0)
+                    {
+                        //有新增的表
+                        DBTableNode node = new DBTableNode(t, this);
+                        this.Children.Add(node);
+                    }
+                    else
+                    {
+                        DBTableNode node = (DBTableNode)this.Children.FirstOrDefault(m => ((DBTableNode)m).Table.id == t.id);
+                        node.Table.Name = t.Name;
+                        node.Table.caption = t.caption;
+                        node.Name = string.Format("{0} {1}", t.Name, t.caption);
                     }
                 }
             }
-            foreach (EJ.DBTable t in tables)
+            catch (Exception ex)
             {
-                if (this.Children.Count(m => ((DBTableNode)m).Table.id == t.id) == 0)
-                {
-                    //有新增的表
-                    DBTableNode node = new DBTableNode(t, this);
-                    this.Children.Add(node);
-                }
-                else
-                {
-                    DBTableNode node = (DBTableNode)this.Children.FirstOrDefault(m => ((DBTableNode)m).Table.id == t.id);
-                    node.Table.Name = t.Name;
-                    node.Table.caption = t.caption;
-                    node.Name = string.Format("{0} {1}", t.Name, t.caption);
-                }
+                MessageBox.Show(ex.Message);
             }
+           
         }
     }
 }

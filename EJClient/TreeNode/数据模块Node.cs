@@ -88,16 +88,42 @@ namespace EJClient.TreeNode
                 Module.DatabaseID = ((DatabaseItemNode)parent).Database.id;
         }
 
+        bool _binded = false;
         public override void ReBindItems()
         {
-            var modules = Helper.Client.InvokeSync<EJ.DBModule[]>("GetDBModuleList", this.Module.DatabaseID.Value, this.Module.id.Value);
-            foreach (var module in modules)
+            this.Children.Add(new TreeNodeBase(this)
             {
-                DBModuleNode node = new DBModuleNode(this, module);
-                this.Children.Add(node);
-                node.ReBindItems();
-            }
+                Name = "Loading..."
+            });
         }
+
+        public override void OnSelectChanged(bool select)
+        {
+            OnExpandChanged(true);
+        }
+        public override async void OnExpandChanged(bool expanded)
+        {
+            if (_binded)
+                return;
+            try
+            {
+                var modules = await Helper.Client.InvokeAsync<EJ.DBModule[]>("GetDBModuleList", this.Module.DatabaseID.Value, this.Module.id.Value);
+                this.Children.Clear();
+                _binded = true;
+                foreach (var module in modules)
+                {
+                    DBModuleNode node = new DBModuleNode(this, module);
+                    this.Children.Add(node);
+                    node.ReBindItems();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+        }
+
 
         internal TreeNode.DBModuleNode FindDBModule(int moduleid)
         {
