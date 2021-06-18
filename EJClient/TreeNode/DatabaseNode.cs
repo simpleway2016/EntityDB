@@ -47,9 +47,15 @@ namespace EJClient.TreeNode
         bool _binded = false;
         public override void ReBindItems()
         {
+            if(_binded)
+            {
+                _binded = false;
+                OnExpandChanged(true);
+                return;
+            }
             this.Children.Add(new TreeNodeBase(this)
             {
-                Name = "Loading..."
+                Name = "Loading...",
             });
         }
 
@@ -66,7 +72,10 @@ namespace EJClient.TreeNode
             {
                 ProjectNode parentNode = this.Parent as ProjectNode;
                 var mydatabases = await Helper.Client.InvokeAsync<EJ.Databases[]>("GetDatabaseList", parentNode.Project.id);
-                this.Children.Clear();
+                if (this.Children.Count == 1 && this.Children[0].Name == "Loading...")
+                {
+                    this.Children.Clear();
+                }
                 _binded = true;
 
                 foreach (var dbitem in mydatabases)
