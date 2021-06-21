@@ -105,6 +105,10 @@ AND c.TABLE_NAME = '" + tablename +@"'
                 {
                     column.dbType = "int";
                 }
+                else if (column.dbType == "enum" || column.dbType == "set")
+                {
+                    column.dbType = "varchar";
+                }
                 else
                 {
                     for (int i = 0; i < Way.EntityDB.Design.ColumnType.SupportTypes.Count; i++)
