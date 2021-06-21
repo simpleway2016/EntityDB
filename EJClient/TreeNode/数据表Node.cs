@@ -46,9 +46,25 @@ namespace EJClient.TreeNode
         bool _binded = false;
         public override void ReBindItems()
         {
-            this.Children.Add(new TreeNodeBase(this) { 
-                Name = "Loading..."
-            });
+            if (this.Children.Count == 0)
+            {
+                this.Children.Add(new TreeNodeBase(this)
+                {
+                    Name = "Loading..."
+                });
+            }
+            else
+            {
+                _binded = false;
+                this.Children.Clear();
+                this.Children.Add(new TreeNodeBase(this)
+                {
+                    Name = "Loading..."
+                });
+                this.OnExpandChanged(true);
+            }
+
+           
         }
 
         public override void OnSelectChanged(bool select)
