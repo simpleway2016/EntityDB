@@ -133,6 +133,7 @@ namespace Way.EJServer
             {
                 classCode.AddString($"System.Linq.IQueryable<{t.Name}> _{t.Name};");
                 PropertyCodeItem proCodeItem = new PropertyCodeItem(t.Name);
+                proCodeItem.Comment = t.caption;
                 classCode.AddItem(proCodeItem);
                 proCodeItem.Modification = "public virtual";
                 proCodeItem.PropertyType = $"System.Linq.IQueryable<{t.Name}>";
@@ -373,6 +374,8 @@ namespace Way.EJServer
                 case "varbinary":
                     return "Byte[]";
                 case "varchar":
+                    return "String";
+                case "longtext":
                     return "String";
                 default:
                     return type;
