@@ -698,6 +698,11 @@ namespace Way.EJServer
                 }
                
             }
+
+            CodeItem setValueFunc = new CodeItem($" public virtual void SetValue(System.Linq.Expressions.Expression<Func<{table.Name}, bool>> exp)");
+            setValueFunc.Comment = "<?xml version=\"1.0\"?><root><summary>把字段的更新，设置为一个指定的表达式值</summary><param name=\"exp\">指定的更新表达式，如 m=&gt;m.age == m.age + 1 &amp;&amp; name == name + \"aa\"，相当于sql语句的 age=age+1,name=name + 'aa'</param></root>";
+            classCode.AddItem(setValueFunc);
+            setValueFunc.AddString($"base.SetValue<{table.Name}>(exp);");
         }
         public static string GetTypeString(string type)
         {

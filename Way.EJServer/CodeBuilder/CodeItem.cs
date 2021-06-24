@@ -74,18 +74,37 @@ namespace Way.EJServer
             if(!string.IsNullOrEmpty(this.Comment))
             {
                 XmlDocument xmldoc = new XmlDocument();
-                xmldoc.LoadXml("<?xml version=\"1.0\"?><summary/>");
-                xmldoc.DocumentElement.InnerText = this.Comment;
-                var xml = xmldoc.DocumentElement.OuterXml;
-                xml = xml.Replace("<summary>", "");
-                xml = xml.Replace("</summary>", "");
+                if (this.Comment.StartsWith("<?xml "))
+                {
+                    xmldoc.LoadXml(this.Comment);
+                }
+                else
+                {
+                    xmldoc.LoadXml("<?xml version=\"1.0\"?><root><summary/></root>");
+                    xmldoc.DocumentElement.ChildNodes[0].InnerText = this.Comment;
+                }
+                foreach( XmlElement childnode in xmldoc.DocumentElement.ChildNodes)
+                {
+                    var text = childnode.InnerText;
+                    if(text.Contains("\n"))
+                    {
+                        string nameStr = childnode.Name;
+                        foreach( XmlAttribute attr in childnode.Attributes )
+                        {
+                            nameStr += $" {attr.Name}=\"{attr.Value}\"";
+                        }
+                        AppendIndentLine(buffer, $"/// <{nameStr}>");
+                        var arr = text.Split('\n').Select(m => $"/// {m.Trim()}").ToArray();
+                        foreach (var str in arr)
+                            AppendIndentLine(buffer, str);
 
-                AppendIndentLine(buffer, "/// <summary>");
-                var arr = xml.Split('\n').Select(m => $"/// {m.Trim()}").ToArray();
-                foreach (var str in arr)
-                    AppendIndentLine(buffer, str);
-
-                AppendIndentLine(buffer, "/// </summary>");
+                        AppendIndentLine(buffer, $"/// </{childnode.Name}>");
+                    }
+                    else
+                    {
+                        AppendIndentLine(buffer, $"/// {childnode.OuterXml.Replace("\n","").Replace("\r","")}");
+                    }
+                }
             }
             if(this.Attributes.Count > 0)
             {
