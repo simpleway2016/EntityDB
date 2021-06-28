@@ -198,7 +198,14 @@ namespace Way.EntityDB.Design.Impls.MySql.Handles
             if (!string.IsNullOrEmpty(column.defaultValue))
             {
                 string defaultValue = column.defaultValue.Trim();
-                sql += " default '" + defaultValue.Replace("'", "''") + "'";
+                if (column.dbType == "bit")
+                {
+                    sql += " default " + defaultValue;
+                }
+                else
+                {
+                    sql += " default '" + defaultValue.Replace("'", "''") + "'";
+                }
 
             }
             database.ExecSqlString(sql);

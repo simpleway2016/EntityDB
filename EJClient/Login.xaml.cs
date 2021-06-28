@@ -67,8 +67,8 @@ namespace EJClient
                 string url = txtAddress.Text;
                 while (url.EndsWith("/"))
                     url = url.Substring(0, url.Length - 1);
-                if (url.StartsWith("https://") == false)
-                    throw new Exception("url must start with https://");
+                //if (url.StartsWith("https://") == false)
+                //    throw new Exception("url must start with https://");
                 Helper.Client = new Net.RemotingClient(url);
 
                 this.Cursor = Cursors.Wait;
