@@ -547,6 +547,9 @@ namespace Way.EntityDB
                 if (method.Name != "Select" || method.IsGenericMethod == false)
                     continue;
                 System.Reflection.MethodInfo mmm = method.MakeGenericMethod(dataType, pinfo.PropertyType);
+                if (mmm.GetParameters().Length != 2)
+                    continue;
+
                 return mmm.Invoke(null, new object[] { linqQuery, expression });
 
             }
@@ -579,6 +582,10 @@ namespace Way.EntityDB
                 if (method.Name != "FirstOrDefault" || method.IsGenericMethod == false)
                     continue;
                 System.Reflection.MethodInfo mmm = method.MakeGenericMethod(dataType);
+
+                var ps = mmm.GetParameters();
+                if (ps.Length != 1)
+                    continue;
                 return mmm.Invoke(null, new object[] { linqQuery });
 
             }
@@ -621,6 +628,9 @@ namespace Way.EntityDB
                     if (method.Name != methodName || method.IsGenericMethod == false)
                         continue;
                     System.Reflection.MethodInfo mmm = method.MakeGenericMethod(dataType, pinfo.PropertyType);
+                    if (mmm.GetParameters().Length != 2)
+                        continue;
+
                     linqQuery = mmm.Invoke(null, new object[] { linqQuery, expression });
                     break;
                 }
@@ -655,6 +665,9 @@ namespace Way.EntityDB
                     if (method.Name != methodName || method.IsGenericMethod == false)
                         continue;
                     System.Reflection.MethodInfo mmm = method.MakeGenericMethod(dataType, pinfo.PropertyType);
+                    if (mmm.GetParameters().Length != 2)
+                        continue;
+
                     linqQuery = mmm.Invoke(null, new object[] { linqQuery, expression });
                     break;
                 }
