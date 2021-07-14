@@ -60,12 +60,10 @@ namespace Way.EntityDB.Test
         {
             try
             {
-
-                using (var db = new Dfd.Common.DBModels.DB.laywer("server=192.168.1.57;User Id=root;password=current456;Database=laywer;", DatabaseType.MySql))
+                using (var db = new TradeSystem.DBModels.DB.TradeSystemDB("data source=./test.dat", DatabaseType.Sqlite))
                 {
-                    db.BeginTransaction();
-                    var casepay = db.fa_case_pay.FirstOrDefault(m => m.order_id == "BA202107080749427220135490804");
-                    var p = db.UpdateLockFirstOrDefault(db.fa_pay_back.Where(m=> m.fa_case_pay_id == casepay.id && m.status == Dfd.Common.DBModels.fa_pay_back_statusEnum.已退款成功));
+                    //sqlite 目前不支持 ilike
+                    var data = db.Position.FirstOrDefault(m =>EF.Functions.Like(m.Symbol , "abc"));
                 }
 
             }
