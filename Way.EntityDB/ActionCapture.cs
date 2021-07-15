@@ -14,11 +14,11 @@ namespace Way.EntityDB
         }
         void BeforeDelete(object database, DatabaseModifyEventArg e);
         void BeforeInsert(object database, DatabaseModifyEventArg e);
-        void BeforeUpdate(object database, DatabaseModifyEventArg e);
+        void BeforeUpdate(object database, DatabaseUpdateArg e);
 
         void AfterDelete(object database, DatabaseModifyEventArg e);
         void AfterInsert(object database, DatabaseModifyEventArg e);
-        void AfterUpdate(object database, DatabaseModifyEventArg e);
+        void AfterUpdate(object database, DatabaseUpdateArg e);
     }
     public abstract class ActionCapture<T> : IActionCapture
     {
@@ -38,11 +38,11 @@ namespace Way.EntityDB
         }
         public virtual void BeforeDelete(object database, DatabaseModifyEventArg e) { }
         public virtual void BeforeInsert(object database, DatabaseModifyEventArg e) { }
-        public virtual void BeforeUpdate(object database, DatabaseModifyEventArg e) { }
+        public virtual void BeforeUpdate(object database, DatabaseUpdateArg e) { }
 
         public virtual void AfterDelete(object database, DatabaseModifyEventArg e) { }
         public virtual void AfterInsert(object database, DatabaseModifyEventArg e) { }
-        public virtual void AfterUpdate(object database, DatabaseModifyEventArg e) { }
+        public virtual void AfterUpdate(object database, DatabaseUpdateArg e) { }
     }
 
 }

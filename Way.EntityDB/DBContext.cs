@@ -43,7 +43,10 @@ namespace Way.EntityDB
             get;
             internal set;
         }
-        public object Parameters
+    }
+    public class DatabaseUpdateArg : DatabaseModifyEventArg
+    {
+        public object Condition
         {
             get;
             internal set;
@@ -55,12 +58,13 @@ namespace Way.EntityDB
 
         #region 事件
         public delegate void DatabaseEventHandler(object sender, DatabaseModifyEventArg e);
+        public delegate void DatabaseUpdateEventHandler(object sender, DatabaseUpdateArg e);
         public static event DatabaseEventHandler BeforeDelete;
         public static event DatabaseEventHandler BeforeInsert;
-        public static event DatabaseEventHandler BeforeUpdate;
+        public static event DatabaseUpdateEventHandler BeforeUpdate;
         public static event DatabaseEventHandler AfterDelete;
         public static event DatabaseEventHandler AfterInsert;
-        public static event DatabaseEventHandler AfterUpdate;
+        public static event DatabaseUpdateEventHandler AfterUpdate;
 
         public event EventHandler AfterCommitTransaction;
         public event EventHandler AfterRollbackTransaction;
@@ -153,7 +157,7 @@ namespace Way.EntityDB
         }
 
         #region 关联事件
-        static void Database_AfterUpdate(object sender, DatabaseModifyEventArg e)
+        static void Database_AfterUpdate(object sender, DatabaseUpdateArg e)
         {
             if (e.DataItem != null)
             {
@@ -198,7 +202,7 @@ namespace Way.EntityDB
             }
         }
 
-        static void Database_BeforeUpdate(object sender, DatabaseModifyEventArg e)
+        static void Database_BeforeUpdate(object sender, DatabaseUpdateArg e)
         {
             if (e.DataItem != null)
             {
@@ -856,9 +860,10 @@ namespace Way.EntityDB
 
             if (BeforeUpdate != null)
             {
-                BeforeUpdate(this, new DatabaseModifyEventArg()
+                BeforeUpdate(this, new DatabaseUpdateArg()
                 {
                     DataItem = dataitem,
+                    Condition = condition
                 });
             }
 
@@ -874,9 +879,10 @@ namespace Way.EntityDB
                 var ret = this.Database.Update(dataitem, condition);
                 if (AfterUpdate != null)
                 {
-                    AfterUpdate(this, new DatabaseModifyEventArg()
+                    AfterUpdate(this, new DatabaseUpdateArg()
                     {
                         DataItem = dataitem,
+                        Condition = condition
                     });
                 }
                 dataitem.UpdateExpression = null;
