@@ -88,7 +88,15 @@ namespace Way.EntityDB.Design.Impls.MySql.Handles
                 database.ExecSqlString("update `" + tablename + "` set `" + column.Name.ToLower() + "`='" + defaultValue.Replace("'", "''") + "' where `" + column.Name.ToLower() + "` is null");
             }
             string sqltype = MySqlTableService.GetSqlType(column.dbType);
-            string sql = "alter table `" + tablename + "` MODIFY `" + column.Name.ToLower() + "` " + sqltype;
+            if (column.length.IsNullOrEmpty() == false)
+            {
+                if (sqltype.Contains("("))
+                    sqltype = sqltype.Substring(0, sqltype.IndexOf("("));
+                sqltype += "(" + column.length + ")";
+            }
+
+            string sql = "alter table `" + tablename + "` MODIFY `" + column.Name.ToLower() + "` " + sqltype;            
+
             if (column.CanNull == false || column.IsPKID == true || column.IsAutoIncrement == true)
                 sql += " NOT";
             sql += " NULL ";

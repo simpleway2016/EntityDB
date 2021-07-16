@@ -60,10 +60,10 @@ namespace Way.EntityDB.Test
         {
             try
             {
-                using (var db = new TradeSystem.DBModels.DB.TradeSystemDB("data source=./test.dat", DatabaseType.Sqlite))
+                using (var db = new Dfd.Common.DBModels.DB.laywer("server=localhost;User Id=root;password=;Database=dfd;", DatabaseType.MySql))
                 {
                     //sqlite 目前不支持 ilike
-                    var data = db.Position.FirstOrDefault(m =>EF.Functions.Like(m.Symbol , "abc"));
+                   
                 }
 
             }
