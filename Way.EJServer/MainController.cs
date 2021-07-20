@@ -983,12 +983,25 @@ namespace Way.EJServer
                 }
                 catch (Exception ex)
                 {
+                    while(ex.InnerException != null)
+                    {
+                        ex = ex.InnerException;
+                    }
+                   
                     if (invokingDB != null && invokingDB.DBContext != db)
                     {
                         invokingDB.DBContext.RollbackTransaction();
                     }
                     db.RollbackTransaction();
-                    throw ex;
+
+                    if (ex is SqlExecException)
+                    {
+                        throw new Exception(ex.ToString());
+                    }
+                    else
+                    {
+                        throw ex;
+                    }
                 }
                 finally
                 {
