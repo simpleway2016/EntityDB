@@ -60,7 +60,7 @@ namespace Way.EntityDB.Test
         {
             try
             {
-                using (var db = new Dfd.Common.DBModels.DB.laywer("server=localhost;User Id=root;password=;Database=dfd;", DatabaseType.MySql))
+                using (var db = new Dfd.Common.DBModels.DB.laywer("server=39.102.60.221;User Id=dong1tmp;password=tWqNYyGEdrZFOioQ;Database=laywer;", DatabaseType.MySql))
                 {
                     //sqlite 目前不支持 ilike
                    
