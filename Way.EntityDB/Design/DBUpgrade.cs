@@ -213,10 +213,9 @@ namespace Way.EntityDB.Design
                                     return allcolumns;
                                 };
                             }
-                            else if(actionItem is EntityDB.Design.Actions.CreateTableAction)
+                            else if(actionItem is EntityDB.Design.Actions.CreateTableAction createAction)
                             {
                                 //往下查找表的变更
-                                var createAction = (EntityDB.Design.Actions.CreateTableAction)actionItem;
                                 var curTableName = createAction.Table.Name;
 
                                 for(int j = i + 1; j < query.Count; j ++)
@@ -228,6 +227,7 @@ namespace Way.EntityDB.Design
                                         if(changeAction.OldTableName == curTableName)
                                         {
                                             curTableName = changeAction.NewTableName;
+                                            createAction.Table.Name = curTableName;
                                             createAction.Columns = (from m in createAction.Columns
                                                                     where changeAction.deletedColumns.Any(n => n.id == m.id) == false
                                                                     && changeAction.changedColumns.Any(n => n.id == m.id) == false

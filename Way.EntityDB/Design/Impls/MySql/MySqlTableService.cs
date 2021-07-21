@@ -148,27 +148,30 @@ CREATE TABLE `" + table.Name.ToLower() + @"` (
             var db = EntityDB.DBContext.CreateDatabaseService(database.ConnectionString.Replace(dbnameMatch.Value, "database=INFORMATION_SCHEMA"), EntityDB.DatabaseType.MySql);
             {
                 var tableid = db.ExecSqlString("select TABLE_ID from INNODB_SYS_TABLES where Name='" + dbname + "/" + tablename + "'");
-                using (var INNODB_SYS_INDEXES_table = db.SelectTable("select * from INNODB_SYS_INDEXES where TABLE_ID=" + tableid + " and type<>3"))
+                if (tableid != null)
                 {
-                    foreach (var drow in INNODB_SYS_INDEXES_table.Rows)
+                    using (var INNODB_SYS_INDEXES_table = db.SelectTable("select * from INNODB_SYS_INDEXES where TABLE_ID=" + tableid + " and type<>3"))
                     {
-                        string indexName = drow["NAME"].ToString().ToLower();
-                        bool isUnique = Convert.ToInt32(drow["TYPE"]) == 2;
-
-                        var findExistItem = indexInfos.FirstOrDefault(m => tablename.ToLower() + "_ej_" + m.ColumnNames.OrderBy(p => p).ToArray().ToSplitString("_").ToLower() == indexName
-                            && m.IsUnique == isUnique);
-
-                        if (findExistItem == null)
+                        foreach (var drow in INNODB_SYS_INDEXES_table.Rows)
                         {
-                            if (indexName.ToLower() != "GEN_CLUST_INDEX".ToLower())//GEN_CLUST_INDEX好像是表示没有主键的意思
-                                needToDels.Add(indexName);
+                            string indexName = drow["NAME"].ToString().ToLower();
+                            bool isUnique = Convert.ToInt32(drow["TYPE"]) == 2;
+
+                            var findExistItem = indexInfos.FirstOrDefault(m => tablename.ToLower() + "_ej_" + m.ColumnNames.OrderBy(p => p).ToArray().ToSplitString("_").ToLower() == indexName
+                                && m.IsUnique == isUnique);
+
+                            if (findExistItem == null)
+                            {
+                                if (indexName.ToLower() != "GEN_CLUST_INDEX".ToLower())//GEN_CLUST_INDEX好像是表示没有主键的意思
+                                    needToDels.Add(indexName);
+                            }
+                            else
+                            {
+                                indexInfos.Remove(findExistItem);
+                            }
                         }
-                        else
-                        {
-                            indexInfos.Remove(findExistItem);
-                        }
+
                     }
-
                 }
             }
 
