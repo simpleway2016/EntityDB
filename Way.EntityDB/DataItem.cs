@@ -309,7 +309,13 @@ namespace Way.EntityDB
         }
 
       
-        internal virtual List<FieldValue> GetFieldValues(bool isInsert)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="isInsert"></param>
+        /// <param name="insertAllField">是否insert所有字段，包括自增长字段</param>
+        /// <returns></returns>
+        internal virtual List<FieldValue> GetFieldValues(bool isInsert,bool insertAllField)
         {
             List<FieldValue> fields = new List<FieldValue>();
             var tableSchema = SchemaManager.GetSchemaTable(this.GetType());
@@ -319,7 +325,7 @@ namespace Way.EntityDB
 
                 foreach (var column in tableSchema.Columns)
                 {
-                    if (column.IsDatabaseGenerated)
+                    if (insertAllField == false && column.IsDatabaseGenerated)
                         continue;
                     object value = column.PropertyInfo.GetValue(this);
                     if (value == null)
@@ -484,7 +490,7 @@ namespace Way.EntityDB
             Type myType = this.GetType();
             TypeInfo myTypeInfo = myType.GetTypeInfo();
             var newObj = (IDataItem)Activator.CreateInstance(myType);
-            var values = this.GetFieldValues(true);
+            var values = this.GetFieldValues(true,false);
             foreach (var field in values)
             {
                 newObj.SetValue(field.FieldName, field.Value);

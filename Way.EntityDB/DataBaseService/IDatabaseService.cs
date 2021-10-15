@@ -27,7 +27,7 @@ namespace Way.EntityDB
         //System.Data.Common.DbConnection CreateConnection(string connectString);
         System.Data.Common.DbCommand CreateCommand(string sql, params object[] parames);
         string BuildWhereString(Expression exp, System.Data.Common.DbCommand cmd);
-        void Insert(DataItem dataitem);
+        void Insert(DataItem dataitem,bool insertAllFields);
         int Update<T>(T dataitem,Expression<Func<T,bool>> condition) where T :DataItem;
 
         void Delete(DataItem dataitem);

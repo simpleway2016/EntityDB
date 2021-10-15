@@ -86,7 +86,7 @@ namespace Way.EntityDB
             }
         }
 
-        internal override List<FieldValue> GetFieldValues(bool isInsert)
+        internal override List<FieldValue> GetFieldValues(bool isInsert,bool insertAllFields)
         {
             return _fields;
         }

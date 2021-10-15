@@ -905,12 +905,22 @@ namespace Way.EntityDB
         /// <param name="dataitem"></param>
         public virtual void Insert(DataItem dataitem)
         {
+            this.Insert(dataitem, false);
+        }
+
+        /// <summary>
+        /// 添加对象数据到数据库
+        /// </summary>
+        /// <param name="dataitem"></param>
+        /// <param name="insertAllFields">是否连自增长字段，也放到insert语句里</param>
+        public virtual void Insert(DataItem dataitem,bool insertAllFields)
+        {
             if (BeforeInsert != null)
             {
                 BeforeInsert(this, new DatabaseModifyEventArg()
-                    {
-                        DataItem = dataitem,
-                    });
+                {
+                    DataItem = dataitem,
+                });
             }
 
             bool needCloseConnection = false;
@@ -922,7 +932,7 @@ namespace Way.EntityDB
 
             try
             {
-                this.Database.Insert(dataitem);
+                this.Database.Insert(dataitem, insertAllFields);
                 if (AfterInsert != null)
                 {
                     AfterInsert(this, new DatabaseModifyEventArg()
@@ -941,6 +951,7 @@ namespace Way.EntityDB
                     this.Database.Connection.Close();
             }
         }
+
         /// <summary>
         /// 在数据库删除此对象数据
         /// </summary>

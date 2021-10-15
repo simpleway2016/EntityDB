@@ -130,7 +130,7 @@ namespace Way.EntityDB
             throw new RepeatException(ex);
         }
 
-        public virtual void Insert(DataItem dataitem)
+        public virtual void Insert(DataItem dataitem, bool insertAllFields)
         {
             bool needToClose = false;
             if (this.Connection.State != System.Data.ConnectionState.Open)
@@ -146,7 +146,7 @@ namespace Way.EntityDB
                 pkid = tableSchema.KeyColumn.PropertyName;
             }
            
-            var fieldValues = dataitem.GetFieldValues(true);
+            var fieldValues = dataitem.GetFieldValues(true,insertAllFields);
             if (fieldValues.Count == 0)
                 return;
 
@@ -489,7 +489,7 @@ namespace Way.EntityDB
             object pkvalue = dataitem.PKValue;
             if (pkvalue == null && condition == null && pkid != null )
             {
-                Insert(dataitem);
+                Insert(dataitem,false);
                 return 1;
             }
 
@@ -519,7 +519,7 @@ namespace Way.EntityDB
                 using (var command = CreateCommand(null))
                 {
 
-                    var fieldValues = dataitem.GetFieldValues(false);
+                    var fieldValues = dataitem.GetFieldValues(false,false);
                     if (fieldValues.Count == 0 && updateExpression == null)
                         return 0;
 
