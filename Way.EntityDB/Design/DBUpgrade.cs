@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.IO.Compression;
+using EJ;
 
 namespace Way.EntityDB.Design
 {
@@ -100,6 +101,78 @@ namespace Way.EntityDB.Design
             return list;
         }
 
+        static void ResetColumnId(List<WayDataRow> query, string tablename,int startRowIndex)
+        {
+            var assembly = typeof(Way.EntityDB.Design.Actions.CreateTableAction).GetTypeInfo().Assembly;
+            string tblName = tablename;
+            //记录最新的列名，对应的column对象
+            Dictionary<string, DBColumn> columniDDict = new Dictionary<string, DBColumn>();
+
+            for (int i = startRowIndex; i < query.Count; i++)
+            {
+                var datarow = query[i];
+                var actionItem = dataRowToAction(assembly, datarow);
+
+                if (actionItem is EntityDB.Design.Actions.ChangeTableAction changeAction)
+                {
+                    if(changeAction.OldTableName == tblName)
+                    {
+                        tblName = changeAction.NewTableName;
+                    }
+                    else
+                    {
+                        continue;
+                    }
+
+                    foreach (var column in changeAction.deletedColumns)
+                    {
+                        var originalColumn = columniDDict[column.Name];
+                        column.m_notSendPropertyChanged = true;
+                        column.id = originalColumn.id;
+                        column.m_notSendPropertyChanged = false;
+                        columniDDict.Remove(column.Name);
+                    }
+
+                    foreach (var column in changeAction.changedColumns)
+                    {
+                        var oldname = column.Name;
+                        if (column.BackupChangedProperties.Any(m => m.Key == "Name"))
+                            oldname = column.BackupChangedProperties["Name"].OriginalValue.ToString();
+
+                        var originalColumn = columniDDict[oldname];
+                        column.m_notSendPropertyChanged = true;
+                        column.id = originalColumn.id;
+                        column.m_notSendPropertyChanged = false;
+
+                        columniDDict.Remove(oldname);
+                        columniDDict[column.Name] = column;
+                    }
+
+                    foreach (var column in changeAction.newColumns)
+                    {
+                        columniDDict[column.Name] = column;
+                    }
+                }
+                else if (actionItem is EntityDB.Design.Actions.CreateTableAction createAction)
+                {
+                    if (createAction.Table.Name == tblName)
+                    {
+                        foreach (var column in createAction.Columns)
+                        {
+                            columniDDict[column.Name] = column;
+                        }
+                    }
+                }
+                else if (actionItem is EntityDB.Design.Actions.DeleteTableAction delTblAction)
+                {
+                    if (delTblAction.TableName == tblName)
+                        return;
+                }
+
+                datarow["content"] = actionItem.ToJsonString();
+            }
+        }
+
         public static void Upgrade(EntityDB.DBContext dbContext, string designData)
         {
             if (designData.IsNullOrEmpty())
@@ -140,8 +213,22 @@ namespace Way.EntityDB.Design
 
                     if (query.Count > 0)
                     {
-                        int? lastid = Convert.ToInt32(query.Last()["id"]);
+                        var allquery = dtable.Rows.OrderBy(m => (long)m["id"]).ToList();
                         var assembly = typeof(Way.EntityDB.Design.Actions.CreateTableAction).GetTypeInfo().Assembly;
+                        //因为通过cs导入结构后，column的id发生变化，所以需要重新统一一下column的id
+                        for (int i = 0; i < allquery.Count; i++)
+                        {
+                            var datarow = allquery[i];
+                            currentRowId = Convert.ToInt32(datarow["id"]);
+                            var actionItem = dataRowToAction(assembly, datarow);
+
+                            if (actionItem is EntityDB.Design.Actions.CreateTableAction createAction)
+                            {
+                                ResetColumnId(allquery, createAction.Table.Name, i);
+                            }
+                        }
+
+                        int? lastid = Convert.ToInt32(query.Last()["id"]);                       
                         db.DBContext.BeginTransaction();
                         for(int i = 0; i < query.Count; i ++)
                         {
