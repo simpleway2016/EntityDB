@@ -212,7 +212,7 @@ namespace Way.EntityDB.Test
                     dataitem.SetValue("c1", "C1");
                     dataitem.SetValue("c2", "C2");
                     dataitem.SetValue("c3", 3);
-                    db.Insert(dataitem);
+                    db.Insert(dataitem , false);
                     if (dataitem.GetValue("id") == null)
                         throw new Exception("测试自增长id失败");
                     db.ExecSqlString("delete from test");
