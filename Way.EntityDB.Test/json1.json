@@ -1,0 +1,3890 @@
+[
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 1
+      },
+      {
+        "Name": "type",
+        "Value": "CreateTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "Table": {
+            "id": 1,
+            "caption": "用户信息",
+            "Name": "UserInfo",
+            "DatabaseID": 1,
+            "iLock": 0
+          },
+          "Columns": [
+            {
+              "id": 1,
+              "caption": null,
+              "Name": "id",
+              "IsAutoIncrement": true,
+              "CanNull": false,
+              "dbType": "int",
+              "Type": null,
+              "EnumDefine": null,
+              "length": null,
+              "defaultValue": null,
+              "TableID": 1,
+              "IsPKID": true,
+              "orderid": 0,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 2,
+              "caption": "注册唯一认证码",
+              "Name": "RegGuid",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "varchar",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "50",
+              "defaultValue": null,
+              "TableID": 1,
+              "IsPKID": false,
+              "orderid": 1,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 3,
+              "caption": null,
+              "Name": "UserName",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "varchar",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "50",
+              "defaultValue": null,
+              "TableID": 1,
+              "IsPKID": false,
+              "orderid": 2,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 4,
+              "caption": null,
+              "Name": "Password",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "varchar",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "100",
+              "defaultValue": null,
+              "TableID": 1,
+              "IsPKID": false,
+              "orderid": 3,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 5,
+              "caption": "手机号",
+              "Name": "PhoneNumber",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "varchar",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "50",
+              "defaultValue": null,
+              "TableID": 1,
+              "IsPKID": false,
+              "orderid": 4,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 6,
+              "caption": null,
+              "Name": "Email",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "varchar",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "50",
+              "defaultValue": null,
+              "TableID": 1,
+              "IsPKID": false,
+              "orderid": 5,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 7,
+              "caption": "平台",
+              "Name": "Platform",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "varchar",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "50",
+              "defaultValue": null,
+              "TableID": 1,
+              "IsPKID": false,
+              "orderid": 6,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 2
+      },
+      {
+        "Name": "type",
+        "Value": "ChangeTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "OldTableName": "UserInfo",
+          "NewTableName": "UserInfo",
+          "newColumns": [
+            {
+              "id": 8,
+              "caption": "是否已经支付给Jack",
+              "Name": "IsPay",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "bit",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": "0",
+              "TableID": 1,
+              "IsPKID": false,
+              "orderid": 7,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "changedColumns": [],
+          "deletedColumns": [],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 3
+      },
+      {
+        "Name": "type",
+        "Value": "CreateTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "Table": {
+            "id": 2,
+            "caption": "系统注册码",
+            "Name": "SystemRegCode",
+            "DatabaseID": 1,
+            "iLock": 0
+          },
+          "Columns": [
+            {
+              "id": 9,
+              "caption": null,
+              "Name": "id",
+              "IsAutoIncrement": true,
+              "CanNull": false,
+              "dbType": "int",
+              "Type": null,
+              "EnumDefine": null,
+              "length": null,
+              "defaultValue": null,
+              "TableID": 2,
+              "IsPKID": true,
+              "orderid": 0,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 10,
+              "caption": null,
+              "Name": "code",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "varchar",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "50",
+              "defaultValue": null,
+              "TableID": 2,
+              "IsPKID": false,
+              "orderid": 1,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 11,
+              "caption": "使用的用户id",
+              "Name": "UserId",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "int",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": null,
+              "TableID": 2,
+              "IsPKID": false,
+              "orderid": 2,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 4
+      },
+      {
+        "Name": "type",
+        "Value": "ChangeTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "OldTableName": "SystemRegCode",
+          "NewTableName": "SystemRegCode",
+          "newColumns": [],
+          "changedColumns": [
+            {
+              "id": 10,
+              "caption": null,
+              "Name": "RegGuid",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "varchar",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "50",
+              "defaultValue": null,
+              "TableID": 2,
+              "IsPKID": false,
+              "orderid": 1,
+              "IsDiscriminator": false,
+              "ClassName": null,
+              "BackupChangedProperties": { "Name": { "OriginalValue": "code" } }
+            }
+          ],
+          "deletedColumns": [],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 5
+      },
+      {
+        "Name": "type",
+        "Value": "ChangeTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "OldTableName": "UserInfo",
+          "NewTableName": "UserInfo",
+          "newColumns": [
+            {
+              "id": 12,
+              "caption": "登陆后生成的唯一码",
+              "Name": "LoginCode",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "varchar",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "50",
+              "defaultValue": null,
+              "TableID": 1,
+              "IsPKID": false,
+              "orderid": 8,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "changedColumns": [],
+          "deletedColumns": [],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 6
+      },
+      {
+        "Name": "type",
+        "Value": "ChangeTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "OldTableName": "UserInfo",
+          "NewTableName": "UserInfo",
+          "newColumns": [
+            {
+              "id": 13,
+              "caption": "注册时间",
+              "Name": "RegTime",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "datetime",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": null,
+              "TableID": 1,
+              "IsPKID": false,
+              "orderid": 2,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "changedColumns": [],
+          "deletedColumns": [],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 7
+      },
+      {
+        "Name": "type",
+        "Value": "CreateTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "Table": {
+            "id": 3,
+            "caption": "用户的效果存档",
+            "Name": "UserEffect",
+            "DatabaseID": 1,
+            "iLock": 0
+          },
+          "Columns": [
+            {
+              "id": 14,
+              "caption": null,
+              "Name": "id",
+              "IsAutoIncrement": true,
+              "CanNull": false,
+              "dbType": "int",
+              "Type": null,
+              "EnumDefine": null,
+              "length": null,
+              "defaultValue": null,
+              "TableID": 3,
+              "IsPKID": true,
+              "orderid": 0,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 15,
+              "caption": null,
+              "Name": "UserId",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "int",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": null,
+              "TableID": 3,
+              "IsPKID": false,
+              "orderid": 1,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 16,
+              "caption": null,
+              "Name": "FileName",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "varchar",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "50",
+              "defaultValue": null,
+              "TableID": 3,
+              "IsPKID": false,
+              "orderid": 2,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 17,
+              "caption": "类型",
+              "Name": "Type",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "int",
+              "Type": null,
+              "EnumDefine": "Project=1,\nTrack=2",
+              "length": "",
+              "defaultValue": "1",
+              "TableID": 3,
+              "IsPKID": false,
+              "orderid": 3,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 8
+      },
+      {
+        "Name": "type",
+        "Value": "ChangeTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "OldTableName": "UserInfo",
+          "NewTableName": "UserInfo",
+          "newColumns": [],
+          "changedColumns": [],
+          "deletedColumns": [],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 9
+      },
+      {
+        "Name": "type",
+        "Value": "ChangeTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "OldTableName": "UserEffect",
+          "NewTableName": "UserEffect",
+          "newColumns": [
+            {
+              "id": 18,
+              "caption": null,
+              "Name": "Name",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "varchar",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "50",
+              "defaultValue": null,
+              "TableID": 3,
+              "IsPKID": false,
+              "orderid": 2,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "changedColumns": [],
+          "deletedColumns": [],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 10
+      },
+      {
+        "Name": "type",
+        "Value": "ChangeTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "OldTableName": "UserEffect",
+          "NewTableName": "UserEffect",
+          "newColumns": [
+            {
+              "id": 19,
+              "caption": null,
+              "Name": "Version",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "int",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": "0",
+              "TableID": 3,
+              "IsPKID": false,
+              "orderid": 5,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "changedColumns": [],
+          "deletedColumns": [],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 11
+      },
+      {
+        "Name": "type",
+        "Value": "CreateTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "Table": {
+            "id": 4,
+            "caption": null,
+            "Name": "AdminUser",
+            "DatabaseID": 1,
+            "iLock": 0
+          },
+          "Columns": [
+            {
+              "id": 20,
+              "caption": null,
+              "Name": "id",
+              "IsAutoIncrement": true,
+              "CanNull": false,
+              "dbType": "int",
+              "Type": null,
+              "EnumDefine": null,
+              "length": null,
+              "defaultValue": null,
+              "TableID": 4,
+              "IsPKID": true,
+              "orderid": 0,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 21,
+              "caption": null,
+              "Name": "UserName",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "varchar",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "50",
+              "defaultValue": null,
+              "TableID": 4,
+              "IsPKID": false,
+              "orderid": 1,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 22,
+              "caption": null,
+              "Name": "Password",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "varchar",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "50",
+              "defaultValue": null,
+              "TableID": 4,
+              "IsPKID": false,
+              "orderid": 2,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 23,
+              "caption": null,
+              "Name": "Role",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "int",
+              "Type": null,
+              "EnumDefine": "超级管理员 = 1<<0,\n普通员工 = 1<<1\n",
+              "length": "",
+              "defaultValue": null,
+              "TableID": 4,
+              "IsPKID": false,
+              "orderid": 3,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 12
+      },
+      {
+        "Name": "type",
+        "Value": "ChangeTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "OldTableName": "SystemRegCode",
+          "NewTableName": "SystemRegCode",
+          "newColumns": [
+            {
+              "id": 24,
+              "caption": "谁生成的",
+              "Name": "MakerUserId",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "int",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": null,
+              "TableID": 2,
+              "IsPKID": false,
+              "orderid": 3,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "changedColumns": [],
+          "deletedColumns": [],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 13
+      },
+      {
+        "Name": "type",
+        "Value": "ChangeTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "OldTableName": "UserInfo",
+          "NewTableName": "UserInfo",
+          "newColumns": [
+            {
+              "id": 25,
+              "caption": "最后一次调用CheckUser时间",
+              "Name": "LastCheckTime",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "datetime",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": null,
+              "TableID": 1,
+              "IsPKID": false,
+              "orderid": 10,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "changedColumns": [],
+          "deletedColumns": [],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 14
+      },
+      {
+        "Name": "type",
+        "Value": "ChangeTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "OldTableName": "SystemRegCode",
+          "NewTableName": "SystemRegCode",
+          "newColumns": [
+            {
+              "id": 26,
+              "caption": "生成时间",
+              "Name": "MakeTime",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "datetime",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": null,
+              "TableID": 2,
+              "IsPKID": false,
+              "orderid": 4,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "changedColumns": [],
+          "deletedColumns": [],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 15
+      },
+      {
+        "Name": "type",
+        "Value": "ChangeTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "OldTableName": "AdminUser",
+          "NewTableName": "AdminUser",
+          "newColumns": [
+            {
+              "id": 27,
+              "caption": "手机号",
+              "Name": "PhoneNumber",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "varchar",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "50",
+              "defaultValue": null,
+              "TableID": 4,
+              "IsPKID": false,
+              "orderid": 4,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "changedColumns": [],
+          "deletedColumns": [],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 16
+      },
+      {
+        "Name": "type",
+        "Value": "ChangeTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "OldTableName": "UserInfo",
+          "NewTableName": "UserInfo",
+          "newColumns": [
+            {
+              "id": 28,
+              "caption": null,
+              "Name": "Disable",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "bit",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": "0",
+              "TableID": 1,
+              "IsPKID": false,
+              "orderid": 11,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "changedColumns": [],
+          "deletedColumns": [],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 27
+      },
+      {
+        "Name": "type",
+        "Value": "ChangeTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "OldTableName": "UserEffect",
+          "NewTableName": "UserEffect",
+          "newColumns": [],
+          "changedColumns": [],
+          "deletedColumns": [],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 117
+      },
+      {
+        "Name": "type",
+        "Value": "ChangeTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "OldTableName": "UserInfo",
+          "NewTableName": "UserInfo",
+          "newColumns": [
+            {
+              "id": 335,
+              "caption": "用户角色",
+              "Name": "Role",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "int",
+              "Type": null,
+              "EnumDefine": "//普通用户\nNormal=0,\n//允许远程控制\nAllowRemote=1<<0,\n//CY22用户\nCY22=1<<1 | AllowRemote,\n",
+              "length": "",
+              "defaultValue": "0",
+              "TableID": 1,
+              "IsPKID": false,
+              "orderid": 12,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "changedColumns": [],
+          "deletedColumns": [],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 118
+      },
+      {
+        "Name": "type",
+        "Value": "ChangeTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "OldTableName": "SystemRegCode",
+          "NewTableName": "SystemRegCode",
+          "newColumns": [
+            {
+              "id": 336,
+              "caption": "用户角色",
+              "Name": "Role",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "int",
+              "Type": null,
+              "EnumDefine": "//普通用户\nNormal=0,\n//允许远程控制\nAllowRemote=1<<0,\n//CY22用户\nCY22=1<<1 | AllowRemote,\n",
+              "length": "",
+              "defaultValue": "0",
+              "TableID": 2,
+              "IsPKID": false,
+              "orderid": 5,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "changedColumns": [],
+          "deletedColumns": [],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 119
+      },
+      {
+        "Name": "type",
+        "Value": "CreateTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "Table": {
+            "id": 26,
+            "caption": "用户登录记录",
+            "Name": "UserLoginRecord",
+            "DatabaseID": 1,
+            "iLock": 0
+          },
+          "Columns": [
+            {
+              "id": 337,
+              "caption": null,
+              "Name": "id",
+              "IsAutoIncrement": true,
+              "CanNull": false,
+              "dbType": "int",
+              "Type": null,
+              "EnumDefine": null,
+              "length": null,
+              "defaultValue": null,
+              "TableID": 26,
+              "IsPKID": true,
+              "orderid": 0,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 338,
+              "caption": null,
+              "Name": "UserId",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "int",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": null,
+              "TableID": 26,
+              "IsPKID": false,
+              "orderid": 1,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 339,
+              "caption": null,
+              "Name": "LoginTime",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "datetime",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": null,
+              "TableID": 26,
+              "IsPKID": false,
+              "orderid": 2,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 120
+      },
+      {
+        "Name": "type",
+        "Value": "ChangeTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "OldTableName": "UserInfo",
+          "NewTableName": "UserInfo",
+          "newColumns": [],
+          "changedColumns": [],
+          "deletedColumns": [],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 121
+      },
+      {
+        "Name": "type",
+        "Value": "ChangeTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "OldTableName": "AdminUser",
+          "NewTableName": "AdminUser",
+          "newColumns": [
+            {
+              "id": 340,
+              "caption": "最大注册码数量",
+              "Name": "MaxCount",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "int",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": "0",
+              "TableID": 4,
+              "IsPKID": false,
+              "orderid": 5,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 341,
+              "caption": "已创建数量",
+              "Name": "CreatedCount",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "int",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": "0",
+              "TableID": 4,
+              "IsPKID": false,
+              "orderid": 6,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "changedColumns": [],
+          "deletedColumns": [],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 122
+      },
+      {
+        "Name": "type",
+        "Value": "ChangeTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "OldTableName": "AdminUser",
+          "NewTableName": "AdminUser",
+          "newColumns": [],
+          "changedColumns": [],
+          "deletedColumns": [],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 123
+      },
+      {
+        "Name": "type",
+        "Value": "ChangeTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "OldTableName": "UserInfo",
+          "NewTableName": "UserInfo",
+          "newColumns": [
+            {
+              "id": 1382,
+              "caption": "公钥",
+              "Name": "PublicKey",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "varchar",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "500",
+              "defaultValue": null,
+              "TableID": 14,
+              "IsPKID": false,
+              "orderid": 13,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 1383,
+              "caption": "私钥",
+              "Name": "PrivateKey",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "varchar",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "500",
+              "defaultValue": null,
+              "TableID": 14,
+              "IsPKID": false,
+              "orderid": 14,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "changedColumns": [],
+          "deletedColumns": [],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 124
+      },
+      {
+        "Name": "type",
+        "Value": "ChangeTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "OldTableName": "UserInfo",
+          "NewTableName": "UserInfo",
+          "newColumns": [
+            {
+              "id": 95,
+              "caption": null,
+              "Name": "PcInfo",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "varchar",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "200",
+              "defaultValue": null,
+              "TableID": 14,
+              "IsPKID": false,
+              "orderid": 15,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "changedColumns": [],
+          "deletedColumns": [],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 125
+      },
+      {
+        "Name": "type",
+        "Value": "ChangeTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "OldTableName": "UserInfo",
+          "NewTableName": "UserInfo",
+          "newColumns": [],
+          "changedColumns": [
+            {
+              "id": 95,
+              "caption": null,
+              "Name": "CreatedCount",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "int",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": "0",
+              "TableID": 14,
+              "IsPKID": false,
+              "orderid": 15,
+              "IsDiscriminator": false,
+              "ClassName": null,
+              "BackupChangedProperties": {
+                "Name": { "OriginalValue": "PcInfo" },
+                "length": { "OriginalValue": "200" },
+                "dbType": { "OriginalValue": "varchar" },
+                "defaultValue": { "OriginalValue": null }
+              }
+            }
+          ],
+          "deletedColumns": [],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 126
+      },
+      {
+        "Name": "type",
+        "Value": "CreateTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "Table": {
+            "id": 19,
+            "caption": null,
+            "Name": "BindedPcInfo",
+            "DatabaseID": 5,
+            "iLock": 0
+          },
+          "Columns": [
+            {
+              "id": 96,
+              "caption": null,
+              "Name": "id",
+              "IsAutoIncrement": true,
+              "CanNull": false,
+              "dbType": "int",
+              "Type": null,
+              "EnumDefine": null,
+              "length": null,
+              "defaultValue": null,
+              "TableID": 19,
+              "IsPKID": true,
+              "orderid": 0,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 97,
+              "caption": null,
+              "Name": "UserId",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "int",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": null,
+              "TableID": 19,
+              "IsPKID": false,
+              "orderid": 1,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 98,
+              "caption": null,
+              "Name": "Pcinfo",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "varchar",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "200",
+              "defaultValue": null,
+              "TableID": 19,
+              "IsPKID": false,
+              "orderid": 2,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 127
+      },
+      {
+        "Name": "type",
+        "Value": "ChangeTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "OldTableName": "UserEffect",
+          "NewTableName": "UserEffect",
+          "newColumns": [
+            {
+              "id": 99,
+              "caption": null,
+              "Name": "LastwriteTime",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "datetime",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": null,
+              "TableID": 16,
+              "IsPKID": false,
+              "orderid": 6,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "changedColumns": [],
+          "deletedColumns": [],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 128
+      },
+      {
+        "Name": "type",
+        "Value": "ChangeTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "OldTableName": "UserInfo",
+          "NewTableName": "UserInfo",
+          "newColumns": [
+            {
+              "id": 100,
+              "caption": "云存储大小（M）",
+              "Name": "CloudSize",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "int",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": "2",
+              "TableID": 14,
+              "IsPKID": false,
+              "orderid": 16,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "changedColumns": [],
+          "deletedColumns": [],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 129
+      },
+      {
+        "Name": "type",
+        "Value": "ChangeTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "OldTableName": "UserEffect",
+          "NewTableName": "UserEffect",
+          "newColumns": [
+            {
+              "id": 101,
+              "caption": null,
+              "Name": "FileSize",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "int",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": null,
+              "TableID": 16,
+              "IsPKID": false,
+              "orderid": 7,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "changedColumns": [],
+          "deletedColumns": [],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 130
+      },
+      {
+        "Name": "type",
+        "Value": "ChangeTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "OldTableName": "UserInfo",
+          "NewTableName": "UserInfo",
+          "newColumns": [
+            {
+              "id": 102,
+              "caption": "过期时间",
+              "Name": "ExpireTime",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "datetime",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": null,
+              "TableID": 14,
+              "IsPKID": false,
+              "orderid": 17,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "changedColumns": [],
+          "deletedColumns": [],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 131
+      },
+      {
+        "Name": "type",
+        "Value": "CreateTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "Table": {
+            "id": 20,
+            "caption": null,
+            "Name": "PayOrder",
+            "DatabaseID": 5,
+            "iLock": 0
+          },
+          "Columns": [
+            {
+              "id": 103,
+              "caption": null,
+              "Name": "id",
+              "IsAutoIncrement": true,
+              "CanNull": false,
+              "dbType": "int",
+              "Type": null,
+              "EnumDefine": null,
+              "length": null,
+              "defaultValue": null,
+              "TableID": 20,
+              "IsPKID": true,
+              "orderid": 0,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 104,
+              "caption": null,
+              "Name": "UserId",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "int",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": null,
+              "TableID": 20,
+              "IsPKID": false,
+              "orderid": 1,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 105,
+              "caption": null,
+              "Name": "Amount",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "double",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": null,
+              "TableID": 20,
+              "IsPKID": false,
+              "orderid": 2,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 106,
+              "caption": null,
+              "Name": "Status",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "int",
+              "Type": null,
+              "EnumDefine": "None = 0,\nWaitToPay = 1,\nFail = 2,\nSuccessed = 3",
+              "length": "",
+              "defaultValue": "0",
+              "TableID": 20,
+              "IsPKID": false,
+              "orderid": 3,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 107,
+              "caption": null,
+              "Name": "CreateTime",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "datetime",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": null,
+              "TableID": 20,
+              "IsPKID": false,
+              "orderid": 4,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 108,
+              "caption": null,
+              "Name": "CallbackTime",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "datetime",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": null,
+              "TableID": 20,
+              "IsPKID": false,
+              "orderid": 5,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 132
+      },
+      {
+        "Name": "type",
+        "Value": "ChangeTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "OldTableName": "PayOrder",
+          "NewTableName": "PayOrder",
+          "newColumns": [
+            {
+              "id": 109,
+              "caption": "交易号",
+              "Name": "TradeNumber",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "varchar",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "100",
+              "defaultValue": null,
+              "TableID": 20,
+              "IsPKID": false,
+              "orderid": 6,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "changedColumns": [],
+          "deletedColumns": [],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 133
+      },
+      {
+        "Name": "type",
+        "Value": "ChangeTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "OldTableName": "SystemRegCode",
+          "NewTableName": "SystemRegCode",
+          "newColumns": [
+            {
+              "id": 110,
+              "caption": "只允许谁注册",
+              "Name": "ToUserName",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "varchar",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "50",
+              "defaultValue": null,
+              "TableID": 15,
+              "IsPKID": false,
+              "orderid": 6,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "changedColumns": [],
+          "deletedColumns": [],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 134
+      },
+      {
+        "Name": "type",
+        "Value": "ChangeTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "OldTableName": "SystemRegCode",
+          "NewTableName": "SystemRegCode",
+          "newColumns": [
+            {
+              "id": 130,
+              "caption": "可以使用几年",
+              "Name": "AllowYears",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "int",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": null,
+              "TableID": 15,
+              "IsPKID": false,
+              "orderid": 7,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "changedColumns": [],
+          "deletedColumns": [],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 135
+      },
+      {
+        "Name": "type",
+        "Value": "CreateTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "Table": {
+            "id": 35,
+            "caption": null,
+            "Name": "PayHistory",
+            "DatabaseID": 8,
+            "iLock": 0
+          },
+          "Columns": [
+            {
+              "id": 434,
+              "caption": null,
+              "Name": "id",
+              "IsAutoIncrement": true,
+              "CanNull": false,
+              "dbType": "int",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": null,
+              "TableID": 35,
+              "IsPKID": true,
+              "orderid": 0,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 435,
+              "caption": null,
+              "Name": "Phone",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "varchar",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "50",
+              "defaultValue": null,
+              "TableID": 35,
+              "IsPKID": false,
+              "orderid": 1,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 436,
+              "caption": null,
+              "Name": "TradeNo",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "varchar",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "100",
+              "defaultValue": null,
+              "TableID": 35,
+              "IsPKID": false,
+              "orderid": 2,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 437,
+              "caption": null,
+              "Name": "Amount",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "double",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": null,
+              "TableID": 35,
+              "IsPKID": false,
+              "orderid": 3,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 438,
+              "caption": null,
+              "Name": "Time",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "datetime",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": null,
+              "TableID": 35,
+              "IsPKID": false,
+              "orderid": 4,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 439,
+              "caption": null,
+              "Name": "Action",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "int",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": null,
+              "TableID": 35,
+              "IsPKID": false,
+              "orderid": 5,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "IDXConfigs": [
+            {
+              "IsUnique": true,
+              "IsClustered": false,
+              "ColumnNames": [ "TradeNo" ],
+              "Name": null
+            }
+          ],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 136
+      },
+      {
+        "Name": "type",
+        "Value": "ChangeTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "OldTableName": "PayHistory",
+          "NewTableName": "PayHistory",
+          "newColumns": [
+            {
+              "id": 440,
+              "caption": null,
+              "Name": "TradeTime",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "datetime",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": null,
+              "TableID": 35,
+              "IsPKID": false,
+              "orderid": 5,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "changedColumns": [
+            {
+              "id": 438,
+              "caption": null,
+              "Name": "CreateTime",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "datetime",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": null,
+              "TableID": 35,
+              "IsPKID": false,
+              "orderid": 4,
+              "IsDiscriminator": false,
+              "ClassName": null,
+              "BackupChangedProperties": { "Name": { "OriginalValue": "Time" } }
+            }
+          ],
+          "deletedColumns": [],
+          "IDXConfigs": [
+            {
+              "IsUnique": true,
+              "IsClustered": false,
+              "ColumnNames": [ "TradeNo" ],
+              "Name": null
+            }
+          ],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 137
+      },
+      {
+        "Name": "type",
+        "Value": "ChangeTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "OldTableName": "PayHistory",
+          "NewTableName": "PayHistory",
+          "newColumns": [],
+          "changedColumns": [],
+          "deletedColumns": [],
+          "IDXConfigs": [
+            {
+              "IsUnique": true,
+              "IsClustered": false,
+              "ColumnNames": [ "TradeNo" ],
+              "Name": null
+            }
+          ],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 138
+      },
+      {
+        "Name": "type",
+        "Value": "ChangeTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "OldTableName": "UserInfo",
+          "NewTableName": "UserInfo",
+          "newColumns": [
+            {
+              "id": 441,
+              "caption": null,
+              "Name": "Balance",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "double",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": "0",
+              "TableID": 28,
+              "IsPKID": false,
+              "orderid": 5,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "changedColumns": [],
+          "deletedColumns": [],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 139
+      },
+      {
+        "Name": "type",
+        "Value": "ChangeTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "OldTableName": "UserInfo",
+          "NewTableName": "UserInfo",
+          "newColumns": [],
+          "changedColumns": [
+            {
+              "id": 1408,
+              "caption": null,
+              "Name": "Balance",
+              "IsAutoIncrement": false,
+              "CanNull": false,
+              "dbType": "double",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": "0",
+              "TableID": 28,
+              "IsPKID": false,
+              "orderid": 5,
+              "IsDiscriminator": false,
+              "ClassName": null,
+              "BackupChangedProperties": { "CanNull": { "OriginalValue": true } }
+            }
+          ],
+          "deletedColumns": [],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 140
+      },
+      {
+        "Name": "type",
+        "Value": "CreateTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "Table": {
+            "id": 142,
+            "caption": "积分明细",
+            "Name": "MoneyDetail",
+            "DatabaseID": 26,
+            "iLock": 0
+          },
+          "Columns": [
+            {
+              "id": 1409,
+              "caption": null,
+              "Name": "id",
+              "IsAutoIncrement": true,
+              "CanNull": false,
+              "dbType": "bigint",
+              "Type": null,
+              "EnumDefine": null,
+              "length": null,
+              "defaultValue": null,
+              "TableID": 142,
+              "IsPKID": true,
+              "orderid": 0,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 1410,
+              "caption": null,
+              "Name": "UserId",
+              "IsAutoIncrement": false,
+              "CanNull": false,
+              "dbType": "int",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": null,
+              "TableID": 142,
+              "IsPKID": false,
+              "orderid": 1,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 1411,
+              "caption": "积分",
+              "Name": "Amount",
+              "IsAutoIncrement": false,
+              "CanNull": false,
+              "dbType": "double",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": null,
+              "TableID": 142,
+              "IsPKID": false,
+              "orderid": 2,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 1412,
+              "caption": "时间",
+              "Name": "CreateTime",
+              "IsAutoIncrement": false,
+              "CanNull": false,
+              "dbType": "datetime",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": null,
+              "TableID": 142,
+              "IsPKID": false,
+              "orderid": 3,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 1413,
+              "caption": "余额",
+              "Name": "Balance",
+              "IsAutoIncrement": false,
+              "CanNull": false,
+              "dbType": "double",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": null,
+              "TableID": 142,
+              "IsPKID": false,
+              "orderid": 4,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 1414,
+              "caption": "备注",
+              "Name": "Remark",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "varchar",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "50",
+              "defaultValue": null,
+              "TableID": 142,
+              "IsPKID": false,
+              "orderid": 5,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 141
+      },
+      {
+        "Name": "type",
+        "Value": "ChangeTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "OldTableName": "UserInfo",
+          "NewTableName": "UserInfo",
+          "newColumns": [],
+          "changedColumns": [],
+          "deletedColumns": [
+            {
+              "id": 1382,
+              "caption": "公钥",
+              "Name": "PublicKey",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "varchar",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "500",
+              "defaultValue": null,
+              "TableID": 134,
+              "IsPKID": false,
+              "orderid": 14,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 1383,
+              "caption": "私钥",
+              "Name": "PrivateKey",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "varchar",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "500",
+              "defaultValue": null,
+              "TableID": 134,
+              "IsPKID": false,
+              "orderid": 15,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 142
+      },
+      {
+        "Name": "type",
+        "Value": "ChangeTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "OldTableName": "UserInfo",
+          "NewTableName": "UserInfo",
+          "newColumns": [
+            {
+              "id": 1415,
+              "caption": "我的邀请ID",
+              "Name": "MyId",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "int",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": null,
+              "TableID": 134,
+              "IsPKID": false,
+              "orderid": 17,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 1416,
+              "caption": "邀请人id",
+              "Name": "InvitorId",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "int",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": null,
+              "TableID": 134,
+              "IsPKID": false,
+              "orderid": 18,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 1417,
+              "caption": "最上层邀请者id",
+              "Name": "RootInvitorId",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "int",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": null,
+              "TableID": 134,
+              "IsPKID": false,
+              "orderid": 19,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 1418,
+              "caption": "是否是超级代理，所有子级都按照二级比例返佣",
+              "Name": "IsSuperInvitor",
+              "IsAutoIncrement": false,
+              "CanNull": false,
+              "dbType": "bit",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": "0",
+              "TableID": 134,
+              "IsPKID": false,
+              "orderid": 20,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 1419,
+              "caption": "积分",
+              "Name": "Amount",
+              "IsAutoIncrement": false,
+              "CanNull": false,
+              "dbType": "decimal",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "18,4",
+              "defaultValue": "0",
+              "TableID": 134,
+              "IsPKID": false,
+              "orderid": 21,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 1420,
+              "caption": "返佣比例",
+              "Name": "RakeBack1",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "decimal",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "18,4",
+              "defaultValue": "0.1",
+              "TableID": 134,
+              "IsPKID": false,
+              "orderid": 22,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 1421,
+              "caption": "二级返佣比例",
+              "Name": "RakeBack2",
+              "IsAutoIncrement": false,
+              "CanNull": false,
+              "dbType": "decimal",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "18,4",
+              "defaultValue": "0.05",
+              "TableID": 134,
+              "IsPKID": false,
+              "orderid": 23,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 1422,
+              "caption": "被邀请人赠送积分数",
+              "Name": "FriendGive",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "int",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": "10",
+              "TableID": 134,
+              "IsPKID": false,
+              "orderid": 24,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 1423,
+              "caption": "是否可以发布资源",
+              "Name": "CanSellRes",
+              "IsAutoIncrement": false,
+              "CanNull": false,
+              "dbType": "bit",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": "1",
+              "TableID": 134,
+              "IsPKID": false,
+              "orderid": 25,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 1424,
+              "caption": "被禁止发布的原因",
+              "Name": "DisableSellReason",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "varchar",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "50",
+              "defaultValue": null,
+              "TableID": 134,
+              "IsPKID": false,
+              "orderid": 26,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "changedColumns": [],
+          "deletedColumns": [],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 143
+      },
+      {
+        "Name": "type",
+        "Value": "ChangeTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "OldTableName": "UserInfo",
+          "NewTableName": "UserInfo",
+          "newColumns": [],
+          "changedColumns": [],
+          "deletedColumns": [],
+          "IDXConfigs": [
+            {
+              "IsUnique": true,
+              "IsClustered": false,
+              "ColumnNames": [ "MyId" ],
+              "Name": null
+            }
+          ],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 144
+      },
+      {
+        "Name": "type",
+        "Value": "CreateTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "Table": {
+            "id": 143,
+            "caption": null,
+            "Name": "ResInfo",
+            "DatabaseID": 26,
+            "iLock": 0
+          },
+          "Columns": [
+            {
+              "id": 1425,
+              "caption": null,
+              "Name": "id",
+              "IsAutoIncrement": true,
+              "CanNull": false,
+              "dbType": "bigint",
+              "Type": null,
+              "EnumDefine": null,
+              "length": null,
+              "defaultValue": null,
+              "TableID": 143,
+              "IsPKID": true,
+              "orderid": 0,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 1426,
+              "caption": "创建人id",
+              "Name": "CreateUserId",
+              "IsAutoIncrement": false,
+              "CanNull": false,
+              "dbType": "int",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": null,
+              "TableID": 143,
+              "IsPKID": false,
+              "orderid": 1,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 1427,
+              "caption": null,
+              "Name": "CreateTime",
+              "IsAutoIncrement": false,
+              "CanNull": false,
+              "dbType": "datetime",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": null,
+              "TableID": 143,
+              "IsPKID": false,
+              "orderid": 2,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 1428,
+              "caption": null,
+              "Name": "Title",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "varchar",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "255",
+              "defaultValue": null,
+              "TableID": 143,
+              "IsPKID": false,
+              "orderid": 3,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 1429,
+              "caption": "内容",
+              "Name": "Content",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "varchar",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "500",
+              "defaultValue": null,
+              "TableID": 143,
+              "IsPKID": false,
+              "orderid": 4,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 1430,
+              "caption": "链接",
+              "Name": "Url",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "varchar",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "200",
+              "defaultValue": null,
+              "TableID": 143,
+              "IsPKID": false,
+              "orderid": 5,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 1431,
+              "caption": "需要积分",
+              "Name": "Amount",
+              "IsAutoIncrement": false,
+              "CanNull": false,
+              "dbType": "decimal",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "18,4",
+              "defaultValue": null,
+              "TableID": 143,
+              "IsPKID": false,
+              "orderid": 6,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 1432,
+              "caption": "类型",
+              "Name": "Type",
+              "IsAutoIncrement": false,
+              "CanNull": false,
+              "dbType": "int",
+              "Type": null,
+              "EnumDefine": "发布资源 = 1,\n求资源 = 2",
+              "length": "",
+              "defaultValue": "1",
+              "TableID": 143,
+              "IsPKID": false,
+              "orderid": 7,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 145
+      },
+      {
+        "Name": "type",
+        "Value": "CreateTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "Table": {
+            "id": 144,
+            "caption": "资源购买记录",
+            "Name": "BuyHistory",
+            "DatabaseID": 26,
+            "iLock": 0
+          },
+          "Columns": [
+            {
+              "id": 1433,
+              "caption": null,
+              "Name": "id",
+              "IsAutoIncrement": true,
+              "CanNull": false,
+              "dbType": "bigint",
+              "Type": null,
+              "EnumDefine": null,
+              "length": null,
+              "defaultValue": null,
+              "TableID": 144,
+              "IsPKID": true,
+              "orderid": 0,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 1434,
+              "caption": null,
+              "Name": "BuyTime",
+              "IsAutoIncrement": false,
+              "CanNull": false,
+              "dbType": "datetime",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": null,
+              "TableID": 144,
+              "IsPKID": false,
+              "orderid": 1,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 1435,
+              "caption": "购买人id",
+              "Name": "BuyerId",
+              "IsAutoIncrement": false,
+              "CanNull": false,
+              "dbType": "int",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": null,
+              "TableID": 144,
+              "IsPKID": false,
+              "orderid": 2,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 1436,
+              "caption": "资源id",
+              "Name": "ResInfoId",
+              "IsAutoIncrement": false,
+              "CanNull": false,
+              "dbType": "bigint",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": null,
+              "TableID": 144,
+              "IsPKID": false,
+              "orderid": 3,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 1437,
+              "caption": "资源所属人id",
+              "Name": "OwnerId",
+              "IsAutoIncrement": false,
+              "CanNull": false,
+              "dbType": "int",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": null,
+              "TableID": 144,
+              "IsPKID": false,
+              "orderid": 4,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 1438,
+              "caption": "支付积分",
+              "Name": "PayAmount",
+              "IsAutoIncrement": false,
+              "CanNull": false,
+              "dbType": "decimal",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "18,4",
+              "defaultValue": null,
+              "TableID": 144,
+              "IsPKID": false,
+              "orderid": 5,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 1439,
+              "caption": "积分是否已经到账",
+              "Name": "IsArrived",
+              "IsAutoIncrement": false,
+              "CanNull": false,
+              "dbType": "bit",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": "0",
+              "TableID": 144,
+              "IsPKID": false,
+              "orderid": 6,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 1440,
+              "caption": "预计到账时间",
+              "Name": "ArriveTime",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "datetime",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": null,
+              "TableID": 144,
+              "IsPKID": false,
+              "orderid": 7,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 1441,
+              "caption": "是否已经撤销",
+              "Name": "IsCancel",
+              "IsAutoIncrement": false,
+              "CanNull": false,
+              "dbType": "bit",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": "0",
+              "TableID": 144,
+              "IsPKID": false,
+              "orderid": 8,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 146
+      },
+      {
+        "Name": "type",
+        "Value": "CreateTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "Table": {
+            "id": 145,
+            "caption": "求资源的回复",
+            "Name": "ResReply",
+            "DatabaseID": 26,
+            "iLock": 0
+          },
+          "Columns": [
+            {
+              "id": 1442,
+              "caption": null,
+              "Name": "id",
+              "IsAutoIncrement": true,
+              "CanNull": false,
+              "dbType": "bigint",
+              "Type": null,
+              "EnumDefine": null,
+              "length": null,
+              "defaultValue": null,
+              "TableID": 145,
+              "IsPKID": true,
+              "orderid": 0,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 1443,
+              "caption": "回复时间",
+              "Name": "ReplyTime",
+              "IsAutoIncrement": false,
+              "CanNull": false,
+              "dbType": "datetime",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": null,
+              "TableID": 145,
+              "IsPKID": false,
+              "orderid": 1,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 1444,
+              "caption": "哪个资源id符合它的需求",
+              "Name": "ResInfoId",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "int",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": null,
+              "TableID": 145,
+              "IsPKID": false,
+              "orderid": 2,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 1445,
+              "caption": "回复人id",
+              "Name": "ReplyUserId",
+              "IsAutoIncrement": false,
+              "CanNull": false,
+              "dbType": "int",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": null,
+              "TableID": 145,
+              "IsPKID": false,
+              "orderid": 3,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 147
+      },
+      {
+        "Name": "type",
+        "Value": "ChangeTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "OldTableName": "UserInfo",
+          "NewTableName": "UserInfo",
+          "newColumns": [],
+          "changedColumns": [],
+          "deletedColumns": [
+            {
+              "id": 1408,
+              "caption": null,
+              "Name": "Balance",
+              "IsAutoIncrement": false,
+              "CanNull": false,
+              "dbType": "double",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": "0",
+              "TableID": 134,
+              "IsPKID": false,
+              "orderid": 5,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "IDXConfigs": [
+            {
+              "IsUnique": true,
+              "IsClustered": false,
+              "ColumnNames": [ "MyId" ],
+              "Name": null
+            }
+          ],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 148
+      },
+      {
+        "Name": "type",
+        "Value": "ChangeTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "OldTableName": "MoneyDetail",
+          "NewTableName": "MoneyDetail",
+          "newColumns": [
+            {
+              "id": 1446,
+              "caption": "来自谁的充值",
+              "Name": "FromUserId",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "int",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": null,
+              "TableID": 142,
+              "IsPKID": false,
+              "orderid": 6,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "changedColumns": [],
+          "deletedColumns": [],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 149
+      },
+      {
+        "Name": "type",
+        "Value": "ChangeTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "OldTableName": "UserInfo",
+          "NewTableName": "UserInfo",
+          "newColumns": [],
+          "changedColumns": [
+            {
+              "id": 1419,
+              "caption": "积分",
+              "Name": "Balance",
+              "IsAutoIncrement": false,
+              "CanNull": false,
+              "dbType": "decimal",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "18,4",
+              "defaultValue": "0",
+              "TableID": 134,
+              "IsPKID": false,
+              "orderid": 20,
+              "IsDiscriminator": false,
+              "ClassName": null,
+              "BackupChangedProperties": { "Name": { "OriginalValue": "Amount" } }
+            }
+          ],
+          "deletedColumns": [],
+          "IDXConfigs": [
+            {
+              "IsUnique": true,
+              "IsClustered": false,
+              "ColumnNames": [ "MyId" ],
+              "Name": null
+            }
+          ],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 150
+      },
+      {
+        "Name": "type",
+        "Value": "ChangeTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "OldTableName": "UserInfo",
+          "NewTableName": "UserInfo",
+          "newColumns": [
+            {
+              "id": 1447,
+              "caption": "昵称",
+              "Name": "NickName",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "varchar",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "50",
+              "defaultValue": null,
+              "TableID": 134,
+              "IsPKID": false,
+              "orderid": 1,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "changedColumns": [],
+          "deletedColumns": [],
+          "IDXConfigs": [
+            {
+              "IsUnique": true,
+              "IsClustered": false,
+              "ColumnNames": [ "MyId" ],
+              "Name": null
+            }
+          ],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 151
+      },
+      {
+        "Name": "type",
+        "Value": "ChangeTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "OldTableName": "ResInfo",
+          "NewTableName": "ResInfo",
+          "newColumns": [
+            {
+              "id": 1448,
+              "caption": null,
+              "Name": "BuyCount",
+              "IsAutoIncrement": false,
+              "CanNull": false,
+              "dbType": "int",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": "0",
+              "TableID": 143,
+              "IsPKID": false,
+              "orderid": 8,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "changedColumns": [],
+          "deletedColumns": [],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 152
+      },
+      {
+        "Name": "type",
+        "Value": "CreateTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "Table": {
+            "id": 146,
+            "caption": "教学资源",
+            "Name": "TeachingRes",
+            "DatabaseID": 26,
+            "iLock": 0
+          },
+          "Columns": [
+            {
+              "id": 1449,
+              "caption": null,
+              "Name": "id",
+              "IsAutoIncrement": true,
+              "CanNull": false,
+              "dbType": "bigint",
+              "Type": null,
+              "EnumDefine": null,
+              "length": null,
+              "defaultValue": null,
+              "TableID": 146,
+              "IsPKID": true,
+              "orderid": 0,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 1450,
+              "caption": null,
+              "Name": "Title",
+              "IsAutoIncrement": false,
+              "CanNull": false,
+              "dbType": "varchar",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "100",
+              "defaultValue": null,
+              "TableID": 146,
+              "IsPKID": false,
+              "orderid": 1,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 1451,
+              "caption": null,
+              "Name": "Content",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "varchar",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "200",
+              "defaultValue": null,
+              "TableID": 146,
+              "IsPKID": false,
+              "orderid": 2,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 1452,
+              "caption": null,
+              "Name": "Url",
+              "IsAutoIncrement": false,
+              "CanNull": false,
+              "dbType": "varchar",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "100",
+              "defaultValue": null,
+              "TableID": 146,
+              "IsPKID": false,
+              "orderid": 3,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 1453,
+              "caption": null,
+              "Name": "Sort",
+              "IsAutoIncrement": false,
+              "CanNull": false,
+              "dbType": "int",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": "0",
+              "TableID": 146,
+              "IsPKID": false,
+              "orderid": 4,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 1454,
+              "caption": "创建人id",
+              "Name": "CreateorId",
+              "IsAutoIncrement": false,
+              "CanNull": false,
+              "dbType": "int",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": null,
+              "TableID": 146,
+              "IsPKID": false,
+              "orderid": 5,
+              "IsDiscriminator": false,
+              "ClassName": null
+            },
+            {
+              "id": 1455,
+              "caption": "更新时间",
+              "Name": "UpdateTime",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "datetime",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": null,
+              "TableID": 146,
+              "IsPKID": false,
+              "orderid": 6,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 153
+      },
+      {
+        "Name": "type",
+        "Value": "ChangeTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "OldTableName": "TeachingRes",
+          "NewTableName": "TeachingRes",
+          "newColumns": [
+            {
+              "id": 1456,
+              "caption": "创建人昵称",
+              "Name": "CreatorName",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "varchar",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "50",
+              "defaultValue": null,
+              "TableID": 146,
+              "IsPKID": false,
+              "orderid": 6,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "changedColumns": [],
+          "deletedColumns": [],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 154
+      },
+      {
+        "Name": "type",
+        "Value": "ChangeTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "OldTableName": "ResInfo",
+          "NewTableName": "ResInfo",
+          "newColumns": [
+            {
+              "id": 1457,
+              "caption": "昵称",
+              "Name": "CreateUserName",
+              "IsAutoIncrement": false,
+              "CanNull": true,
+              "dbType": "varchar",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "50",
+              "defaultValue": null,
+              "TableID": 143,
+              "IsPKID": false,
+              "orderid": 2,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "changedColumns": [],
+          "deletedColumns": [],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 155
+      },
+      {
+        "Name": "type",
+        "Value": "DeleteTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "TableName": "TeachingRes",
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 156
+      },
+      {
+        "Name": "type",
+        "Value": "ChangeTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "OldTableName": "ResInfo",
+          "NewTableName": "ResInfo",
+          "newColumns": [],
+          "changedColumns": [],
+          "deletedColumns": [],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  },
+  {
+    "Items": [
+      {
+        "Name": "id",
+        "Value": 157
+      },
+      {
+        "Name": "type",
+        "Value": "ChangeTableAction"
+      },
+      {
+        "Name": "databaseid",
+        "Value": 26
+      },
+      {
+        "Name": "actionItem",
+        "Value": {
+          "OldTableName": "ResReply",
+          "NewTableName": "ResReply",
+          "newColumns": [
+            {
+              "id": 1458,
+              "caption": "回复resid",
+              "Name": "ReplyResId",
+              "IsAutoIncrement": false,
+              "CanNull": false,
+              "dbType": "bigint",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": null,
+              "TableID": 145,
+              "IsPKID": false,
+              "orderid": 3,
+              "IsDiscriminator": false,
+              "ClassName": null
+            }
+          ],
+          "changedColumns": [
+            {
+              "id": 1444,
+              "caption": "哪个资源id符合它的需求",
+              "Name": "ResInfoId",
+              "IsAutoIncrement": false,
+              "CanNull": false,
+              "dbType": "bigint",
+              "Type": null,
+              "EnumDefine": null,
+              "length": "",
+              "defaultValue": null,
+              "TableID": 145,
+              "IsPKID": false,
+              "orderid": 2,
+              "IsDiscriminator": false,
+              "ClassName": null,
+              "BackupChangedProperties": {
+                "dbType": { "OriginalValue": "int" },
+                "CanNull": { "OriginalValue": true }
+              }
+            }
+          ],
+          "deletedColumns": [],
+          "IDXConfigs": [],
+          "ID": 0
+        }
+      }
+    ],
+    "RowState": 0
+  }
+]

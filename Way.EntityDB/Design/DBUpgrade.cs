@@ -173,6 +173,127 @@ namespace Way.EntityDB.Design
             }
         }
 
+        static DBColumn[] FindAllColumnsForChangeTable(Assembly assembly, EntityDB.Design.Actions.ChangeTableAction changeAction, int changeActionRowId,List<WayDataRow> allRows)
+        {
+            List<EJ.DBColumn> allcolumns = new List<EJ.DBColumn>();
+
+            //往上逆推，查找字段信息
+            var datarows = allRows.Where(m => (long)m["id"] < changeActionRowId).OrderBy(m => (long)m["id"]).ToList();
+
+            //先从后逆推出最早的CreateTableAction;
+            var curTableName = changeAction.OldTableName;
+            EntityDB.Design.Actions.CreateTableAction createTableAction = null;
+            int startIndex = 0;
+            for (int i = datarows.Count - 1; i>=0; i--)
+            {
+                var preAction = dataRowToAction(assembly, datarows[i]);
+                if (preAction is EntityDB.Design.Actions.ChangeTableAction action)
+                {
+                    if(action.NewTableName == curTableName)
+                    {
+                        curTableName = action.OldTableName;
+                    }
+                }
+                else if (preAction is EntityDB.Design.Actions.CreateTableAction caction)
+                {
+                    if(caction.Table.Name == curTableName)
+                    {
+                        curTableName = caction.Table.Name;
+                        createTableAction = caction;
+                        startIndex = i + 1;
+                        break;
+                    }
+                }
+            }
+
+            if (createTableAction == null)
+                throw new Exception($"表“{changeAction.NewTableName}”无法找到当初的建表行为");
+
+            if (FindCreateTableActionAllColumns(assembly, createTableAction, datarows, startIndex) == false)
+                throw new Exception($"表“{changeAction.NewTableName}”在查找表所有字段时，发现表被删除了");
+
+            return createTableAction.Columns;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="createAction"></param>
+        /// <param name="startIndex"></param>
+        /// <returns>返回false，表示table后来删除了</returns>
+        static bool FindCreateTableActionAllColumns(Assembly assembly, EntityDB.Design.Actions.CreateTableAction createAction,List<WayDataRow> query ,int startIndex)
+        {
+            for (int j = startIndex; j < query.Count; j++)
+            {
+                var nextAction = dataRowToAction(assembly, query[j]);
+                if (nextAction is EntityDB.Design.Actions.ChangeTableAction)
+                {
+                    var changeAction = (EntityDB.Design.Actions.ChangeTableAction)nextAction;
+                    if (changeAction.OldTableName == createAction.Table.Name)
+                    {
+                        createAction.Table.Name = changeAction.NewTableName;                        
+                        createAction.IDXConfigs = changeAction.IDXConfigs;
+
+                        List<DBColumn> nowColumns = new List<DBColumn>(createAction.Columns);
+
+                        foreach( var delColumn in changeAction.deletedColumns )
+                        {
+                            var columnName = delColumn.Name;
+                            if (delColumn.BackupChangedProperties.Any(m => m.Key == "Name"))
+                                columnName = delColumn.BackupChangedProperties.FirstOrDefault(m => m.Key == "Name").Value.OriginalValue.ToString();
+
+                            var index = nowColumns.FindIndex(m => m.Name == columnName);
+                            if(index >= 0)
+                            {
+                                nowColumns.RemoveAt(index);
+                            }
+                        }
+
+                        foreach (var column in changeAction.changedColumns)
+                        {
+                            var columnName = column.Name;
+                            if (column.BackupChangedProperties.Any(m => m.Key == "Name"))
+                                columnName = column.BackupChangedProperties.FirstOrDefault(m => m.Key == "Name").Value.OriginalValue.ToString();
+
+                            var index = nowColumns.FindIndex(m => m.Name == columnName);
+                            if (index >= 0)
+                            {
+                                nowColumns.RemoveAt(index);
+                            }
+                            nowColumns.Add(column);
+                        }
+
+                        foreach (var column in changeAction.newColumns)
+                        {
+                            nowColumns.Add(column);
+                        }
+
+                        createAction.Columns = nowColumns.ToArray();
+
+                        query.RemoveAt(j);
+                        j--;
+                    }
+                }
+                else if (nextAction is EntityDB.Design.Actions.DeleteTableAction)
+                {
+                    var deleteAction = (EntityDB.Design.Actions.DeleteTableAction)nextAction;
+                    if (deleteAction.TableName == createAction.Table.Name)
+                    {
+                        query.RemoveAt(j);
+                        createAction.Table.Name = null;
+                        break;
+                    }
+                }
+            }
+
+            if (createAction.Table.Name == null)
+            {
+                //表后来删除了
+                return false;
+            }
+            return true;
+        }
+
         public static void Upgrade(EntityDB.DBContext dbContext, string designData)
         {
             if (designData.IsNullOrEmpty())
@@ -241,106 +362,15 @@ namespace Way.EntityDB.Design
                                 var changeAction = (EntityDB.Design.Actions.ChangeTableAction)actionItem;
                                 
                                 changeAction._getColumnsFunc = () => {
-                                    List<EJ.DBColumn> allcolumns = new List<EJ.DBColumn>();
-
-                                    //往上逆推，查找字段信息
-                                    var datarows = dtable.Rows.Where(m => (long)m["id"] < currentRowId).OrderByDescending(m => (long)m["id"]).ToList();
-                                    var curTableName = changeAction.OldTableName;
-                                    List<int> deletedColumnids = new List<int>();
-
-                                    foreach (var preRow in datarows )
-                                    {
-                                        var preAction = dataRowToAction(assembly, preRow);
-                                        if(preAction is EntityDB.Design.Actions.CreateTableAction)
-                                        {
-                                            var tableAction = preAction as EntityDB.Design.Actions.CreateTableAction;
-                                            if (tableAction.Table.Name != curTableName)
-                                                continue;
-                                            else
-                                            {
-                                                foreach( var c in tableAction.Columns )
-                                                {
-                                                    if(allcolumns.Any(m=>m.id == c.id) == false)
-                                                    {
-                                                        allcolumns.Add(c);
-                                                    }
-                                                }
-                                                break;
-                                            }
-                                        }
-                                        else if (preAction is EntityDB.Design.Actions.ChangeTableAction)
-                                        {
-                                            var preChangeAction = preAction as EntityDB.Design.Actions.ChangeTableAction;
-                                            if (preChangeAction.NewTableName != curTableName)
-                                                continue;
-                                            else
-                                            {
-                                                curTableName = preChangeAction.OldTableName;
-                                                foreach (var c in preChangeAction.newColumns)
-                                                {
-                                                    if (deletedColumnids.Contains(c.id.Value) == false && allcolumns.Any(m => m.id == c.id) == false)
-                                                    {
-                                                        allcolumns.Add(c);
-                                                    }
-                                                }
-                                                foreach (var c in preChangeAction.changedColumns)
-                                                {
-                                                    if (deletedColumnids.Contains(c.id.Value) == false && allcolumns.Any(m => m.id == c.id) == false)
-                                                    {
-                                                        allcolumns.Add(c);
-                                                    }
-                                                }
-                                                foreach (var c in preChangeAction.deletedColumns)
-                                                {
-                                                    deletedColumnids.Add(c.id.Value);
-                                                }
-                                            }
-                                        }
-                                    }
-                                    return allcolumns;
+                                    return FindAllColumnsForChangeTable(assembly, changeAction, currentRowId, dtable.Rows).ToList();
                                 };
                             }
                             else if(actionItem is EntityDB.Design.Actions.CreateTableAction createAction)
                             {
                                 //往下查找表的变更
-                                var curTableName = createAction.Table.Name;
+                                var ret = FindCreateTableActionAllColumns(assembly , createAction , query , i+1);
 
-                                for(int j = i + 1; j < query.Count; j ++)
-                                {
-                                    var nextAction = dataRowToAction(assembly, query[j]);
-                                    if(nextAction is EntityDB.Design.Actions.ChangeTableAction)
-                                    {
-                                        var changeAction = (EntityDB.Design.Actions.ChangeTableAction)nextAction;
-                                        if(changeAction.OldTableName == curTableName)
-                                        {
-                                            curTableName = changeAction.NewTableName;
-                                            createAction.Table.Name = curTableName;
-                                            createAction.Columns = (from m in createAction.Columns
-                                                                    where changeAction.deletedColumns.Any(n => n.id == m.id) == false
-                                                                    && changeAction.changedColumns.Any(n => n.id == m.id) == false
-                                                                    select m).ToArray();
-
-                                            createAction.Columns = createAction.Columns.Concat(changeAction.changedColumns).ToArray();
-                                            createAction.Columns = createAction.Columns.Concat(changeAction.newColumns).ToArray();
-                                            createAction.IDXConfigs = changeAction.IDXConfigs;
-                                            query.RemoveAt(j);
-                                            j--;
-                                            continue;
-                                        }
-                                    }
-                                    else if (nextAction is EntityDB.Design.Actions.DeleteTableAction)
-                                    {
-                                        var deleteAction = (EntityDB.Design.Actions.DeleteTableAction)nextAction;
-                                        if(deleteAction.TableName == curTableName)
-                                        {
-                                            query.RemoveAt(j);
-                                            curTableName = null;
-                                            break;
-                                        }
-                                    }
-                                }
-
-                                if(curTableName == null)
+                                if(ret == false)
                                 {
                                     //表后来删除了
                                     query.RemoveAt(i);

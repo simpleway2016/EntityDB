@@ -178,11 +178,20 @@ namespace Way.EntityDB
                 var item = _items.FirstOrDefault(m => string.Equals(m.Name, name, StringComparison.CurrentCultureIgnoreCase));
                 if (item==null)
                 {
-                    _items.Add(new ItemPair() {Name = name,Value=value });
+                    if(value != null)
+                        _items.Add(new ItemPair() {Name = name,Value=value });
                 }
                 else
                 {
-                    item.Value = value;
+                    if(value == null)
+                    {
+                        _items.Remove(item);
+                    }
+                    else
+                    {
+                        item.Value = value;
+                    }
+                   
                 }
             }
         }

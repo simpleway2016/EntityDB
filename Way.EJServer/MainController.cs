@@ -455,7 +455,7 @@ namespace Way.EJServer
                                 if (column.IsAutoIncrement == false && drow[column.Name] != null)
                                     dataitem.SetValue(column.Name.ToLower(), drow[column.Name]);
                             }
-                            invokingDB.Insert(dataitem);
+                            invokingDB.Insert(dataitem,false);
                         }
                         else if (drow.RowState == DataRowState.Modified)
                         {
