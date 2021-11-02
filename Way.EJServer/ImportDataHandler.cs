@@ -84,7 +84,7 @@ namespace Way.EJServer
                                 newDataItem = new CustomDataItem(_tablename, pkname, null);
                                 foreach (var item in data)
                                     newDataItem.SetValue(item.Key, item.Value);
-                                invokingDB.Insert(newDataItem);
+                                invokingDB.Insert(newDataItem,false);
                             }
                         }
                         catch(Exception ex)

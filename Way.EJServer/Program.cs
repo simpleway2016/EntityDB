@@ -18,6 +18,8 @@ namespace Way.EJServer
       
         public static void Main(string[] args)
         {
+            Environment.CurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+
             HttpServer server = null;
             try
             {
@@ -52,7 +54,7 @@ namespace Way.EJServer
                 server.RegisterHandler(new ImportDataHandler());
                 server.RegisterHandler(new ImportCSFileHandler());
 
-                server.UseHttps(new X509Certificate2(Way.Lib.PlatformHelper.GetAppDirectory() + "EJServerCert.pfx", "123456") , System.Security.Authentication.SslProtocols.None , true);
+                server.UseHttps(new X509Certificate2("./EJServerCert.pfx", "123456") , System.Security.Authentication.SslProtocols.None , true);
                 Console.WriteLine($"use ssl EJServerCert.pfx");
 
                 server.SessionTimeout = 60 * 24;
