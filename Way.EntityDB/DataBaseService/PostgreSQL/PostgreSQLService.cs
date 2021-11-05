@@ -68,7 +68,7 @@ namespace Way.EntityDB
             if (!(ex is PostgresException))
                 throw ex;
             PostgresException nerror = ex as PostgresException;
-            if(nerror.SqlState != "23505" || (nerror.Detail.Contains(" already exists") == false && nerror.Message.Contains("duplicate key value ") == false))
+            if(nerror.SqlState != "23505")
                 throw ex;
             throw new RepeatException(ex);
         }
