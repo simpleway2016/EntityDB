@@ -326,7 +326,10 @@ namespace Way.EJServer
                         return "double";
 
                 case "image":
-                    return "Byte[]";
+                    if (canNull)
+                        return "Byte[]?";
+                    else
+                        return "Byte[]";
                 case "int":
                     if (canNull)
                         return "System.Nullable<Int32>";
@@ -386,9 +389,15 @@ namespace Way.EJServer
                     else
                         return "string";
                 case "timestamp":
-                    return "Byte[]";
+                    if (canNull)
+                        return "Byte[]?";
+                    else
+                        return "Byte[]";
                 case "varbinary":
-                    return "Byte[]";
+                    if (canNull)
+                        return "Byte[]?";
+                    else
+                        return "Byte[]";
                 case "varchar":
                     if (canNull)
                         return "string?";
@@ -400,7 +409,10 @@ namespace Way.EJServer
                     else
                         return "string";
                 case "jsonb":
-                    return "object";
+                    if (canNull)
+                        return "object?";
+                    else
+                        return "object";
                 default:
                     return type;
 
