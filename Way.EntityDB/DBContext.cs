@@ -120,6 +120,11 @@ namespace Way.EntityDB
             }
         }
 
+        /// <summary>
+        /// 当进行insert、update、delete等操作时，自动启动事务
+        /// </summary>
+        public bool AutoBeginTransaction { get; set; }
+
         #endregion
 
         bool _disposed = false;
@@ -921,6 +926,8 @@ namespace Way.EntityDB
         /// <param name="condition">指定更新条件，如：m=&gt;m.age &gt; 16 &amp;&amp; m.id == dataitem.id，默认使用主键匹配</param>
         public virtual int Update<T>(T dataitem, Expression<Func<T, bool>> condition) where T : DataItem
         {
+            if (AutoBeginTransaction)
+                this.BeginTransaction();
 
             if (BeforeUpdate != null)
             {
@@ -966,6 +973,8 @@ namespace Way.EntityDB
 
         public virtual int Delete<T>(Expression<Func<T, bool>> condition) where T : DataItem
         {
+            if (AutoBeginTransaction)
+                this.BeginTransaction();
 
             if (BeforeDelete != null)
             {
@@ -1007,6 +1016,8 @@ namespace Way.EntityDB
 
         public virtual async Task<int> DeleteAsync<T>(Expression<Func<T, bool>> condition) where T : DataItem
         {
+            if (AutoBeginTransaction)
+               await this.BeginTransactionAsync();
 
             if (BeforeDelete != null)
             {
@@ -1053,6 +1064,8 @@ namespace Way.EntityDB
         /// <param name="condition">指定更新条件，如：m=&gt;m.age &gt; 16 &amp;&amp; m.id == dataitem.id，默认使用主键匹配</param>
         public virtual async Task<int> UpdateAsync<T>(T dataitem, Expression<Func<T, bool>> condition) where T : DataItem
         {
+            if (AutoBeginTransaction)
+               await this.BeginTransactionAsync();
 
             if (BeforeUpdate != null)
             {
@@ -1121,6 +1134,9 @@ namespace Way.EntityDB
         /// <param name="insertAllFields">是否连自增长字段，也放到insert语句里</param>
         public virtual void Insert(DataItem dataitem,bool insertAllFields)
         {
+            if (AutoBeginTransaction)
+                this.BeginTransaction();
+
             if (BeforeInsert != null)
             {
                 BeforeInsert(this, new DatabaseModifyEventArg()
@@ -1165,6 +1181,9 @@ namespace Way.EntityDB
         /// <param name="insertAllFields">是否连自增长字段，也放到insert语句里</param>
         public virtual async Task InsertAsync(DataItem dataitem, bool insertAllFields)
         {
+            if (AutoBeginTransaction)
+               await this.BeginTransactionAsync();
+
             if (BeforeInsert != null)
             {
                 BeforeInsert(this, new DatabaseModifyEventArg()
@@ -1208,6 +1227,9 @@ namespace Way.EntityDB
         /// <param name="dataitem"></param>
         public virtual void Delete(DataItem dataitem)
         {
+            if (AutoBeginTransaction)
+                this.BeginTransaction();
+
             if (BeforeDelete != null)
             {
                 BeforeDelete(this, new DatabaseModifyEventArg()
@@ -1252,6 +1274,9 @@ namespace Way.EntityDB
         /// <param name="dataitem"></param>
         public virtual async Task DeleteAsync(DataItem dataitem)
         {
+            if (AutoBeginTransaction)
+               await this.BeginTransactionAsync();
+
             if (BeforeDelete != null)
             {
                 BeforeDelete(this, new DatabaseModifyEventArg()
@@ -1589,6 +1614,9 @@ namespace Way.EntityDB
         /// <param name="items"></param>
         public void Delete(System.Linq.IQueryable items)
         {
+            if (AutoBeginTransaction)
+                this.BeginTransaction();
+
             Type dataType = items.GetType().GetGenericArguments()[0];
 
             var tableSchema = SchemaManager.GetSchemaTable(dataType);
@@ -1643,6 +1671,9 @@ namespace Way.EntityDB
         /// <param name="items"></param>
         public async Task DeleteAsync(System.Linq.IQueryable items)
         {
+            if (AutoBeginTransaction)
+               await this.BeginTransactionAsync();
+
             Type dataType = items.GetType().GetGenericArguments()[0];
 
             var tableSchema = SchemaManager.GetSchemaTable(dataType);
