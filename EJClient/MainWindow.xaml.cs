@@ -293,7 +293,7 @@ namespace EJClient
                 var nameSpaceList = namespaceStr.Split(',').Select(x=>x.Trim()).Where(x=>x.Length > 0 && x != "$not lower$").ToArray();
                 if(nameSpaceList.Length == 1)
                 {
-                    downloadClass(selectedItem, "DownloadDatabaseCode.aspx?namespace=" + name);
+                    downloadClass(selectedItem, "DownloadDatabaseCode.aspx?namespace=" + nameSpaceList[0]);
                     return;
                 }
                 var menu = new ContextMenu();
