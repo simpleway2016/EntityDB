@@ -19,7 +19,7 @@ namespace EJClient.BuildDatabase
             System.GC.Collect();
             try
             {
-                req = HttpWebRequest.Create(Helper.WebSite + "/"+ pagename + "?databaseid=" + databaseid + "&filepath=" + System.Web.HttpUtility.UrlEncode(filepath , System.Text.Encoding.UTF8)) as System.Net.HttpWebRequest;
+                req = HttpWebRequest.Create(Helper.WebSite + "/"+ pagename + (pagename.Contains("?")?"&":"?") + "databaseid=" + databaseid + "&filepath=" + System.Web.HttpUtility.UrlEncode(filepath , System.Text.Encoding.UTF8)) as System.Net.HttpWebRequest;
                 req.Headers["Cookie"] = $"WayScriptRemoting={Net.RemotingClient.SessionID}";
                 req.AllowAutoRedirect = true;
                 req.KeepAlive = false;

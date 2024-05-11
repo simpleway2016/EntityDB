@@ -257,10 +257,10 @@ namespace Way.EJServer
             return outBuffer.ToArray();
         }
 
-        public void BuildTable(EJDB db, NamespaceCode namespaceCode, EJ.DBTable table, List<string> foreignKeys)
+        public void BuildTable(EJDB db,bool columnToLower, NamespaceCode namespaceCode, EJ.DBTable table, List<string> foreignKeys)
         {
             var columns = db.DBColumn.Where(m => m.TableID == table.id).ToList();
-            BuildTable(db, namespaceCode, table, columns, foreignKeys);
+            BuildTable(db, columnToLower, namespaceCode, table, columns, foreignKeys);
         }
         /// <summary>
         /// </summary>
@@ -480,7 +480,7 @@ namespace Way.EJServer
             return names;
         }
 
-        static void BuildTable(EJDB db, NamespaceCode namespaceCode, EJ.DBTable table, List<EJ.DBColumn> columns, List<string> foreignKeys)
+        static void BuildTable(EJDB db,bool columnToLower, NamespaceCode namespaceCode, EJ.DBTable table, List<EJ.DBColumn> columns, List<string> foreignKeys)
         {
             var pkcolumn = columns.FirstOrDefault(m => m.IsPKID == true);
             CodeItem classCode = new CodeItem($"public class {table.Name} :Way.EntityDB.DataItem");
@@ -666,13 +666,29 @@ namespace Way.EJServer
                 {
                     columnCodeItem.Attributes.Add($"[Display(Name = \"{column.caption.Replace("\r", "").Replace("\n", " ").Replace("\"", "\\\"")}\")]");
                 }
-                if (column.dbType == "jsonb")
+
+
+                if (columnToLower)
                 {
-                    columnCodeItem.Attributes.Add($"[Column(\"{column.Name.ToLower()}\",TypeName = \"jsonb\")]");
+                    if (column.dbType == "jsonb")
+                    {
+                        columnCodeItem.Attributes.Add($"[Column(\"{column.Name.ToLower()}\",TypeName = \"jsonb\")]");
+                    }
+                    else
+                    {
+                        columnCodeItem.Attributes.Add($"[Column(\"{column.Name.ToLower()}\")]");
+                    }
                 }
                 else
                 {
-                    columnCodeItem.Attributes.Add($"[Column(\"{column.Name.ToLower()}\")]");
+                    if (column.dbType == "jsonb")
+                    {
+                        columnCodeItem.Attributes.Add($"[Column(\"{column.Name}\",TypeName = \"jsonb\")]");
+                    }
+                    else
+                    {
+                        columnCodeItem.Attributes.Add($"[Column(\"{column.Name}\")]");
+                    }
                 }
                 columnCodeItem.PropertyType = dataType;
                 columnCodeItem.Comment = column.caption;

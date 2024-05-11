@@ -50,12 +50,12 @@ namespace Way.EJServer
 
                     bw.Write(1);
                     ICodeBuilder codeBuilder = new CodeBuilder();
-
-                    if(connectInfo.Request.Query.ContainsKey("namespace"))
+                    var columnToLower = !database.NameSpace.Contains("$not lower$");
+                    if (connectInfo.Request.Query.ContainsKey("namespace"))
                     {
                         database.NameSpace = connectInfo.Request.Query["namespace"];
                     }
-
+                  
                     NamespaceCode namespaceCode = new NamespaceCode(database.NameSpace);
                     NamespaceCode namespaceCode2 = new NamespaceCode(database.NameSpace + ".DB");
                     namespaceCode.AddUsing("System");
@@ -75,7 +75,7 @@ namespace Way.EJServer
                     List<string> foreignKeys = new List<string>();
                     foreach (var table in tables)
                     {
-                        codeBuilder.BuildTable(db, namespaceCode, table, foreignKeys);
+                        codeBuilder.BuildTable(db, columnToLower, namespaceCode, table, foreignKeys);
                     }
 
                     bw.Write("code.cs");

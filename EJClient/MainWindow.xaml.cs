@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -284,8 +285,38 @@ namespace EJClient
         private void MenuItem_生成数据库模型代码_Click_1(object sender, RoutedEventArgs e)
         {
             DatabaseItemNode selectedItem = ((FrameworkElement)e.OriginalSource).DataContext as DatabaseItemNode;
-            downloadClass(selectedItem, "DownloadDatabaseCode.aspx");
+            var namespaceStr = selectedItem.Database.NameSpace.Replace("，", ",");
 
+            if (namespaceStr.Contains(","))
+            {
+                var nameSpaceList = namespaceStr.Split(',').Select(x=>x.Trim()).Where(x=>x.Length > 0).ToArray();
+                var menu = new ContextMenu();
+                foreach( var name in nameSpaceList )
+                {
+                    var menuitem = new MenuItem();
+                    menuitem.Header = name;
+                    menuitem.Click += (s, e2) =>
+                    {
+                        downloadClass(selectedItem, "DownloadDatabaseCode.aspx?namespace=" + name);
+                    };
+                    menu.Items.Add(menuitem);
+                }
+               
+              
+                menu.Closed += (s, e2) =>
+                {
+                    gridMain.ContextMenu = null;
+                };
+
+                gridMain.ContextMenu = menu;
+                menu.PlacementTarget = this;
+               
+                menu.IsOpen = true;
+            }
+            else
+            {
+                downloadClass(selectedItem, "DownloadDatabaseCode.aspx");
+            }
         }
 
         void downloadClass(DatabaseItemNode selectedItem , string url)
