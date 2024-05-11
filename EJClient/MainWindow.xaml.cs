@@ -16,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Xml.Linq;
 
 namespace EJClient
 {
@@ -289,7 +290,12 @@ namespace EJClient
 
             if (namespaceStr.Contains(","))
             {
-                var nameSpaceList = namespaceStr.Split(',').Select(x=>x.Trim()).Where(x=>x.Length > 0).ToArray();
+                var nameSpaceList = namespaceStr.Split(',').Select(x=>x.Trim()).Where(x=>x.Length > 0 && x != "$not lower$").ToArray();
+                if(nameSpaceList.Length == 1)
+                {
+                    downloadClass(selectedItem, "DownloadDatabaseCode.aspx?namespace=" + name);
+                    return;
+                }
                 var menu = new ContextMenu();
                 foreach( var name in nameSpaceList )
                 {
