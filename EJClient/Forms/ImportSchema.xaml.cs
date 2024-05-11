@@ -69,7 +69,7 @@ namespace EJClient.Forms
                             {
                                 TableName = table,
                                 Columns = columns.ToArray(),
-                                Indexes = indexes.ToArray(),
+                                Indexes = indexes.Where(x=>x.ColumnNames != null && x.ColumnNames.Length > 0).ToArray(),
                             });
                         }
 
@@ -79,6 +79,13 @@ namespace EJClient.Forms
 
                     foreach( var tableinfo in tables )
                     {
+                        foreach( var column in tableinfo.Columns )
+                        {
+                            if(column.dbType == "text")
+                            {
+                                column.length = "";
+                            }
+                        }
                         var notSureColumn = tableinfo.Columns.Where(n => n.dbType.StartsWith("[未识别]")).ToArray();
                         if (notSureColumn.Count() > 0)
                         {

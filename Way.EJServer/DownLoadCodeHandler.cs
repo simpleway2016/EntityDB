@@ -51,6 +51,11 @@ namespace Way.EJServer
                     bw.Write(1);
                     ICodeBuilder codeBuilder = new CodeBuilder();
 
+                    if(connectInfo.Request.Query.ContainsKey("namespace"))
+                    {
+                        database.NameSpace = connectInfo.Request.Query["namespace"];
+                    }
+
                     NamespaceCode namespaceCode = new NamespaceCode(database.NameSpace);
                     NamespaceCode namespaceCode2 = new NamespaceCode(database.NameSpace + ".DB");
                     namespaceCode.AddUsing("System");
