@@ -303,7 +303,7 @@ namespace EJClient
                     menuitem.Header = name;
                     menuitem.Click += (s, e2) =>
                     {
-                        downloadClass(selectedItem, "DownloadDatabaseCode.aspx?namespace=" + name);
+                        downloadClass(selectedItem, "DownloadDatabaseCode.aspx?namespace=" + name , name);
                     };
                     menu.Items.Add(menuitem);
                 }
@@ -325,11 +325,11 @@ namespace EJClient
             }
         }
 
-        void downloadClass(DatabaseItemNode selectedItem , string url)
+        void downloadClass(DatabaseItemNode selectedItem , string url,string namesapce = null)
         {
             using (System.Windows.Forms.SaveFileDialog fd = new System.Windows.Forms.SaveFileDialog())
             {
-                var savepath = this.Cache[$"{url}_{selectedItem.Database.id}"];
+                var savepath = namesapce == null ? this.Cache[$"{url}_{selectedItem.Database.id}"]: this.Cache[$"{url}_{selectedItem.Database.id}_{namesapce}"];
 
                 if (!string.IsNullOrEmpty(savepath))
                 {
@@ -352,7 +352,14 @@ namespace EJClient
                         Forms.BuildeCode code = new Forms.BuildeCode(selectedItem.Database.id.Value, fd.FileName, url);
                         code.Owner = this;
                         code.ShowDialog();
-                        this.Cache[$"{url}_{selectedItem.Database.id}"] = fd.FileName;
+                        if (namesapce != null)
+                        {
+                            this.Cache[$"{url}_{selectedItem.Database.id}_{namesapce}"] = fd.FileName;
+                        }
+                        else
+                        {
+                            this.Cache[$"{url}_{selectedItem.Database.id}"] = fd.FileName;
+                        }
                         this.Cache.Save();
                     }
                     catch (Exception ex)
