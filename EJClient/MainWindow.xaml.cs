@@ -293,7 +293,7 @@ namespace EJClient
                 var nameSpaceList = namespaceStr.Split(',').Select(x=>x.Trim()).Where(x=>x.Length > 0 && x != "$not lower$").ToArray();
                 if(nameSpaceList.Length == 1)
                 {
-                    downloadClass(selectedItem, "DownloadDatabaseCode.aspx?namespace=" + nameSpaceList[0]);
+                    downloadClass(selectedItem, "DownloadDatabaseCode.aspx", "DownloadDatabaseCode.aspx?namespace=" + nameSpaceList[0]);
                     return;
                 }
                 var menu = new ContextMenu();
@@ -303,7 +303,7 @@ namespace EJClient
                     menuitem.Header = name;
                     menuitem.Click += (s, e2) =>
                     {
-                        downloadClass(selectedItem, "DownloadDatabaseCode.aspx?namespace=" + name , name);
+                        downloadClass(selectedItem, "DownloadDatabaseCode.aspx", "DownloadDatabaseCode.aspx?namespace=" + name , name);
                     };
                     menu.Items.Add(menuitem);
                 }
@@ -321,15 +321,19 @@ namespace EJClient
             }
             else
             {
-                downloadClass(selectedItem, "DownloadDatabaseCode.aspx");
+                downloadClass(selectedItem, "DownloadDatabaseCode.aspx", "DownloadDatabaseCode.aspx");
             }
         }
 
-        void downloadClass(DatabaseItemNode selectedItem , string url,string namesapce = null)
+        void downloadClass(DatabaseItemNode selectedItem ,string baseUrl, string url,string namesapce = null)
         {
             using (System.Windows.Forms.SaveFileDialog fd = new System.Windows.Forms.SaveFileDialog())
             {
                 var savepath = namesapce == null ? this.Cache[$"{url}_{selectedItem.Database.id}"]: this.Cache[$"{url}_{selectedItem.Database.id}_{namesapce}"];
+                if (string.IsNullOrEmpty(savepath))
+                {
+                    savepath = this.Cache[$"{baseUrl}_{selectedItem.Database.id}"];
+                }
 
                 if (!string.IsNullOrEmpty(savepath))
                 {
@@ -373,7 +377,7 @@ namespace EJClient
         private void MenuItem_生成简单模型代码_Click_1(object sender, RoutedEventArgs e)
         {
             DatabaseItemNode selectedItem = ((FrameworkElement)e.OriginalSource).DataContext as DatabaseItemNode;
-            downloadClass(selectedItem, "DownLoadSimpleCodeHandler.aspx");
+            downloadClass(selectedItem, "DownLoadSimpleCodeHandler.aspx", "DownLoadSimpleCodeHandler.aspx");
 
 
         }
@@ -820,7 +824,7 @@ namespace EJClient
         private void MenuItem_生成最简化模型代码_Click_1(object sender, RoutedEventArgs e)
         {
             DatabaseItemNode selectedItem = ((FrameworkElement)e.OriginalSource).DataContext as DatabaseItemNode;
-            downloadClass(selectedItem, "DownLoadVerySimpleCodeHandler.aspx");
+            downloadClass(selectedItem, "DownLoadVerySimpleCodeHandler", "DownLoadVerySimpleCodeHandler.aspx");
 
         }
 

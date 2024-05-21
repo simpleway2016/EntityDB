@@ -435,10 +435,11 @@ namespace Way.EntityDB
                 throw new Exception(ToArrayMethod.Name + ".MakeGenericMethod失败，参数类型：" + dataType.FullName);
         }
 
-        public async Task<object> InvokeToArrayAsync(object linqQuery)
+        static MethodInfo ToArrayAsyncMethod;
+        public static async Task<object> InvokeToArrayAsync(object linqQuery)
         {
             Type dataType = linqQuery.GetType().GetGenericArguments()[0];
-            if (ToArrayMethod == null)
+            if (ToArrayAsyncMethod == null)
             {
                 Type queryType = typeof(EntityFrameworkQueryableExtensions);
                 var methods = queryType.GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static).Where(m => m.Name == "ToArrayAsync");
@@ -446,14 +447,43 @@ namespace Way.EntityDB
                 {
                     if (method.IsGenericMethod)
                     {
-                        ToArrayMethod = method;
+                        ToArrayAsyncMethod = method;
                     }
                 }
             }
-            if (ToArrayMethod == null)
+            if (ToArrayAsyncMethod == null)
                 throw new Exception("找不到泛型ToArrayAsync方法");
 
-            System.Reflection.MethodInfo mmm = ToArrayMethod.MakeGenericMethod(dataType);
+            System.Reflection.MethodInfo mmm = ToArrayAsyncMethod.MakeGenericMethod(dataType);
+            if (mmm != null)
+            {
+                var t = mmm.Invoke(null, new object[] { linqQuery, CancellationToken.None });
+                return await (dynamic)t;
+            }
+            else
+                throw new Exception(ToArrayMethod.Name + ".MakeGenericMethod失败，参数类型：" + dataType.FullName);
+        }
+
+        static MethodInfo CountAsyncMethod;
+        public static async Task<object> InvokeCountAsync(object linqQuery)
+        {
+            Type dataType = linqQuery.GetType().GetGenericArguments()[0];
+            if (CountAsyncMethod == null)
+            {
+                Type queryType = typeof(EntityFrameworkQueryableExtensions);
+                var methods = queryType.GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static).Where(m => m.Name == "CountAsync");
+                foreach (System.Reflection.MethodInfo method in methods)
+                {
+                    if (method.IsGenericMethod && method.GetParameters().Length == 2)
+                    {
+                        CountAsyncMethod = method;
+                    }
+                }
+            }
+            if (CountAsyncMethod == null)
+                throw new Exception("找不到泛型CountAsync方法");
+
+            System.Reflection.MethodInfo mmm = CountAsyncMethod.MakeGenericMethod(dataType);
             if (mmm != null)
             {
                 var t = mmm.Invoke(null, new object[] { linqQuery, CancellationToken.None });
