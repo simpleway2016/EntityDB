@@ -213,7 +213,7 @@ namespace Way.EJServer
             data.TableInModules = db.TableInModule.Where(m => tableids.Contains(m.TableID.Value)).ToArray();
             data.IDXIndexes = db.IDXIndex.Where(m => tableids.Contains(m.TableID.Value)).ToArray();
             data.DBDeleteConfigs = db.DBDeleteConfig.Where(m => tableids.Contains(m.TableID.Value)).ToArray();
-            data.DBColumns = db.DBColumn.Where(m => tableids.Contains(m.TableID.Value)).ToArray();
+            data.DBColumns = db.DBColumn.Where(m => tableids.Contains(m.TableID.Value)).OrderBy(m => m.orderid).ToArray();
             data.classproperties = db.classproperty.Where(m => tableids.Contains(m.tableid.Value)).ToArray();
             string json = Newtonsoft.Json.JsonConvert.SerializeObject(data);
             string content = Convert.ToBase64String(GZip(System.Text.Encoding.UTF8.GetBytes(json)));
@@ -259,7 +259,7 @@ namespace Way.EJServer
 
         public void BuildTable(EJDB db,bool columnToLower, NamespaceCode namespaceCode, EJ.DBTable table, List<string> foreignKeys)
         {
-            var columns = db.DBColumn.Where(m => m.TableID == table.id).ToList();
+            var columns = db.DBColumn.Where(m => m.TableID == table.id).OrderBy(m => m.orderid).ToList();
             BuildTable(db, columnToLower, namespaceCode, table, columns, foreignKeys);
         }
         /// <summary>
@@ -856,7 +856,7 @@ namespace Way.EJServer
         /// <returns></returns>
         public void BuildSimpleTable(EJDB db, NamespaceCode namespaceCode, EJ.DBTable table)
         {
-            var columns = db.DBColumn.Where(m => m.TableID == table.id).ToList();
+            var columns = db.DBColumn.Where(m => m.TableID == table.id).OrderBy(m=>m.orderid).ToList();
             BuildSimpleTable(db, namespaceCode, table, columns);
         }
 
@@ -1020,7 +1020,7 @@ namespace Way.EJServer
 
         public void BuildVerySimpleTable(EJDB db, NamespaceCode namespaceCode, EJ.DBTable table)
         {
-            var columns = db.DBColumn.Where(m => m.TableID == table.id).ToList();
+            var columns = db.DBColumn.Where(m => m.TableID == table.id).OrderBy(m => m.orderid).ToList();
             BuildVerySimpleTable(db, namespaceCode, table, columns);
         }
 
@@ -1180,7 +1180,7 @@ namespace Way.EJServer
 
         public string BuildDtoTable(EJDB db,  EJ.DBTable table)
         {
-            var columns = db.DBColumn.Where(m => m.TableID == table.id).ToList();
+            var columns = db.DBColumn.Where(m => m.TableID == table.id).OrderBy(m => m.orderid).ToList();
             NamespaceCode namespaceCode = new NamespaceCode(null);
             var oldname = table.Name;
             table.Name += "Dto";
