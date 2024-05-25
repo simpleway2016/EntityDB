@@ -257,7 +257,7 @@ namespace Way.EJServer
             return outBuffer.ToArray();
         }
 
-        public void BuildTable(EJDB db,bool columnToLower, NamespaceCode namespaceCode, EJ.DBTable table, List<string> foreignKeys)
+        public void BuildTable(EJDB db, bool columnToLower, NamespaceCode namespaceCode, EJ.DBTable table, List<string> foreignKeys)
         {
             var columns = db.DBColumn.Where(m => m.TableID == table.id).OrderBy(m => m.orderid).ToList();
             BuildTable(db, columnToLower, namespaceCode, table, columns, foreignKeys);
@@ -480,7 +480,7 @@ namespace Way.EJServer
             return names;
         }
 
-        static void BuildTable(EJDB db,bool columnToLower, NamespaceCode namespaceCode, EJ.DBTable table, List<EJ.DBColumn> columns, List<string> foreignKeys)
+        static void BuildTable(EJDB db, bool columnToLower, NamespaceCode namespaceCode, EJ.DBTable table, List<EJ.DBColumn> columns, List<string> foreignKeys)
         {
             var pkcolumn = columns.FirstOrDefault(m => m.IsPKID == true);
             CodeItem classCode = new CodeItem($"public class {table.Name} :Way.EntityDB.DataItem");
@@ -547,7 +547,7 @@ namespace Way.EJServer
                 {
                     dataType = GetLinqTypeString(column.dbType, column.CanNull.GetValueOrDefault() || column.IsAutoIncrement == true);
                 }
-                if(column.dbType == "jsonb" && column.CanNull == true)
+                if (column.dbType == "jsonb" && column.CanNull == true)
                 {
                     if (dataType.EndsWith("?") == false)
                         dataType += "?";
@@ -708,7 +708,7 @@ namespace Way.EJServer
                 }
                 columnCodeItem.ItemForSet.AddString($"    SendPropertyChanging(\"{column.Name.Trim()}\",_{column.Name.Trim()},value);");
                 columnCodeItem.ItemForSet.AddString($"    _{column.Name} = value;");
-                columnCodeItem.ItemForSet.AddString($"    SendPropertyChanged(\"{column.Name.Trim()}\");"); 
+                columnCodeItem.ItemForSet.AddString($"    SendPropertyChanged(\"{column.Name.Trim()}\");");
                 if (column.dbType != "jsonb")
                 {
                     columnCodeItem.ItemForSet.AddString("}");
@@ -861,7 +861,7 @@ namespace Way.EJServer
         /// <returns></returns>
         public void BuildSimpleTable(EJDB db, NamespaceCode namespaceCode, EJ.DBTable table)
         {
-            var columns = db.DBColumn.Where(m => m.TableID == table.id).OrderBy(m=>m.orderid).ToList();
+            var columns = db.DBColumn.Where(m => m.TableID == table.id).OrderBy(m => m.orderid).ToList();
             BuildSimpleTable(db, namespaceCode, table, columns);
         }
 
@@ -1183,7 +1183,7 @@ namespace Way.EJServer
         }
 
 
-        public string BuildDtoTable(EJDB db,  EJ.DBTable table)
+        public string BuildDtoTable(EJDB db, EJ.DBTable table)
         {
             var columns = db.DBColumn.Where(m => m.TableID == table.id).OrderBy(m => m.orderid).ToList();
             NamespaceCode namespaceCode = new NamespaceCode(null);
@@ -1222,12 +1222,26 @@ namespace Way.EJServer
                     if (column.EnumDefine.Trim().StartsWith("$"))
                     {
                         var target = column.EnumDefine.Trim().Substring(1).Split('.');
-                        if (column.CanNull == true)
-                            dataType = target[0] + "_" + target[1] + "Enum?";
-                        else
-                            dataType = target[0] + "_" + target[1] + "Enum";
+                        var t_name = target[0];
+                        var c_name = target[1];
+
+                        try
+                        {
+                            var other_t = db.DBTable.FirstOrDefault(m => m.DatabaseID == table.DatabaseID && m.Name == t_name);
+                            var other_c = db.DBColumn.FirstOrDefault(m => m.TableID == other_t.id && m.Name == c_name);
+                            column.EnumDefine = other_c.EnumDefine;
+                        }
+                        catch (Exception)
+                        {
+                            column.EnumDefine = null;
+                            if (column.CanNull == true)
+                                dataType = "object?";
+                            else
+                                dataType = "object";
+                        }
                     }
-                    else
+
+                    if (column.EnumDefine != null)
                     {
                         string[] enumitems = column.EnumDefine.Replace("\r", "").Split('\n');
 
