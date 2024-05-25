@@ -547,6 +547,11 @@ namespace Way.EJServer
                 {
                     dataType = GetLinqTypeString(column.dbType, column.CanNull.GetValueOrDefault() || column.IsAutoIncrement == true);
                 }
+                if(column.dbType == "jsonb" && column.CanNull == true)
+                {
+                    if (dataType.EndsWith("?") == false)
+                        dataType += "?";
+                }
 
                 string eqString = "";
                 if (!string.IsNullOrEmpty(column.EnumDefine) && column.dbType == "int")
