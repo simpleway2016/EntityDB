@@ -604,6 +604,8 @@ namespace Way.EntityDB
             return left;
         }
 
+
+        static MethodInfo SelectMethod = null;
         public static object InvokeSelect(object linqQuery, string propertyName)
         {
             Type dataType = linqQuery.GetType().GetGenericArguments()[0];
@@ -614,21 +616,34 @@ namespace Way.EntityDB
 
             System.Linq.Expressions.Expression expression = System.Linq.Expressions.Expression.Lambda(left, param);
 
-            Type myType = typeof(System.Linq.Queryable);
-            var methods = myType.GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
-            foreach (System.Reflection.MethodInfo method in methods)
+            if (SelectMethod == null)
             {
-                if (method.Name != "Select" || method.IsGenericMethod == false)
-                    continue;
-                System.Reflection.MethodInfo mmm = method.MakeGenericMethod(dataType, pinfo.PropertyType);
-                if (mmm.GetParameters().Length != 2)
-                    continue;
-
-                return mmm.Invoke(null, new object[] { linqQuery, expression });
-
+                Type myType = typeof(System.Linq.Queryable);
+                SelectMethod = myType.GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static).FirstOrDefault(m=>m.Name == "Select" && m.IsGenericMethod && m.GetParameters().Length == 2);
             }
-            return null;
+            if (SelectMethod == null)
+                throw new Exception("找不到Select方法");
+
+            System.Reflection.MethodInfo mmm = SelectMethod.MakeGenericMethod(dataType, pinfo.PropertyType);
+            return mmm.Invoke(null, new object[] { linqQuery, expression });
         }
+
+        public static object InvokeSelect(Type returnType, object linqQuery, Expression expression)
+        {
+            Type dataType = linqQuery.GetType().GetGenericArguments()[0];
+            if (SelectMethod == null)
+            {
+                Type myType = typeof(System.Linq.Queryable);
+                SelectMethod = myType.GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static).FirstOrDefault(m => m.Name == "Select" && m.IsGenericMethod && m.GetParameters().Length == 2);
+            }
+            if (SelectMethod == null)
+                throw new Exception("找不到Select方法");
+
+            MethodInfo methodInfo2 = SelectMethod.MakeGenericMethod(dataType, returnType);
+            return methodInfo2.Invoke(null, new object[2] { linqQuery, expression });
+        }
+
+
         public static object InvokeSum(object linqQuery)
         {
             Type dataType = linqQuery.GetType().GetGenericArguments()[0];
