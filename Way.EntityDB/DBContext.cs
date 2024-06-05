@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -604,6 +605,23 @@ namespace Way.EntityDB
             return left;
         }
 
+        static MethodInfo AsQueryableMethod;
+        public static object InvokeAsQueryable(object source)
+        {
+            if (AsQueryableMethod == null)
+            {
+                AsQueryableMethod = typeof(Queryable).GetMethods().FirstOrDefault(m => m.IsGenericMethod == false && m.Name == "AsQueryable" && m.GetParameters().Length == 1);
+            }
+            var query = AsQueryableMethod.Invoke(null, new object[] { source });
+
+            return query;
+        }
+
+        public static IEnumerable InvokeEnumerableSelect(Type type, object source, string propertyName)
+        {
+            var query = InvokeAsQueryable(source);
+            return (IEnumerable)DBContext.InvokeSelect(query, propertyName);
+        }
 
         static MethodInfo SelectMethod = null;
         public static object InvokeSelect(object linqQuery, string propertyName)
