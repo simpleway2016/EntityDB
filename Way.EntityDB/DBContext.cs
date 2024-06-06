@@ -14,7 +14,7 @@ using Way.EntityDB.DataBaseService;
 
 namespace Way.EntityDB
 {
-    public enum DatabaseType:int 
+    public enum DatabaseType : int
     {
 
 
@@ -53,7 +53,7 @@ namespace Way.EntityDB
             internal set;
         }
     }
-   
+
     public class DBContext : Microsoft.EntityFrameworkCore.DbContext
     {
 
@@ -112,7 +112,7 @@ namespace Way.EntityDB
 
         IDatabaseService _databaseService;
         static object GlobalLockObj = new object();
-        static Dictionary<string,bool> upgradedDatabase = new Dictionary<string, bool>();
+        static Dictionary<string, bool> upgradedDatabase = new Dictionary<string, bool>();
         public new IDatabaseService Database
         {
             get
@@ -142,7 +142,7 @@ namespace Way.EntityDB
             //防止有些dll版本不对，无法加载
             //Way.EntityDB.PlatformHelper.setAssemblyResolve();
 
-            
+
             BeforeDelete += Database_BeforeDelete;
             BeforeInsert += Database_BeforeInsert;
             BeforeUpdate += Database_BeforeUpdate;
@@ -179,7 +179,7 @@ namespace Way.EntityDB
                 {
                     if (dataitemType.FullName == capture.DataItemType.FullName)
                     {
-                        capture.AfterUpdate(  sender, e);
+                        capture.AfterUpdate(sender, e);
                     }
                 }
             }
@@ -209,7 +209,7 @@ namespace Way.EntityDB
                 {
                     if (dataitemType.FullName == capture.DataItemType.FullName)
                     {
-                        capture.AfterDelete( sender, e);
+                        capture.AfterDelete(sender, e);
                     }
                 }
             }
@@ -262,7 +262,7 @@ namespace Way.EntityDB
         }
         #endregion
 
-#region 动态query
+        #region 动态query
 #if NET46
         public static object GetQueryByString(object linqQuery, string stringQuery)
         {
@@ -355,7 +355,7 @@ namespace Way.EntityDB
             return null;
         }
 
-        public static object InvokeWhereWithMethod(object linqQuery,MethodInfo fieldMethod, string propertyName, object value)
+        public static object InvokeWhereWithMethod(object linqQuery, MethodInfo fieldMethod, string propertyName, object value)
         {
             Type dataType = linqQuery.GetType().GetGenericArguments()[0];
             ParameterExpression param = System.Linq.Expressions.Expression.Parameter(dataType, "n");
@@ -377,7 +377,7 @@ namespace Way.EntityDB
                 right = System.Linq.Expressions.Expression.Constant(Convert.ChangeType(value, pinfo.PropertyType));
             }
 
-            System.Linq.Expressions.Expression expression = System.Linq.Expressions.Expression.Call(left,fieldMethod, right);
+            System.Linq.Expressions.Expression expression = System.Linq.Expressions.Expression.Call(left, fieldMethod, right);
             expression = System.Linq.Expressions.Expression.Lambda(expression, param);
 
             Type queryableType = typeof(System.Linq.Queryable);
@@ -509,7 +509,7 @@ namespace Way.EntityDB
                         TakeMethod = method;
                         break;
                     }
-                    
+
                 }
             }
             if (TakeMethod == null)
@@ -637,7 +637,7 @@ namespace Way.EntityDB
             if (SelectMethod == null)
             {
                 Type myType = typeof(System.Linq.Queryable);
-                SelectMethod = myType.GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static).FirstOrDefault(m=>m.Name == "Select" && m.IsGenericMethod && m.GetParameters().Length == 2);
+                SelectMethod = myType.GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static).FirstOrDefault(m => m.Name == "Select" && m.IsGenericMethod && m.GetParameters().Length == 2);
             }
             if (SelectMethod == null)
                 throw new Exception("找不到Select方法");
@@ -661,6 +661,23 @@ namespace Way.EntityDB
             return methodInfo2.Invoke(null, new object[2] { linqQuery, expression });
         }
 
+        static MethodInfo GroupByMethod = null;
+        public static object InvokeGroupBy(object linqQuery, Expression expression)
+        {
+            if (GroupByMethod == null)
+            {
+                Type myType = typeof(System.Linq.Queryable);
+                GroupByMethod = myType.GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static).FirstOrDefault(m => m.Name == "GroupBy" && m.IsGenericMethod && m.GetParameters().Length == 2);
+            }
+            if (GroupByMethod == null)
+                throw new Exception("找不到GroupBy方法");
+
+            var expType = expression.GetType();
+            expType = expType.GetGenericArguments()[0];
+
+            System.Reflection.MethodInfo mmm = GroupByMethod.MakeGenericMethod(expType.GetGenericArguments());
+            return mmm.Invoke(null, new object[] { linqQuery, expression });
+        }
 
         public static object InvokeSum(object linqQuery)
         {
@@ -711,7 +728,7 @@ namespace Way.EntityDB
                 System.Reflection.MethodInfo mmm = method.MakeGenericMethod(dataType);
 
                 var ps = mmm.GetParameters();
-                return await (dynamic)mmm.Invoke(null, new object[] { linqQuery , CancellationToken.None });
+                return await (dynamic)mmm.Invoke(null, new object[] { linqQuery, CancellationToken.None });
 
             }
             return null;
@@ -852,7 +869,7 @@ namespace Way.EntityDB
         /// </summary>
         /// <param name="conStr">连接字符串</param>
         /// <param name="dbType">数据库类型</param>
-        public DBContext(string conStr, DatabaseType dbType = DatabaseType.SqlServer):this(conStr,dbType,true)
+        public DBContext(string conStr, DatabaseType dbType = DatabaseType.SqlServer) : this(conStr, dbType, true)
         {
 
         }
@@ -862,17 +879,17 @@ namespace Way.EntityDB
         /// <param name="conStr">连接字符串</param>
         /// <param name="dbType">数据库类型</param>
         /// <param name="upgradeDatabase">是否自动更新数据库结构到最新</param>
-        public DBContext(string conStr, DatabaseType dbType , bool upgradeDatabase)
+        public DBContext(string conStr, DatabaseType dbType, bool upgradeDatabase)
         {
             this.DatabaseType = dbType;
-           
+
 
             Type type = DatabaseServiceTypes[this.DatabaseType];
             _databaseService = (IDatabaseService)Activator.CreateInstance(type, new object[] { this });
 
             this.ConnectionString = _databaseService.ConvertConnectionString(conStr);
 
-            var thisType = this.GetType() ;
+            var thisType = this.GetType();
             var dictKey = thisType + "," + this.ConnectionString;
             if (upgradeDatabase && thisType != typeof(EntityDB.DBContext))
             {
@@ -913,7 +930,7 @@ namespace Way.EntityDB
             return Way.EntityDB.Design.DBUpgrade.GetDatabaseActions(GetDesignString());
         }
 
-        static Dictionary<Type,bool> CreatedIfNotExist = new Dictionary<Type, bool>();
+        static Dictionary<Type, bool> CreatedIfNotExist = new Dictionary<Type, bool>();
         /// <summary>
         /// 如果数据库不存在，创建数据库，此方法在构造函数中自动调用，如果不想创建数据库，请重写此方法
         /// 此方法只在进程第一次调用有效
@@ -921,7 +938,7 @@ namespace Way.EntityDB
         protected virtual void CreateIfNotExist()
         {
             Type thisType = this.GetType();
-            
+
             if (CreatedIfNotExist.ContainsKey(thisType) == false || !CreatedIfNotExist[thisType])
             {
                 lock (GlobalLockObj)
@@ -938,11 +955,11 @@ namespace Way.EntityDB
                             });
                         }
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         CreatedIfNotExist[thisType] = true;
                     }
-                    
+
                 }
             }
         }
@@ -1080,7 +1097,7 @@ namespace Way.EntityDB
         public virtual async Task<int> DeleteAsync<T>(Expression<Func<T, bool>> condition) where T : DataItem
         {
             if (AutoBeginTransaction && this.CurrentTransaction == null)
-               await this.BeginTransactionAsync();
+                await this.BeginTransactionAsync();
 
             if (BeforeDelete != null)
             {
@@ -1116,7 +1133,7 @@ namespace Way.EntityDB
             finally
             {
                 if (needCloseConnection)
-                   await this.Database.Connection.CloseAsync();
+                    await this.Database.Connection.CloseAsync();
             }
         }
 
@@ -1128,7 +1145,7 @@ namespace Way.EntityDB
         public virtual async Task<int> UpdateAsync<T>(T dataitem, Expression<Func<T, bool>> condition) where T : DataItem
         {
             if (AutoBeginTransaction && this.CurrentTransaction == null)
-               await this.BeginTransactionAsync();
+                await this.BeginTransactionAsync();
 
             if (BeforeUpdate != null)
             {
@@ -1143,12 +1160,12 @@ namespace Way.EntityDB
             if (this.Database.Connection.State != System.Data.ConnectionState.Open)
             {
                 needCloseConnection = true;
-               await this.Database.Connection.OpenAsync();
+                await this.Database.Connection.OpenAsync();
             }
 
             try
             {
-                var ret =await this.Database.UpdateAsync(dataitem, condition);
+                var ret = await this.Database.UpdateAsync(dataitem, condition);
                 if (AfterUpdate != null)
                 {
                     AfterUpdate(this, new DatabaseUpdateArg()
@@ -1168,7 +1185,7 @@ namespace Way.EntityDB
             finally
             {
                 if (needCloseConnection)
-                  await this.Database.Connection.CloseAsync();
+                    await this.Database.Connection.CloseAsync();
             }
         }
         /// <summary>
@@ -1195,7 +1212,7 @@ namespace Way.EntityDB
         /// </summary>
         /// <param name="dataitem"></param>
         /// <param name="insertAllFields">是否连自增长字段，也放到insert语句里</param>
-        public virtual void Insert(DataItem dataitem,bool insertAllFields)
+        public virtual void Insert(DataItem dataitem, bool insertAllFields)
         {
             if (AutoBeginTransaction && this.CurrentTransaction == null)
                 this.BeginTransaction();
@@ -1245,7 +1262,7 @@ namespace Way.EntityDB
         public virtual async Task InsertAsync(DataItem dataitem, bool insertAllFields)
         {
             if (AutoBeginTransaction && this.CurrentTransaction == null)
-               await this.BeginTransactionAsync();
+                await this.BeginTransactionAsync();
 
             if (BeforeInsert != null)
             {
@@ -1328,7 +1345,7 @@ namespace Way.EntityDB
                 if (needCloseConnection)
                     this.Database.Connection.Close();
             }
-           
+
         }
 
         /// <summary>
@@ -1338,7 +1355,7 @@ namespace Way.EntityDB
         public virtual async Task DeleteAsync(DataItem dataitem)
         {
             if (AutoBeginTransaction && this.CurrentTransaction == null)
-               await this.BeginTransactionAsync();
+                await this.BeginTransactionAsync();
 
             if (BeforeDelete != null)
             {
@@ -1373,7 +1390,7 @@ namespace Way.EntityDB
             finally
             {
                 if (needCloseConnection)
-                   await this.Database.Connection.CloseAsync();
+                    await this.Database.Connection.CloseAsync();
             }
 
         }
@@ -1387,7 +1404,7 @@ namespace Way.EntityDB
             if (this.Database.Connection.State != System.Data.ConnectionState.Open)
                 throw new Exception("没有开启事务");
 
-           Type dataType = items.GetType().GetGenericArguments()[0];
+            Type dataType = items.GetType().GetGenericArguments()[0];
 
             var tableSchema = SchemaManager.GetSchemaTable(dataType);
 
@@ -1395,26 +1412,26 @@ namespace Way.EntityDB
                 throw new Exception(dataType.Name + "没有定义主键");
 
             int pagesize = 100;
-                var query = InvokeSelect(items, tableSchema.KeyColumn.PropertyName);
-                int skip = 0;
-                while (true)
+            var query = InvokeSelect(items, tableSchema.KeyColumn.PropertyName);
+            int skip = 0;
+            while (true)
+            {
+                var skipQuery = InvokeSkip(query, skip);
+                var data1 = InvokeTake(skipQuery, pagesize);
+                var dataitems = (System.Array)InvokeToArray(data1);
+
+                foreach (var idvalue in dataitems)
                 {
-                    var skipQuery = InvokeSkip(query, skip);
-                    var data1 = InvokeTake(skipQuery, pagesize);
-                    var dataitems = (System.Array)InvokeToArray(data1);
-
-                    foreach (var idvalue in dataitems)
-                    {
-                        this.Database.UpdateLock(dataType, idvalue);
-                    }
-
-                    if (dataitems.Length < pagesize)
-                        break;
-
-                    skip += pagesize;
+                    this.Database.UpdateLock(dataType, idvalue);
                 }
 
-            
+                if (dataitems.Length < pagesize)
+                    break;
+
+                skip += pagesize;
+            }
+
+
         }
 
         /// <summary>
@@ -1461,7 +1478,7 @@ namespace Way.EntityDB
         /// 开启更新锁，并返回锁住后的数据集
         /// </summary>
         /// <param name="dataQuery"></param>
-        public T[] UpdateLockToArray<T>(System.Linq.IQueryable<T> dataQuery) where T:DataItem
+        public T[] UpdateLockToArray<T>(System.Linq.IQueryable<T> dataQuery) where T : DataItem
         {
             if (this.Database.Connection.State != System.Data.ConnectionState.Open)
                 throw new Exception("没有开启事务");
@@ -1488,7 +1505,7 @@ namespace Way.EntityDB
                 {
                     this.Database.UpdateLock(dataType, idvalue);
                     var data = InvokeFirstOrDefault(InvokeWhereEquals(dset, tableSchema.KeyColumn.PropertyName, idvalue));
-                    if(data != null)
+                    if (data != null)
                     {
                         result.Add((T)data);
                     }
@@ -1578,7 +1595,7 @@ namespace Way.EntityDB
 
             object query = this.Set<T>();
             query = InvokeWhereEquals(query, tableSchema.KeyColumn.PropertyName, idvalue);
-            return  (T)InvokeFirstOrDefault(query);
+            return (T)InvokeFirstOrDefault(query);
         }
 
         /// <summary>
@@ -1703,7 +1720,7 @@ namespace Way.EntityDB
                 {
                     var data1 = InvokeTake(query, pagesize);
                     var dataitems = (System.Array)InvokeToArray(data1);
-                   
+
                     foreach (var idvalue in dataitems)
                     {
                         var deldataItem = (DataItem)Activator.CreateInstance(dataType);
@@ -1735,7 +1752,7 @@ namespace Way.EntityDB
         public async Task DeleteAsync(System.Linq.IQueryable items)
         {
             if (AutoBeginTransaction && this.CurrentTransaction == null)
-               await this.BeginTransactionAsync();
+                await this.BeginTransactionAsync();
 
             Type dataType = items.GetType().GetGenericArguments()[0];
 
@@ -1749,7 +1766,7 @@ namespace Way.EntityDB
             if (this.Database.Connection.State != System.Data.ConnectionState.Open)
             {
                 needCloseConnection = true;
-               await this.Database.Connection.OpenAsync();
+                await this.Database.Connection.OpenAsync();
             }
 
             int pagesize = 100;
@@ -1780,7 +1797,7 @@ namespace Way.EntityDB
             finally
             {
                 if (needCloseConnection)
-                   await this.Database.Connection.CloseAsync();
+                    await this.Database.Connection.CloseAsync();
             }
 
         }
