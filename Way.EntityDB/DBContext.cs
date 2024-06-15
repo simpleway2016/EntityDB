@@ -54,7 +54,7 @@ namespace Way.EntityDB
         }
     }
 
-    public class DBContext : Microsoft.EntityFrameworkCore.DbContext
+    public partial class DBContext : Microsoft.EntityFrameworkCore.DbContext
     {
 
         #region 事件

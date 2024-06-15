@@ -9,6 +9,12 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Way.EntityDB.Attributes;
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.EntityFrameworkCore.Storage;
+using System.Linq.Expressions;
+using System.Collections;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace TradeSystem.DBModels
 {
@@ -6672,6 +6678,8 @@ namespace TradeSystem.DBModels.DB
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<MoneyAccount>().HasKey(m => m.Id);
             modelBuilder.Entity<SymbolInfo>().HasKey(m => m.id);
             modelBuilder.Entity<SetStopPLHistory>().HasKey(m => m.id);
@@ -6695,7 +6703,9 @@ namespace TradeSystem.DBModels.DB
             modelBuilder.Entity<TransferWhiteList>().HasKey(m => m.id);
             modelBuilder.Entity<MoneyExam>().HasKey(m => m.id);
             modelBuilder.Entity<ExPriceRateSetting>().HasKey(m => m.id);
+
         }
+
         System.Linq.IQueryable<MoneyAccount> _MoneyAccount;
         /// <summary>用户资金表</summary>
         public virtual System.Linq.IQueryable<MoneyAccount> MoneyAccount

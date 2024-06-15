@@ -68,7 +68,16 @@ namespace Way.EntityDB.Test
             {
                 using (var db = new TradeSystem.DBModels.DB.TradeSystemDB("data source='file:memdb2?mode=memory&cache=shared'", DatabaseType.Sqlite))
                 {
-                       var cddd = DBContext.InvokeCountAsync(db.MoneyAccount).GetAwaiter().GetResult();
+
+                    string n1 = "12";
+                    string n2 = "ab";
+                    var t = db.AccountKeys.Where(m => db.ILike(m.Address, n1));
+
+                    var t2 = t.Where(m => db.JsonArrayExist(m.id.ToString(), n2));
+
+                    var q = t2.ToQueryString();
+
+                    var cddd = DBContext.InvokeCountAsync(db.MoneyAccount).GetAwaiter().GetResult();
                     int c = 2;
                     var user = new TradeSystem.DBModels.MoneyAccount();
                     user.SetValue(m => m.Balance == m.Balance + (decimal)c);
