@@ -105,8 +105,6 @@ namespace Way.EJServer
             CodeItem modelbuildFunc = new CodeItem("protected override void OnModelCreating(ModelBuilder modelBuilder)");
             classCode.AddItem(modelbuildFunc);
 
-            modelbuildFunc.AddString($"base.OnModelCreating(modelBuilder);");
-
             foreach (var t in tables)
             {
                 var pkcolumn = db.DBColumn.FirstOrDefault(m => m.TableID == t.id && m.IsPKID == true);
