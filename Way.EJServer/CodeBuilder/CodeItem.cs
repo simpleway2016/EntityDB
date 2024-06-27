@@ -94,7 +94,7 @@ namespace Way.EJServer
                             nameStr += $" {attr.Name}=\"{attr.Value}\"";
                         }
                         AppendIndentLine(buffer, $"/// <{nameStr}>");
-                        var arr = text.Split('\n').Select(m => $"/// {m.Trim()}").ToArray();
+                        var arr = text.Split('\n').Select(m => $"/// {m.Trim().Replace("&" , "&amp;").Replace(">", "&gt;").Replace("<" , "&lt;")}").ToArray();
                         foreach (var str in arr)
                             AppendIndentLine(buffer, str);
 
@@ -102,7 +102,7 @@ namespace Way.EJServer
                     }
                     else
                     {
-                        AppendIndentLine(buffer, $"/// {childnode.OuterXml.Replace("\n","").Replace("\r","")}");
+                        AppendIndentLine(buffer, $"/// {childnode.OuterXml.Replace("\n","").Replace("\r","").Replace("&", "&amp;").Replace(">", "&gt;").Replace("<", "&lt;")}");
                     }
                 }
             }
