@@ -102,7 +102,7 @@ namespace Way.EJServer
                     }
                     else
                     {
-                        AppendIndentLine(buffer, $"/// {childnode.OuterXml.Replace("\n","").Replace("\r","")}");
+                        AppendIndentLine(buffer, $"/// <{childnode.Name}>{text.Replace("\r","").Replace("&", "&amp;").Replace(">", "&gt;").Replace("<", "&lt;")}</{childnode.Name}>");
                     }
                 }
             }
