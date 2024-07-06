@@ -870,7 +870,7 @@ namespace Way.EJServer
             var pkcolumn = columns.FirstOrDefault(m => m.IsPKID == true);
 
 
-            CodeItem classCode = new CodeItem($"public class {table.Name} :Way.Lib.DataModel");
+            CodeItem classCode = new CodeItem($"public partial class {table.Name} :Way.Lib.DataModel");
             namespaceCode.AddItem(classCode);
             classCode.Comment = table.caption;
 
@@ -1034,7 +1034,7 @@ namespace Way.EJServer
             var pkcolumn = columns.FirstOrDefault(m => m.IsPKID == true);
 
 
-            CodeItem classCode = new CodeItem($"public class {table.Name}");
+            CodeItem classCode = new CodeItem($"public partial class {table.Name}");
             namespaceCode.AddItem(classCode);
             classCode.Comment = table.caption;
 
