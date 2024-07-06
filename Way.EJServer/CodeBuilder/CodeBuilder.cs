@@ -479,11 +479,11 @@ namespace Way.EJServer
             }
             return names;
         }
-
+        
         static void BuildTable(EJDB db, bool columnToLower, NamespaceCode namespaceCode, EJ.DBTable table, List<EJ.DBColumn> columns, List<string> foreignKeys)
         {
             var pkcolumn = columns.FirstOrDefault(m => m.IsPKID == true);
-            CodeItem classCode = new CodeItem($"public class {table.Name} :Way.EntityDB.DataItem");
+            CodeItem classCode = new CodeItem($"public partial class {table.Name} :Way.EntityDB.DataItem");
             namespaceCode.AddItem(classCode);
             classCode.Comment = table.caption;
 
