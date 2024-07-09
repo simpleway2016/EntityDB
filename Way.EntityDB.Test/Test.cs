@@ -66,6 +66,7 @@ namespace Way.EntityDB.Test
         {
             try
             {
+               
                 using (var db = new TradeSystem.DBModels.DB.TradeSystemDB("data source='file:memdb2?mode=memory&cache=shared'", DatabaseType.Sqlite))
                 {
                     var cddd = DBContext.InvokeCountAsync(db.MoneyAccount).GetAwaiter().GetResult();

@@ -18,11 +18,16 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace TradeSystem.DBModels
 {
+    public partial class MoneyAccount
+    {
+        [NotMapped]
+        public bool TestName { get; set; }
+    }
     /// <summary>用户资金表</summary>
     [TableConfig]
     [Table("moneyaccount")]
     [Way.EntityDB.DataItemJsonConverter]
-    public class MoneyAccount : Way.EntityDB.DataItem
+    public partial class MoneyAccount : Way.EntityDB.DataItem
     {
         Int64 _UserId;
         /// <summary>用户id，0表示系统账户</summary>
