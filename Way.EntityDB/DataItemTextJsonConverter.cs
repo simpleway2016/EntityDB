@@ -124,8 +124,8 @@ namespace Way.EntityDB
             writer.WriteStartObject();
             foreach (var p in properties)
             {
-                if (p.GetCustomAttribute(typeof(NotMappedAttribute)) != null)
-                    continue;
+                //if (p.GetCustomAttribute(typeof(NotMappedAttribute)) != null)
+                //    continue;
                 object pvalue = p.GetValue(dataitem);
                 if (pvalue == null && options.DefaultIgnoreCondition.HasFlag(JsonIgnoreCondition.WhenWritingNull))
                     continue;
