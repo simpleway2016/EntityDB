@@ -47,12 +47,13 @@ namespace Way.EntityDB.Test
         public void timezone()
         {
             //Server=127.0.0.1;Port=15432;UserId=postgres;Password=gis;Database=test;
-            using (var db = new TestTimeZone.DBModels.DB.Test("Server=47.250.182.178;Port=15432;UserId=postgres;Password=gis;Database=test;", DatabaseType.PostgreSql))
+            using (var db = new TestTimeZone.DBModels.DB.Test("Server=;Port=15432;UserId=postgres;Password=gis;Database=test;", DatabaseType.PostgreSql))
             {
-                //var user = new TestTimeZone.DBModels.UserInfo { 
-                //    Name = "Jack",
-                //    CreateTime = DateTime.UtcNow
-                //};
+                var user = new TestTimeZone.DBModels.UserInfo
+                {
+                    Name = "Jack",
+                    CreateTime = DateTime.UtcNow
+                };
 
                 //db.Insert(user);
 
