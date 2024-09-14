@@ -23,6 +23,7 @@ namespace Way.EntityDB.Design.Database.MySql
                                             "date",//smalldatetime
                                             "real",
                                             "datetime",//datetime
+                                            "timestamp",//datetime with time zone
                                             "date",//date
                                             "time",//time
                                             "float",

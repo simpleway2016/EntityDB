@@ -9,16 +9,19 @@ namespace EJClient
     public class ColumnType
     {
         static List<string> _supportTypes = new List<string>(new string[] {
-                                            "varchar",
+                                           "varchar",
                                             "int",
                                             "image",
                                             "text",
+                                            "mediumtext",
+                                            "longtext",
                                             "smallint",
                                             "smalldatetime",
                                             "real",
                                             "datetime",
-                                            "date",
-                                            "time",
+                                            "datetimezone",
+                                             "date",
+                                              "time",
                                             "float",
                                             "double",
                                             "bit",
@@ -28,7 +31,7 @@ namespace EJClient
                                             "varbinary",
                                             "char",
                                             "timestamp",
-                                            "jsonb", });
+                                            "jsonb",});
         /// <summary>
         /// 目前支持的数据库字段类型
         /// </summary>

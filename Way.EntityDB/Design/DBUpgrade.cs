@@ -22,6 +22,7 @@ namespace Way.EntityDB.Design
                                             "smalldatetime",
                                             "real",
                                             "datetime",
+                                            "datetimezone",
                                              "date",
                                               "time",
                                             "float",

@@ -23,6 +23,7 @@ namespace Way.EntityDB.Design.Database.PostgreSQL
                                             "date",//smalldatetime
                                             "real",
                                             "timestamp without time zone",//datetime
+                                             "timestamp with time zone",//datetime with time zone
                                              "date",//date
                                               "time without time zone",//time
                                             "float4",

@@ -22,6 +22,7 @@ namespace Way.EntityDB.Design.Database.Sqlite
                                             "DATE",//smalldatetime
                                             "REAL",
                                             "DATETIME",//datetime
+                                             "DATETIME",//datetime with time zone
                                              "DATE",//date
                                               "TIME",//time
                                             "FLOAT",

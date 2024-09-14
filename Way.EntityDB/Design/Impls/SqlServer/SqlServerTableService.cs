@@ -23,6 +23,7 @@ namespace Way.EntityDB.Design.Database.SqlServer
                                             "smalldatetime",
                                             "real",
                                             "datetime",
+                                            "datetimeoffset",
                                              "date",
                                               "time",
                                             "float",
