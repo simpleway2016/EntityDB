@@ -288,11 +288,11 @@ namespace Way.EJServer
                     else
                         return "string";
                 case "datetime":
+                case "datetimezone":
                     if (canNull)
                         return "System.Nullable<DateTime>";
                     else
                         return "DateTime";
-
                 case "date":
                     if (canNull)
                         return "System.Nullable<DateTime>";
