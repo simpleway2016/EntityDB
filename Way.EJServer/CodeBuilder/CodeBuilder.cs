@@ -672,14 +672,28 @@ namespace Way.EJServer
                     columnCodeItem.Attributes.Add($"[Display(Name = \"{column.caption.Replace("\r", "").Replace("\n", " ").Replace("\"", "\\\"")}\")]");
                 }
 
-
+                columnCodeItem.Attributes.Add($"[DesignColumn(TypeName = \"{column.dbType}\")]");
                 if (columnToLower)
                 {
-                    columnCodeItem.Attributes.Add($"[Column(\"{column.Name.ToLower()}\",TypeName = \"{column.dbType}\")]");
+                    if (column.dbType == "jsonb")
+                    {
+                        columnCodeItem.Attributes.Add($"[Column(\"{column.Name.ToLower()}\",TypeName = \"jsonb\")]");
+                    }
+                    else
+                    {
+                        columnCodeItem.Attributes.Add($"[Column(\"{column.Name.ToLower()}\")]");
+                    }
                 }
                 else
                 {
-                    columnCodeItem.Attributes.Add($"[Column(\"{column.Name}\",TypeName = \"{column.dbType}\")]");
+                    if (column.dbType == "jsonb")
+                    {
+                        columnCodeItem.Attributes.Add($"[Column(\"{column.Name}\",TypeName = \"jsonb\")]");
+                    }
+                    else
+                    {
+                        columnCodeItem.Attributes.Add($"[Column(\"{column.Name}\")]");
+                    }
                 }
                 columnCodeItem.PropertyType = dataType;
                 columnCodeItem.Comment = column.caption;
