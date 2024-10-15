@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -84,5 +85,23 @@ namespace Way.EntityDB
             return builder.ToString();
         }
 
+        public override void ConvertDesignTypeToDataTypeName(DbParameter dbParameter, object value, string designType)
+        {
+            if (value == null)
+                return;
+
+            switch (designType)
+            {
+                case "jsonb":
+                    dbParameter.Value = System.Text.Json.JsonSerializer.Serialize(value, DefaultJsonSerializerOptions);
+                    ((Npgsql.NpgsqlParameter)dbParameter).DataTypeName = "jsonb";
+                    break;
+                case "datetimezone":
+                    ((Npgsql.NpgsqlParameter)dbParameter).DataTypeName = "timestamp with time zone";
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }

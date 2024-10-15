@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Security.Cryptography;
 using FllowOrderSystem.DBModels;
+using Pomelo.Data.MySql;
 
 namespace Way.EntityDB.Test
 { 
@@ -47,15 +48,15 @@ namespace Way.EntityDB.Test
         public void timezone()
         {
             //Server=127.0.0.1;Port=15432;UserId=postgres;Password=gis;Database=test;
-            using (var db = new TestTimeZone.DBModels.DB.Test("Server=;Port=15432;UserId=postgres;Password=gis;Database=test;", DatabaseType.PostgreSql))
+            using (var db = new TestTimeZone.DBModels.DB.Test("Server=47.250.182.178;Port=15432;UserId=postgres;Password=gis;Database=test;", DatabaseType.PostgreSql))
             {
                 var user = new TestTimeZone.DBModels.UserInfo
                 {
                     Name = "Jack",
-                    CreateTime = DateTime.UtcNow
+                    CreateTime = DateTime.Now
                 };
 
-                //db.Insert(user);
+                db.Insert(user);
 
                 //user = new TestTimeZone.DBModels.UserInfo
                 //{

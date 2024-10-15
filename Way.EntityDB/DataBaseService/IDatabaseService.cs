@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -22,6 +23,7 @@ namespace Way.EntityDB
         {
             get;
         }
+        void ConvertDesignTypeToDataTypeName(DbParameter dbParameter,object value, string designType);
         string ConvertConnectionString(string conStr);
         void OnConfiguring(Microsoft.EntityFrameworkCore.DbContextOptionsBuilder optionsBuilder);
         //System.Data.Common.DbConnection CreateConnection(string connectString);

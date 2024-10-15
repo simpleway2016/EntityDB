@@ -10,6 +10,7 @@ using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Way.EntityDB.DataBaseService;
 using System.Linq;
+using Microsoft.Data.SqlClient;
 namespace Way.EntityDB
 {
     [Attributes.DatabaseTypeAttribute(DatabaseType.SqlServer)]
@@ -85,7 +86,17 @@ namespace Way.EntityDB
             throw new RepeatException( ex);
         }
 
-
+        public override void ConvertDesignTypeToDataTypeName(DbParameter dbParameter, object value, string designType)
+        {
+            switch (designType)
+            {
+                case "datetimezone":
+                    ((SqlParameter)dbParameter).SqlDbType = SqlDbType.DateTimeOffset;
+                    break;
+                default:
+                    break;
+            }
+        }
 
     }
 }

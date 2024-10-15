@@ -16,6 +16,7 @@ using Way.EntityDB.DataBaseService;
 using Way.EntityDB.ExpressionParsers;
 using System.Reflection.Metadata;
 using System.Text.Json.Serialization;
+using System.Data.Common;
 
 namespace Way.EntityDB
 {
@@ -26,11 +27,11 @@ namespace Way.EntityDB
         DBContext _dbcontext;
         ExpressionParserRoute _expressionParserRoute;
         protected virtual bool SupportEnum => true;
-        static System.Text.Json.JsonSerializerOptions DefaultJsonSerializerOptions = new System.Text.Json.JsonSerializerOptions
+        internal static System.Text.Json.JsonSerializerOptions DefaultJsonSerializerOptions = new System.Text.Json.JsonSerializerOptions
         {
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         };
-    public virtual void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public virtual void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite(this.ConnectionString);
         }
@@ -223,10 +224,6 @@ namespace Way.EntityDB
                         if (schemaColumn != null && schemaColumn.TypeName == "jsonb")
                         {
                             parameter.Value = System.Text.Json.JsonSerializer.Serialize(field.Value, DefaultJsonSerializerOptions);
-                            if (parameter is Npgsql.NpgsqlParameter)
-                            {
-                                ((Npgsql.NpgsqlParameter)parameter).DataTypeName = schemaColumn.TypeName;
-                            }
                         }
                         else if (!SupportEnum && field.Value != null && schemaColumn != null && schemaColumn.PropertyInfo.PropertyType.IsEnum)
                         {
@@ -236,6 +233,9 @@ namespace Way.EntityDB
                         {
                             parameter.Value = Convert.ToInt32(field.Value);
                         }
+
+                        ConvertDesignTypeToDataTypeName(parameter, field.Value, schemaColumn?.TypeName);
+
 
                         command.Parameters.Add(parameter);
 
@@ -366,15 +366,7 @@ namespace Way.EntityDB
                         parameter.Value = field.Value;
 
                         SchemaColumn schemaColumn = tableSchema?.Columns.FirstOrDefault(m => m.Name == field.FieldName);
-                        if (schemaColumn != null && schemaColumn.TypeName == "jsonb")
-                        {
-                            parameter.Value = System.Text.Json.JsonSerializer.Serialize(field.Value , DefaultJsonSerializerOptions);
-                            if (parameter is Npgsql.NpgsqlParameter)
-                            {
-                                ((Npgsql.NpgsqlParameter)parameter).DataTypeName = schemaColumn.TypeName;
-                            }
-                        }
-                        else if (!SupportEnum && field.Value != null && schemaColumn != null && schemaColumn.PropertyInfo.PropertyType.IsEnum)
+                        if (!SupportEnum && field.Value != null && schemaColumn != null && schemaColumn.PropertyInfo.PropertyType.IsEnum)
                         {
                             parameter.Value = Convert.ToInt32(field.Value);
                         }
@@ -382,6 +374,8 @@ namespace Way.EntityDB
                         {
                             parameter.Value = Convert.ToInt32(field.Value);
                         }
+
+                        ConvertDesignTypeToDataTypeName(parameter, field.Value, schemaColumn?.TypeName);
 
                         command.Parameters.Add(parameter);
 
@@ -391,7 +385,7 @@ namespace Way.EntityDB
                     }
 
                     string sql;
-                    if (GetInsertIDValueSqlStringInOneSql()&&pkid != null && tableSchema.KeyColumn.IsDatabaseGenerated)
+                    if (GetInsertIDValueSqlStringInOneSql() && pkid != null && tableSchema.KeyColumn.IsDatabaseGenerated)
                     {
                         sql = string.Format("insert into {0} ({1}) values ({2}) {3}", FormatObjectName(dataitem.TableName), str_fields, str_values, this.GetInsertIDValueSqlString(pkid));
                         command.CommandText = sql;
@@ -492,7 +486,7 @@ namespace Way.EntityDB
                         var parser = _expressionParserRoute.GetExpressionParser(updateExpression.Body);
                         if (parser == null)
                             throw new ParseUpdateExpressionException($"无法解析{updateExpression.Body}");
-                        var setString = parser.Parse(updateExpression.Body, command, addedMembers , true);
+                        var setString = parser.Parse(updateExpression.Body, command, addedMembers, true);
                         if (setString != null)
                         {
                             setString = setString.Replace(" and ", ",").Replace(" or ", ",");
@@ -517,15 +511,7 @@ namespace Way.EntityDB
                         var parameter = command.CreateParameter();
 
                         SchemaColumn schemaColumn = tableSchema?.Columns.FirstOrDefault(m => m.Name == fieldValue.FieldName);
-                        if (schemaColumn != null && schemaColumn.TypeName == "jsonb")
-                        {
-                            value = System.Text.Json.JsonSerializer.Serialize(value, DefaultJsonSerializerOptions);
-                            if (parameter is Npgsql.NpgsqlParameter && string.IsNullOrEmpty(schemaColumn.TypeName) == false)
-                            {
-                                ((Npgsql.NpgsqlParameter)parameter).DataTypeName = schemaColumn.TypeName;
-                            }
-                        }
-                        else if (!SupportEnum && value != null && schemaColumn != null && schemaColumn.PropertyInfo.PropertyType.IsEnum)
+                        if (!SupportEnum && value != null && schemaColumn != null && schemaColumn.PropertyInfo.PropertyType.IsEnum)
                         {
                             value = Convert.ToInt32(value);
                         }
@@ -544,6 +530,8 @@ namespace Way.EntityDB
                             string parameterName = "@p" + (parameterIndex++);
                             parameter.ParameterName = parameterName;
                             parameter.Value = value;
+
+                            ConvertDesignTypeToDataTypeName(parameter, value,schemaColumn?.TypeName);
 
                             command.Parameters.Add(parameter);
 
@@ -566,7 +554,7 @@ namespace Way.EntityDB
                             var parser = _expressionParserRoute.GetExpressionParser(condition.Body);
                             if (parser == null)
                                 throw new ParseUpdateExpressionException($"无法解析{condition.Body}");
-                            var where = parser.Parse(condition.Body, command, null , false);
+                            var where = parser.Parse(condition.Body, command, null, false);
 
                             command.CommandText = string.Format("update {0} set {1} where " + where, FormatObjectName(dataitem.TableName), str_fields);
                         }
@@ -582,7 +570,7 @@ namespace Way.EntityDB
                             var parser = _expressionParserRoute.GetExpressionParser(condition.Body);
                             if (parser == null)
                                 throw new ParseUpdateExpressionException($"无法解析{condition.Body}");
-                            var where = parser.Parse(condition.Body, command, null , false);
+                            var where = parser.Parse(condition.Body, command, null, false);
 
                             command.CommandText = string.Format("update {0} set {1} where " + where, FormatObjectName(dataitem.TableName), str_fields);
                         }
@@ -767,7 +755,7 @@ namespace Way.EntityDB
                         var parser = _expressionParserRoute.GetExpressionParser(updateExpression.Body);
                         if (parser == null)
                             throw new ParseUpdateExpressionException($"无法解析{updateExpression.Body}");
-                        var setString = parser.Parse(updateExpression.Body, command, addedMembers,true);
+                        var setString = parser.Parse(updateExpression.Body, command, addedMembers, true);
                         if (setString != null)
                         {
                             setString = setString.Replace(" and ", ",").Replace(" or ", ",");
@@ -792,15 +780,7 @@ namespace Way.EntityDB
                         var parameter = command.CreateParameter();
 
                         SchemaColumn schemaColumn = tableSchema?.Columns.FirstOrDefault(m => m.Name == fieldValue.FieldName);
-                        if (schemaColumn != null && schemaColumn.TypeName == "jsonb")
-                        {
-                            value = System.Text.Json.JsonSerializer.Serialize(value, DefaultJsonSerializerOptions);
-                            if (parameter is Npgsql.NpgsqlParameter && string.IsNullOrEmpty(schemaColumn.TypeName) == false)
-                            {
-                                ((Npgsql.NpgsqlParameter)parameter).DataTypeName = schemaColumn.TypeName;
-                            }
-                        }
-                        else if (!SupportEnum && value != null && schemaColumn != null && schemaColumn.PropertyInfo.PropertyType.IsEnum)
+                        if (!SupportEnum && value != null && schemaColumn != null && schemaColumn.PropertyInfo.PropertyType.IsEnum)
                         {
                             value = Convert.ToInt32(value);
                         }
@@ -819,6 +799,8 @@ namespace Way.EntityDB
                             string parameterName = "@p" + (parameterIndex++);
                             parameter.ParameterName = parameterName;
                             parameter.Value = value;
+
+                            ConvertDesignTypeToDataTypeName(parameter, value, schemaColumn?.TypeName);
 
                             command.Parameters.Add(parameter);
 
@@ -1230,6 +1212,11 @@ namespace Way.EntityDB
         public virtual string ConvertConnectionString(string conStr)
         {
             return conStr;
+        }
+
+        public virtual void ConvertDesignTypeToDataTypeName(DbParameter dbParameter,  object value,string designType)
+        {
+
         }
 
         public DBContext DBContext

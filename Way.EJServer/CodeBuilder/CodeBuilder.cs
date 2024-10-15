@@ -675,25 +675,11 @@ namespace Way.EJServer
 
                 if (columnToLower)
                 {
-                    if (column.dbType == "jsonb")
-                    {
-                        columnCodeItem.Attributes.Add($"[Column(\"{column.Name.ToLower()}\",TypeName = \"jsonb\")]");
-                    }
-                    else
-                    {
-                        columnCodeItem.Attributes.Add($"[Column(\"{column.Name.ToLower()}\")]");
-                    }
+                    columnCodeItem.Attributes.Add($"[Column(\"{column.Name.ToLower()}\",TypeName = \"{column.dbType}\")]");
                 }
                 else
                 {
-                    if (column.dbType == "jsonb")
-                    {
-                        columnCodeItem.Attributes.Add($"[Column(\"{column.Name}\",TypeName = \"jsonb\")]");
-                    }
-                    else
-                    {
-                        columnCodeItem.Attributes.Add($"[Column(\"{column.Name}\")]");
-                    }
+                    columnCodeItem.Attributes.Add($"[Column(\"{column.Name}\",TypeName = \"{column.dbType}\")]");
                 }
                 columnCodeItem.PropertyType = dataType;
                 columnCodeItem.Comment = column.caption;

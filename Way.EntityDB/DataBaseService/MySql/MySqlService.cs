@@ -80,6 +80,16 @@ namespace Way.EntityDB
             return builder.ToString();
         }
 
-
+        public override void ConvertDesignTypeToDataTypeName(DbParameter dbParameter, object value, string designType)
+        {
+            switch (designType)
+            {
+                case "datetimezone":
+                    ((Pomelo.Data.MySql.MySqlParameter)dbParameter).MySqlDbType = MySqlDbType.Timestamp;
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }
