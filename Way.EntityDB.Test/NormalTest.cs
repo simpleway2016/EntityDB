@@ -47,11 +47,11 @@ namespace Way.EntityDB.Test
         [TestMethod]
         public void timezone()
         {
+            //查询时，时间要用utc变量去查询
+
             //Server=127.0.0.1;Port=15432;UserId=postgres;Password=gis;Database=test;
-            using (var db = new TestTimeZone.DBModels.DB.Test("Server=47.250.182.178;Port=15432;UserId=postgres;Password=gis;Database=test;", DatabaseType.PostgreSql))
+            using (var db = new TestTimeZone.DBModels.DB.Test("Server=;Port=15432;UserId=postgres;Password=gis;Database=test;", DatabaseType.PostgreSql))
             {
-                var tt = DateTime.Now.AddHours(-2);
-                var sql = db.UserInfo.Where(m => m.CreateTime >= tt).ToSql();
                 var user = new TestTimeZone.DBModels.UserInfo
                 {
                     Name = "Jack",
@@ -69,7 +69,7 @@ namespace Way.EntityDB.Test
                 //db.Insert(user);
 
                 
-                var users = Newtonsoft.Json.JsonConvert.SerializeObject( db.UserInfo.Where(m=>m.CreateTime >= tt).ToArray());
+                var users = Newtonsoft.Json.JsonConvert.SerializeObject( db.UserInfo.ToArray());
             }
         }
 
