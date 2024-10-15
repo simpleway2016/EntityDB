@@ -50,6 +50,8 @@ namespace Way.EntityDB.Test
             //Server=127.0.0.1;Port=15432;UserId=postgres;Password=gis;Database=test;
             using (var db = new TestTimeZone.DBModels.DB.Test("Server=47.250.182.178;Port=15432;UserId=postgres;Password=gis;Database=test;", DatabaseType.PostgreSql))
             {
+                var tt = DateTime.Now.AddHours(-2);
+                var sql = db.UserInfo.Where(m => m.CreateTime >= tt).ToSql();
                 var user = new TestTimeZone.DBModels.UserInfo
                 {
                     Name = "Jack",
@@ -66,7 +68,8 @@ namespace Way.EntityDB.Test
 
                 //db.Insert(user);
 
-                var users = Newtonsoft.Json.JsonConvert.SerializeObject( db.UserInfo.ToArray());
+                
+                var users = Newtonsoft.Json.JsonConvert.SerializeObject( db.UserInfo.Where(m=>m.CreateTime >= tt).ToArray());
             }
         }
 

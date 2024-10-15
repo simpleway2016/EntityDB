@@ -59,7 +59,8 @@ namespace TestTimeZone.DBModels
         }
         DateTime _CreateTime;
         [DisallowNull]
-        [Column("createtime",TypeName = "datetimezone")]
+        [DesignColumn(TypeName = "datetimezone")]
+        [Column("createtime")]
         public virtual DateTime CreateTime
         {
             get

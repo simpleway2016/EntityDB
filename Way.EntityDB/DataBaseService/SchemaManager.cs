@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection;
 using System.Text;
+using Way.EntityDB.Attributes;
 
 namespace Way.EntityDB.DataBaseService
 {
@@ -35,11 +36,12 @@ namespace Way.EntityDB.DataBaseService
                 foreach( var pro in proInfos )
                 {
                     var columnAttr = pro.GetCustomAttribute<ColumnAttribute>();
-                    if(columnAttr != null)
+                    var design_columnAttr = pro.GetCustomAttribute<DesignColumnAttribute>();
+                    if (columnAttr != null)
                     {
                         var column = new SchemaColumn();
                         column.Name = columnAttr.Name;
-                        column.TypeName = columnAttr.TypeName;
+                        column.TypeName = design_columnAttr?.TypeName;
                         column.IsKey = pro.GetCustomAttribute<KeyAttribute>() != null;
                         if (column.IsKey && ret.KeyColumn == null)
                             ret.KeyColumn = column;
