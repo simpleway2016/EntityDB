@@ -748,13 +748,14 @@ namespace Way.EntityDB
                     continue;
                 bool desc = order.Trim().ToLower().Contains(" desc");
                 string methodName;
-                if (isThenBy == false)
+                if (isThenBy == false && !(linqQuery is IOrderedQueryable))
                 {
                     isThenBy = true;
                     methodName = desc ? "OrderByDescending" : "OrderBy";
                 }
                 else
                 {
+                    isThenBy = true;
                     methodName = desc ? "ThenByDescending" : "ThenBy";
                 }
                 string itemProperty = order.Trim().Split(' ')[0];
