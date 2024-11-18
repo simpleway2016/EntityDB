@@ -748,7 +748,7 @@ namespace Way.EntityDB
                     continue;
                 bool desc = order.Trim().ToLower().Contains(" desc");
                 string methodName;
-                if (isThenBy == false && !(linqQuery is IOrderedQueryable))
+                if (isThenBy == false)// && !(linqQuery is IOrderedQueryable)) 不能用IOrderedQueryable判断，因为普通没有排序的query也会是true
                 {
                     isThenBy = true;
                     methodName = desc ? "OrderByDescending" : "OrderBy";
