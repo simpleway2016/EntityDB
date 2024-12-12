@@ -41,7 +41,12 @@ namespace Way.EntityDB.DataBaseService
                     {
                         var column = new SchemaColumn();
                         column.Name = columnAttr.Name;
-                        column.TypeName = design_columnAttr?.TypeName;
+                       
+                        if (design_columnAttr == null)
+                            column.TypeName = columnAttr.TypeName;
+                        else
+                            column.TypeName = design_columnAttr.TypeName;
+
                         column.IsKey = pro.GetCustomAttribute<KeyAttribute>() != null;
                         if (column.IsKey && ret.KeyColumn == null)
                             ret.KeyColumn = column;
