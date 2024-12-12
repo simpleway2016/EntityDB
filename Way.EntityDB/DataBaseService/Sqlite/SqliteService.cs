@@ -221,11 +221,7 @@ namespace Way.EntityDB
                         parameter.Value = field.Value;
 
                         SchemaColumn schemaColumn = tableSchema?.Columns.FirstOrDefault(m => m.Name == field.FieldName);
-                        if (schemaColumn != null && schemaColumn.TypeName == "jsonb")
-                        {
-                            parameter.Value = System.Text.Json.JsonSerializer.Serialize(field.Value, DefaultJsonSerializerOptions);
-                        }
-                        else if (!SupportEnum && field.Value != null && schemaColumn != null && schemaColumn.PropertyInfo.PropertyType.IsEnum)
+                        if (!SupportEnum && field.Value != null && schemaColumn != null && schemaColumn.PropertyInfo.PropertyType.IsEnum)
                         {
                             parameter.Value = Convert.ToInt32(field.Value);
                         }
