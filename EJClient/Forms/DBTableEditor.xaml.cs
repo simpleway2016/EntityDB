@@ -1157,6 +1157,7 @@ namespace EJClient.Forms
             }
         }
 
+        static string CopyedColumns = null;
         private void btnCopy_Click_1(object sender, RoutedEventArgs e)
         {
             List<EJ.DBColumn> copyColumns = new List<EJ.DBColumn>();
@@ -1167,15 +1168,14 @@ namespace EJClient.Forms
                     copyColumns.Add(column.m_column);
                 }
             }
-            Clipboard.SetText("DBColumns:" + copyColumns.ToJsonString());
+            CopyedColumns = copyColumns.ToJsonString();
         }
 
         private void btnPaste_Click_1(object sender, RoutedEventArgs e)
         {
-            string content = Clipboard.GetText();
-            if (content.StartsWith("DBColumns:"))
+            if (CopyedColumns != null)
             {
-                EJ.DBColumn[] sourceColumns = content.Substring("DBColumns:".Length).ToJsonObject<EJ.DBColumn[]>();
+                EJ.DBColumn[] sourceColumns = CopyedColumns.ToJsonObject<EJ.DBColumn[]>();
                 for (int i = 0; i < sourceColumns.Length; i++)
                 {
                     if (m_columns.Where(m => m.Name == sourceColumns[i].Name).Count() > 0)
