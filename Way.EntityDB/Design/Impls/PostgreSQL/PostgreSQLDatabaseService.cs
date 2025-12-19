@@ -219,6 +219,11 @@ and pg_constraint.contype='p'");
             // 如果 schema 为空或空白，则使用 public（与其他方法保持一致）
             var schemaName = string.IsNullOrWhiteSpace(schema) ? "public" : schema;
 
+            if (!string.IsNullOrWhiteSpace(schema))
+            {
+                db.ExecSqlString($"CREATE SCHEMA IF NOT EXISTS \"{schema}\"");
+            }
+
             // 检查指定 schema 下是否存在该表
             bool exists = Convert.ToInt32(db.ExecSqlString($"select count(*) from pg_tables where tablename='__wayeasyjob' and schemaname='{schemaName}'")) > 0;
 

@@ -20,7 +20,7 @@ namespace Way.EntityDB.Test
     public class TestAllDatabaseType
     {
         const string SqlServerConstr = "Data Source=8.219.191.213;User ID=sa;Password=NAM121R7E2Y2198UMCVKX6Iq;Initial Catalog=TestDB";
-        const string PostgreSqlConStr = "Server=192.168.136.137;Port=5432;UserId=postgres;Password=123456;Database=TestDB;";
+        const string PostgreSqlConStr = "Server=47.250.182.178;Port=15432;UserId=postgres;Password=gis;Database=TestDB;";
         const string MySqlConStr = "server=192.168.136.137;User Id=user1;password=User.123456;Database=TestDB";
 
         [TestMethod]
@@ -109,6 +109,25 @@ namespace Way.EntityDB.Test
                 conStr = new SqlConnectionStringBuilder(SqlServerConstr) { InitialCatalog = "TestingDb" }.ToString(),
                 Name = "testingdb",
                 dbType = EJ.Databases_dbTypeEnum.SqlServer,
+            }, "a2");
+        }
+
+        [TestMethod]
+        public void TestPostgreSql()
+        {
+
+            Test(new EJ.Databases()
+            {
+                conStr = new Npgsql.NpgsqlConnectionStringBuilder(PostgreSqlConStr) { Database = "TestingDb" }.ToString(),
+                Name = "testingdb",
+                dbType = EJ.Databases_dbTypeEnum.PostgreSql,
+            }, "a1");
+
+            Test(new EJ.Databases()
+            {
+                conStr = new Npgsql.NpgsqlConnectionStringBuilder(PostgreSqlConStr) { Database = "TestingDb" }.ToString(),
+                Name = "testingdb",
+                dbType = EJ.Databases_dbTypeEnum.PostgreSql,
             }, "a2");
         }
 

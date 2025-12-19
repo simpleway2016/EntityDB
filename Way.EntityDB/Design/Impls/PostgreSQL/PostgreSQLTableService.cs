@@ -276,7 +276,7 @@ AND pg_constraint.contype = 'p';
 
             foreach (var column in deletedColumns)
             {
-                ChangeColumnHandler.HandleDelete(database, newTableName, column);
+                ChangeColumnHandler.HandleDelete(database, schema,newTableName, column);
             }
 
             foreach (string delIndexName in needToDels)
@@ -297,14 +297,14 @@ AND pg_constraint.contype = 'p';
             {
                 if (column.dbType == "jsonb")
                     column.length = null;
-                ChangeColumnHandler.HandleChange(database, newTableName, column);
+                ChangeColumnHandler.HandleChange(database, schema, newTableName, column);
             }
 
             foreach (var column in addColumns)
             {
                 if (column.dbType == "jsonb")
                     column.length = null;
-                ChangeColumnHandler.HandleNewColumn(database, newTableName, column);
+                ChangeColumnHandler.HandleNewColumn(database, schema,newTableName, column);
             }
 
             foreach (var config in indexInfos)
@@ -318,7 +318,7 @@ AND pg_constraint.contype = 'p';
             table = table.ToLower();
             //alter table table_name add unique key new_uk_name (col1,col2);
             var columns = indexinfo.ColumnNames.OrderBy(m => m).Select(m => m.ToLower()).ToArray();
-            string name = (string.IsNullOrWhiteSpace(schema) ? table : (schema + "_" + table)) + "_ej_" + columns.ToSplitString("_");
+            string name = table + "_ej_" + columns.ToSplitString("_");
 
             string sql = "CREATE ";
             if (indexinfo.IsUnique)
@@ -329,10 +329,7 @@ AND pg_constraint.contype = 'p';
             // 使用指定的索引名，且在表所在 schema 中创建索引
             string qualifiedTable = GetQualifiedName(schema, table);
             string indexNameQuoted = $"\"{name}\"";
-            if (!string.IsNullOrWhiteSpace(schema))
-            {
-                indexNameQuoted = GetQualifiedName(schema, name);
-            }
+           
 
             if (indexinfo.IsClustered)
             {
