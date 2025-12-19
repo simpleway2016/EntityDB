@@ -54,7 +54,7 @@ namespace Way.EntityDB
             return $"\"{name}\"";
         }
 
-        public virtual string FormatTableName(string name)
+        public override string FormatTableName(string name)
         {
             if (!string.IsNullOrWhiteSpace(DBContext.Schema))
             {
