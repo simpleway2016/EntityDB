@@ -67,6 +67,22 @@ namespace Way.EntityDB
                 return name;
             return string.Format("[{0}]", name);
         }
+        public virtual string FormatTableName(string name)
+        {
+            if (!string.IsNullOrWhiteSpace(DBContext.Schema))
+            {
+                if (name.StartsWith("[") || name.StartsWith("("))
+                    return $"[{DBContext.Schema}].{name}";
+                else
+                    return $"[{DBContext.Schema}].[{name}]";
+            }
+            else
+            {
+                if (name.StartsWith("[") || name.StartsWith("("))
+                    return name;
+                return string.Format("[{0}]", name);
+            }
+        }
         protected override string GetInsertIDValueSqlString(string pkColumnName)
         {
             return "select Scope_Identity()";

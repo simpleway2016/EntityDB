@@ -46,16 +46,29 @@ namespace Way.EntityDB.Design.Database.PostgreSQL
             return ColumnType[index];
         }
 
+        // Helper: 返回带双引号的限定名，例如 "\"schema\".\"table\"" 或 "\"table\""
+        private static string GetQualifiedName(string schema, string name)
+        {
+            if (string.IsNullOrWhiteSpace(schema))
+                return $"\"{name}\"";
+            return $"\"{schema}\".\"{name}\"";
+        }
 
+        // Helper: 返回用于 information_schema 或 sp-like 调用的 schema. 前缀（无引号），例如 "schema." 或 ""
+        private static string GetSchemaDotPrefix(string schema)
+        {
+            if (string.IsNullOrWhiteSpace(schema))
+                return string.Empty;
+            return $"{schema}.";
+        }
 
         public void CreateTable(EntityDB.IDatabaseService db, EJ.DBTable table, EJ.DBColumn[] columns, IndexInfo[] indexInfos)
         {
-
-            //db.ExecSqlString("drop table if exists " + table.Name.ToLower() + "");
+            var schema = db.DBContext.Schema;
 
             string sqlstr;
             sqlstr = @"
-CREATE TABLE """ + table.Name.ToLower() + @""" (
+CREATE TABLE " + GetQualifiedName(schema, table.Name.ToLower()) + @" (
 ";
 
             for (int i = 0; i < columns.Length; i++)
@@ -90,22 +103,17 @@ CREATE TABLE """ + table.Name.ToLower() + @""" (
                     string defaultValue = column.defaultValue.Trim();
                     sqlstr += " DEFAULT '" + defaultValue.Replace("'", "''") + "'";
                 }
-
-
             }
-
-
 
             sqlstr += ")";
 
             db.ExecSqlString(sqlstr);
 
-
             foreach (var column in columns)
             {
                 if (column.IsAutoIncrement == true)
                 {
-                    setColumn_IsAutoIncrement(db, column, table.Name.ToLower(), true);
+                    setColumn_IsAutoIncrement(db, column, schema, table.Name.ToLower(), true);
                 }
             }
 
@@ -113,54 +121,61 @@ CREATE TABLE """ + table.Name.ToLower() + @""" (
             {
                 foreach (var config in indexInfos)
                 {
-                    createIndex(db, table.Name.ToLower(), config);
+                    createIndex(db, schema, table.Name.ToLower(), config);
                 }
             }
-
         }
 
-        void setColumn_IsAutoIncrement(IDatabaseService db, EJ.DBColumn column, string table, bool isAutoIncrement)
+        void setColumn_IsAutoIncrement(EntityDB.IDatabaseService db, EJ.DBColumn column, string schema, string table, bool isAutoIncrement)
         {
             table = table.ToLower();
             /*
              先创建一张表，再创建一个序列，然后将表主键ID的默认值设置成这个序列的NEXT值
              SELECT c.relname FROM pg_class c WHERE c.relkind = 'S';可以查看所有SEQUENCE
              */
+            var seqName = $"{table}_{column.Name.ToLower()}_seq";
+            var qualifiedSeq = string.IsNullOrWhiteSpace(schema) ? seqName : $"{schema}.{seqName}";
             if (isAutoIncrement)
             {
-                db.ExecSqlString($"DROP SEQUENCE IF EXISTS {table}_{column.Name.ToLower()}_seq");
+                db.ExecSqlString($"DROP SEQUENCE IF EXISTS {(string.IsNullOrWhiteSpace(schema) ? seqName : GetQualifiedName(schema, seqName))}");
 
                 db.ExecSqlString($@"
-CREATE SEQUENCE {table}_{column.Name.ToLower()}_seq
+CREATE SEQUENCE {(string.IsNullOrWhiteSpace(schema) ? seqName : GetQualifiedName(schema, seqName))}
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-alter table ""{table}"" alter column ""{column.Name.ToLower()}"" set default nextval('{table}_{column.Name.ToLower()}_seq');
+alter table {GetQualifiedName(schema, table)} alter column ""{ column.Name.ToLower()}"" set default nextval('{qualifiedSeq}');
 ");
             }
             else
             {
                 //查找是哪个sequence
                 //select column_name,data_type,column_default,is_nullable,character_maximum_length,character_octet_length from information_schema.columns where table_name = 'tbl_role';
-                var seqName = db.ExecSqlString($"select column_default from information_schema.columns where table_name = '{table.ToLower()}' and column_name='{column.Name.ToLower()}'").ToSafeString();
-                Match m = Regex.Match(seqName, @"nextval\(\'(?<n>(\w)+)\'");
-                if (m != null && m.Length > 0)
+                string infoSql = $"select column_default from information_schema.columns where table_name = '{table.ToLower()}' and column_name='{column.Name.ToLower()}'";
+                if (!string.IsNullOrWhiteSpace(schema))
                 {
-                    seqName = m.Groups["n"].Value;
-                    db.ExecSqlString($"alter table \"{table}\" ALTER COLUMN \"{column.Name.ToLower()}\" DROP DEFAULT");
-                    db.ExecSqlString($"DROP SEQUENCE IF EXISTS  {seqName}");
+                    infoSql += $" and table_schema = '{schema}'";
+                }
+                var seqCol = db.ExecSqlString(infoSql).ToSafeString();
+                Match m = Regex.Match(seqCol, @"nextval\(\'(?<n>[\w\.]+)\'");
+                if (m != null && m.Success)
+                {
+                    var foundSeq = m.Groups["n"].Value;
+                    // remove possible schema qualification in foundSeq for DROP/ALTER using qualified name
+                    string dropSeqQualified = foundSeq.Contains(".") ? foundSeq : (string.IsNullOrWhiteSpace(schema) ? foundSeq : $"{schema}.{foundSeq}");
+                    db.ExecSqlString($"alter table {GetQualifiedName(schema, table)} ALTER COLUMN \"{column.Name.ToLower()}\" DROP DEFAULT");
+                    db.ExecSqlString($"DROP SEQUENCE IF EXISTS {(foundSeq.Contains(".") ? GetQualifiedName(foundSeq.Split('.')[0], foundSeq.Split('.')[1]) : (string.IsNullOrWhiteSpace(schema) ? $"\"{foundSeq}\"" : GetQualifiedName(schema, foundSeq)))}");
                 }
             }
         }
 
         public void DeleteTable(EntityDB.IDatabaseService database, string tableName)
         {
-            database.ExecSqlString(string.Format("DROP TABLE IF EXISTS \"{0}\"", tableName.ToLower()));
+            var schema = database.DBContext.Schema;
+            database.ExecSqlString(string.Format("DROP TABLE IF EXISTS {0}", GetQualifiedName(schema, tableName.ToLower())));
         }
-
-
 
         List<string> checkIfIdxChanged(EntityDB.IDatabaseService database, string tablename, List<IndexInfo> indexInfos)
         {
@@ -194,43 +209,57 @@ alter table ""{table}"" alter column ""{column.Name.ToLower()}"" set default nex
         }
         void deletecolumn(EntityDB.IDatabaseService database, string table, string column)
         {
+            var schema = database.DBContext.Schema;
             table = table.ToLower();
             column = column.ToLower();
 
-            database.ExecSqlString(string.Format("alter table \"{0}\" drop column \"{1}\"", table, column));
+            database.ExecSqlString(string.Format("alter table {0} drop column \"{1}\"", GetQualifiedName(schema, table), column));
         }
         void dropTableIndex(EntityDB.IDatabaseService database, string table, string indexName)
         {
+            var schema = database.DBContext.Schema;
             table = table.ToLower();
-            database.ExecSqlString("ALTER TABLE \"" + table.ToLower() + "\" DROP CONSTRAINT IF EXISTS " + indexName.ToLower() + "");
-            database.ExecSqlString("DROP INDEX IF EXISTS " + indexName.ToLower() + "");
+            indexName = indexName.ToLower();
+
+            database.ExecSqlString($"ALTER TABLE {GetQualifiedName(schema, table)} DROP CONSTRAINT IF EXISTS \"{indexName}\"");
+            if (string.IsNullOrWhiteSpace(schema))
+            {
+                database.ExecSqlString($"DROP INDEX IF EXISTS \"{indexName}\"");
+            }
+            else
+            {
+                database.ExecSqlString($"DROP INDEX IF EXISTS {GetQualifiedName(schema, indexName)}");
+            }
         }
 
-        void deletePkColumn(IDatabaseService database, string tablename)
+        void deletePkColumn(EntityDB.IDatabaseService database, string tablename)
         {
+            var schema = database.DBContext.Schema;
             tablename = tablename.ToLower();
             //去除主键;//删除主建
-            var pkeyIndexName = database.ExecSqlString(@"
+            // 使用 pg_namespace 限定 schema，避免同名表冲突
+            var pkeyIndexName = database.ExecSqlString($@"
 SELECT
     pg_constraint.conname AS pk_name
 FROM
     pg_constraint
 INNER JOIN pg_class ON pg_constraint.conrelid = pg_class.oid
+INNER JOIN pg_namespace ns ON pg_class.relnamespace = ns.oid
 WHERE
-    pg_class.relname = '" + tablename + @"'
+    pg_class.relname = '{tablename}'
+    {(string.IsNullOrWhiteSpace(schema) ? "" : $"AND ns.nspname = '{schema}'")}
 AND pg_constraint.contype = 'p';
 ").ToSafeString();
-            //if (pkeyIndexName.Length > 0)
-            //{
-            //    database.ExecSqlString($"ALTER TABLE {newTableName} DROP CONSTRAINT IF EXISTS {oldTableName}_pkey");
-            //    database.ExecSqlString($"DROP INDEX IF EXISTS {oldTableName}_pkey");
-            //}
 
-            database.ExecSqlString($"ALTER TABLE \"{tablename}\" DROP CONSTRAINT IF EXISTS {pkeyIndexName}");
-            database.ExecSqlString($"DROP INDEX IF EXISTS {pkeyIndexName}");
+            database.ExecSqlString($"ALTER TABLE {GetQualifiedName(schema, tablename)} DROP CONSTRAINT IF EXISTS \"{pkeyIndexName}\"");
+            if (string.IsNullOrWhiteSpace(schema))
+                database.ExecSqlString($"DROP INDEX IF EXISTS \"{pkeyIndexName}\"");
+            else
+                database.ExecSqlString($"DROP INDEX IF EXISTS {GetQualifiedName(schema, pkeyIndexName)}");
         }
         public void ChangeTable(EntityDB.IDatabaseService database, string oldTableName, string newTableName, EJ.DBColumn[] addColumns, EJ.DBColumn[] changed_columns, EJ.DBColumn[] deletedColumns, Func<List<EJ.DBColumn>> getColumnsFunc, IndexInfo[] _indexInfos)
         {
+            var schema = database.DBContext.Schema;
             List<EJ.DBColumn> changedColumns = new List<EJ.DBColumn>(changed_columns);
             oldTableName = oldTableName.ToLower();
             newTableName = newTableName.ToLower();
@@ -239,8 +268,8 @@ AND pg_constraint.contype = 'p';
             //先判断表明是否更改
             if (oldTableName != newTableName)
             {
-                //更改表名
-                database.ExecSqlString($"alter table \"{oldTableName}\" RENAME TO \"{newTableName}\"");
+                //更改表名，保留 schema（如果有）
+                database.ExecSqlString($"alter table {GetQualifiedName(schema, oldTableName)} RENAME TO \"{newTableName}\"");
             }
 
             var needToDels = checkIfIdxChanged(database, newTableName, indexInfos);
@@ -280,29 +309,38 @@ AND pg_constraint.contype = 'p';
 
             foreach (var config in indexInfos)
             {
-                createIndex(database, newTableName, config);
+                createIndex(database, schema, newTableName, config);
             }
         }
 
-        void createIndex(EntityDB.IDatabaseService database, string table, IndexInfo indexinfo)
+        void createIndex(EntityDB.IDatabaseService database, string schema, string table, IndexInfo indexinfo)
         {
             table = table.ToLower();
             //alter table table_name add unique key new_uk_name (col1,col2);
             var columns = indexinfo.ColumnNames.OrderBy(m => m).Select(m => m.ToLower()).ToArray();
-            string name = table + "_ej_" + columns.ToSplitString("_");
+            string name = (string.IsNullOrWhiteSpace(schema) ? table : (schema + "_" + table)) + "_ej_" + columns.ToSplitString("_");
 
             string sql = "CREATE ";
             if (indexinfo.IsUnique)
             {
                 sql += "UNIQUE ";
             }
+
+            // 使用指定的索引名，且在表所在 schema 中创建索引
+            string qualifiedTable = GetQualifiedName(schema, table);
+            string indexNameQuoted = $"\"{name}\"";
+            if (!string.IsNullOrWhiteSpace(schema))
+            {
+                indexNameQuoted = GetQualifiedName(schema, name);
+            }
+
             if (indexinfo.IsClustered)
             {
-                sql += $"INDEX ON \"{table}\" ({columns.ToSplitString(" ASC NULLS FIRST,")} ASC NULLS FIRST)";
+                sql += $"INDEX {indexNameQuoted} ON {qualifiedTable} ({columns.ToSplitString(" ASC NULLS FIRST,")} ASC NULLS FIRST)";
             }
             else
             {
-                sql += $"INDEX ON \"{table}\" ({columns.ToSplitString(",")})";
+                sql += $"INDEX {indexNameQuoted} ON {qualifiedTable} ({columns.ToSplitString(",")})";
             }
             database.ExecSqlString(sql);
         }

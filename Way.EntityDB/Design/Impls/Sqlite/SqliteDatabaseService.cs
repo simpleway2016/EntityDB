@@ -32,11 +32,18 @@ namespace Way.EntityDB.Design.Database.Sqlite
         }
         public void Create(EJ.Databases database)
         {
+            Create(database, null);
+        }
+        public void Create(EJ.Databases database,string schema)
+        {
 
             var db = EntityDB.DBContext.CreateDatabaseService(database.conStr, EntityDB.DatabaseType.Sqlite);
             CreateEasyJobTable(db);
         }
-
+        public string GetEasyJobTableFullName(EntityDB.IDatabaseService db)
+        {
+           return "__wayeasyjob";
+        }
         public void CreateEasyJobTable(EntityDB.IDatabaseService db)
         {
             bool exists = true;

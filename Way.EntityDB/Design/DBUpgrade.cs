@@ -1,11 +1,12 @@
-﻿using Way.EntityDB.Design.Services;
+﻿using EJ;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
-using System.IO.Compression;
-using EJ;
+using Way.EntityDB.Design.Services;
 
 namespace Way.EntityDB.Design
 {
@@ -324,7 +325,9 @@ namespace Way.EntityDB.Design
                 IDatabaseDesignService dbservice = EntityDB.Design.DBHelper.CreateDatabaseDesignService(dbType);
                 dbservice.CreateEasyJobTable(db);
 
-                var dbconfig = db.ExecSqlString("select contentConfig from __wayeasyjob").ToString().ToJsonObject<DataBaseConfig>();
+                var tname = dbservice.GetEasyJobTableFullName(db);
+
+                var dbconfig = db.ExecSqlString($"select contentConfig from {tname}").ToString().ToJsonObject<DataBaseConfig>();
                 if (string.IsNullOrEmpty(dbconfig.DatabaseGuid) == false && dbconfig.DatabaseGuid != dset.DataSetName)
                     throw new Exception("此结构脚本并不是对应此数据库");
 
@@ -412,7 +415,11 @@ namespace Way.EntityDB.Design
         {
             if (string.IsNullOrEmpty(databaseGuid))
                 throw new Exception("Database Guid can not be empty");
-            var dbconfig = db.ExecSqlString("select contentConfig from __wayeasyjob").ToString().ToJsonObject<DataBaseConfig>();
+
+            IDatabaseDesignService dbservice = EntityDB.Design.DBHelper.CreateDatabaseDesignService(db.DBContext.DatabaseType);
+            var tname = dbservice.GetEasyJobTableFullName(db);
+
+            var dbconfig = db.ExecSqlString($"select contentConfig from {tname}").ToString().ToJsonObject<DataBaseConfig>();
             dbconfig.LastUpdatedID = Convert.ToInt32(actionid);
             dbconfig.DatabaseGuid = databaseGuid;
 

@@ -72,7 +72,7 @@ namespace Way.EntityDB
 
             var pkColumn = tableSchema.Columns.FirstOrDefault(m => m.IsKey);
             var columnname = FormatObjectName(pkColumn.Name.ToLower());
-            this.ExecSqlString($"update {FormatObjectName(tableSchema.TableName.ToLower())} set {columnname}={columnname} where {columnname}=@p0", pkValue);
+            this.ExecSqlString($"update {FormatTableName(tableSchema.TableName.ToLower())} set {columnname}={columnname} where {columnname}=@p0", pkValue);
         }
 
         public virtual Task UpdateLockAsync<T>(object pkValue) where T : DataItem
@@ -85,7 +85,7 @@ namespace Way.EntityDB
 
             var pkColumn = tableSchema.Columns.FirstOrDefault(m => m.IsKey);
             var columnname = FormatObjectName(pkColumn.Name.ToLower());
-            return this.ExecSqlStringAsync($"update {FormatObjectName(tableSchema.TableName.ToLower())} set {columnname}={columnname} where {columnname}=@p0", pkValue);
+            return this.ExecSqlStringAsync($"update {FormatTableName(tableSchema.TableName.ToLower())} set {columnname}={columnname} where {columnname}=@p0", pkValue);
         }
 
         public virtual string FormatObjectName(string name)
@@ -94,6 +94,24 @@ namespace Way.EntityDB
                 return name;
             return string.Format("[{0}]", name);
         }
+
+        public virtual string FormatTableName(string name)
+        {
+            if (!string.IsNullOrWhiteSpace(DBContext.Schema))
+            {
+                if (name.StartsWith("[") || name.StartsWith("("))
+                    return $"[{DBContext.Schema}].{name}";
+                else
+                    return $"[{DBContext.Schema}].[{name}]";
+            }
+            else
+            {
+                if (name.StartsWith("[") || name.StartsWith("("))
+                    return name;
+                return string.Format("[{0}]", name);
+            }
+        }
+
         /// <summary>
         /// GetInsertIDValueSqlString是否放在一个sql语句
         /// </summary>
@@ -243,7 +261,7 @@ namespace Way.EntityDB
                     string sql;
                     if (GetInsertIDValueSqlStringInOneSql() && pkid != null && tableSchema.KeyColumn.IsDatabaseGenerated)
                     {
-                        sql = string.Format("insert into {0} ({1}) values ({2}) {3}", FormatObjectName(dataitem.TableName), str_fields, str_values, this.GetInsertIDValueSqlString(pkid));
+                        sql = string.Format("insert into {0} ({1}) values ({2}) {3}", FormatTableName(dataitem.TableName), str_fields, str_values, this.GetInsertIDValueSqlString(pkid));
                         command.CommandText = sql;
                         object id = command.ExecuteScalar();
 
@@ -255,7 +273,7 @@ namespace Way.EntityDB
                     }
                     else
                     {
-                        sql = string.Format("insert into {0} ({1}) values ({2})", FormatObjectName(dataitem.TableName), str_fields, str_values);
+                        sql = string.Format("insert into {0} ({1}) values ({2})", FormatTableName(dataitem.TableName), str_fields, str_values);
                         command.CommandText = sql;
                         command.ExecuteNonQuery();
 
@@ -383,7 +401,7 @@ namespace Way.EntityDB
                     string sql;
                     if (GetInsertIDValueSqlStringInOneSql() && pkid != null && tableSchema.KeyColumn.IsDatabaseGenerated)
                     {
-                        sql = string.Format("insert into {0} ({1}) values ({2}) {3}", FormatObjectName(dataitem.TableName), str_fields, str_values, this.GetInsertIDValueSqlString(pkid));
+                        sql = string.Format("insert into {0} ({1}) values ({2}) {3}", FormatTableName(dataitem.TableName), str_fields, str_values, this.GetInsertIDValueSqlString(pkid));
                         command.CommandText = sql;
                         object id = await command.ExecuteScalarAsync();
 
@@ -395,7 +413,7 @@ namespace Way.EntityDB
                     }
                     else
                     {
-                        sql = string.Format("insert into {0} ({1}) values ({2})", FormatObjectName(dataitem.TableName), str_fields, str_values);
+                        sql = string.Format("insert into {0} ({1}) values ({2})", FormatTableName(dataitem.TableName), str_fields, str_values);
                         command.CommandText = sql;
                         await command.ExecuteNonQueryAsync();
 
@@ -552,11 +570,11 @@ namespace Way.EntityDB
                                 throw new ParseUpdateExpressionException($"无法解析{condition.Body}");
                             var where = parser.Parse(condition.Body, command, null, false);
 
-                            command.CommandText = string.Format("update {0} set {1} where " + where, FormatObjectName(dataitem.TableName), str_fields);
+                            command.CommandText = string.Format("update {0} set {1} where " + where, FormatTableName(dataitem.TableName), str_fields);
                         }
                         else
                         {
-                            command.CommandText = string.Format("update {0} set {1} where {2}=@pid", FormatObjectName(dataitem.TableName), str_fields, FormatObjectName(pkid.ToLower()));
+                            command.CommandText = string.Format("update {0} set {1} where {2}=@pid", FormatTableName(dataitem.TableName), str_fields, FormatObjectName(pkid.ToLower()));
                         }
                     }
                     else
@@ -568,11 +586,11 @@ namespace Way.EntityDB
                                 throw new ParseUpdateExpressionException($"无法解析{condition.Body}");
                             var where = parser.Parse(condition.Body, command, null, false);
 
-                            command.CommandText = string.Format("update {0} set {1} where " + where, FormatObjectName(dataitem.TableName), str_fields);
+                            command.CommandText = string.Format("update {0} set {1} where " + where, FormatTableName(dataitem.TableName), str_fields);
                         }
                         else
                         {
-                            command.CommandText = string.Format("update {0} set {1}", FormatObjectName(dataitem.TableName), str_fields);
+                            command.CommandText = string.Format("update {0} set {1}", FormatTableName(dataitem.TableName), str_fields);
                         }
                     }
                     var ret = command.ExecuteNonQuery();
@@ -616,7 +634,7 @@ namespace Way.EntityDB
 
                     if (condition == null)
                     {
-                        command.CommandText = string.Format("delete from {0}", FormatObjectName(tableSchema.TableName));
+                        command.CommandText = string.Format("delete from {0}", FormatTableName(tableSchema.TableName));
                     }
                     else
                     {
@@ -625,7 +643,7 @@ namespace Way.EntityDB
                             throw new ParseUpdateExpressionException($"无法解析{condition.Body}");
                         var where = parser.Parse(condition.Body, command, null, false);
 
-                        command.CommandText = string.Format("delete from {0} where {1}", FormatObjectName(tableSchema.TableName), where);
+                        command.CommandText = string.Format("delete from {0} where {1}", FormatTableName(tableSchema.TableName), where);
                     }
                     var ret = command.ExecuteNonQuery();
 
@@ -668,7 +686,7 @@ namespace Way.EntityDB
 
                     if (condition == null)
                     {
-                        command.CommandText = string.Format("delete from {0}", FormatObjectName(tableSchema.TableName));
+                        command.CommandText = string.Format("delete from {0}", FormatTableName(tableSchema.TableName));
                     }
                     else
                     {
@@ -677,7 +695,7 @@ namespace Way.EntityDB
                             throw new ParseUpdateExpressionException($"无法解析{condition.Body}");
                         var where = parser.Parse(condition.Body, command, null, false);
 
-                        command.CommandText = string.Format("delete from {0} where {1}", FormatObjectName(tableSchema.TableName), where);
+                        command.CommandText = string.Format("delete from {0} where {1}", FormatTableName(tableSchema.TableName), where);
                     }
                     var ret = await command.ExecuteNonQueryAsync();
 
@@ -821,11 +839,11 @@ namespace Way.EntityDB
                                 throw new ParseUpdateExpressionException($"无法解析{condition.Body}");
                             var where = parser.Parse(condition.Body, command, null, false);
 
-                            command.CommandText = string.Format("update {0} set {1} where " + where, FormatObjectName(dataitem.TableName), str_fields);
+                            command.CommandText = string.Format("update {0} set {1} where " + where, FormatTableName(dataitem.TableName), str_fields);
                         }
                         else
                         {
-                            command.CommandText = string.Format("update {0} set {1} where {2}=@pid", FormatObjectName(dataitem.TableName), str_fields, FormatObjectName(pkid.ToLower()));
+                            command.CommandText = string.Format("update {0} set {1} where {2}=@pid", FormatTableName(dataitem.TableName), str_fields, FormatObjectName(pkid.ToLower()));
                         }
                     }
                     else
@@ -837,11 +855,11 @@ namespace Way.EntityDB
                                 throw new ParseUpdateExpressionException($"无法解析{condition.Body}");
                             var where = parser.Parse(condition.Body, command, null, false);
 
-                            command.CommandText = string.Format("update {0} set {1} where " + where, FormatObjectName(dataitem.TableName), str_fields);
+                            command.CommandText = string.Format("update {0} set {1} where " + where, FormatTableName(dataitem.TableName), str_fields);
                         }
                         else
                         {
-                            command.CommandText = string.Format("update {0} set {1}", FormatObjectName(dataitem.TableName), str_fields);
+                            command.CommandText = string.Format("update {0} set {1}", FormatTableName(dataitem.TableName), str_fields);
                         }
                     }
                     var ret = await command.ExecuteNonQueryAsync();
@@ -880,7 +898,7 @@ namespace Way.EntityDB
             {
                 using (var command = CreateCommand(null))
                 {
-                    command.CommandText = string.Format("delete from {0} where {1}=@p0", FormatObjectName(dataitem.TableName), FormatObjectName(dataitem.KeyName.ToLower()));
+                    command.CommandText = string.Format("delete from {0} where {1}=@p0", FormatTableName(dataitem.TableName), FormatObjectName(dataitem.KeyName.ToLower()));
                     var parameter = command.CreateParameter();
                     parameter.ParameterName = "@p0";
                     parameter.Value = dataitem.PKValue;
@@ -915,7 +933,7 @@ namespace Way.EntityDB
             {
                 using (var command = CreateCommand(null))
                 {
-                    command.CommandText = string.Format("delete from {0} where {1}=@p0", FormatObjectName(dataitem.TableName), FormatObjectName(dataitem.KeyName.ToLower()));
+                    command.CommandText = string.Format("delete from {0} where {1}=@p0", FormatTableName(dataitem.TableName), FormatObjectName(dataitem.KeyName.ToLower()));
                     var parameter = command.CreateParameter();
                     parameter.ParameterName = "@p0";
                     parameter.Value = dataitem.PKValue;

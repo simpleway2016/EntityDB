@@ -34,6 +34,10 @@ namespace Way.EntityDB.Design.Impls.PostgreSQL
         }
         public void Create(Databases database)
         {
+            Create(database, null);
+        }
+        public void Create(Databases database,string schema)
+        {
             Npgsql.NpgsqlConnectionStringBuilder conStrBuilder = new Npgsql.NpgsqlConnectionStringBuilder(database.conStr);
 
            var dbname = conStrBuilder.Database;
@@ -56,7 +60,7 @@ namespace Way.EntityDB.Design.Impls.PostgreSQL
 
             conStrBuilder.Database = dbname.ToLower();
             //创建必须表
-            db = EntityDB.DBContext.CreateDatabaseService(conStrBuilder.ToString(), EntityDB.DatabaseType.PostgreSql);
+            db = EntityDB.DBContext.CreateDatabaseService(conStrBuilder.ToString(),schema, EntityDB.DatabaseType.PostgreSql);
             db.DBContext.BeginTransaction();
             try
             {
@@ -197,14 +201,34 @@ and pg_constraint.contype='p'");
 
             return result;
         }
+
+        public string GetEasyJobTableFullName(EntityDB.IDatabaseService db)
+        {
+            var schema = db.DBContext.Schema;
+            if (!string.IsNullOrWhiteSpace(schema))
+            {
+                return $"\"{schema}\".__wayeasyjob";
+            }
+            else
+                return "__wayeasyjob";
+        }
+
         public void CreateEasyJobTable(EntityDB.IDatabaseService db)
         {
-            bool exists = Convert.ToInt32(db.ExecSqlString("select count(*) from pg_tables where tablename='__wayeasyjob'")) > 0;
-            
+            var schema = db.DBContext.Schema;
+            // 如果 schema 为空或空白，则使用 public（与其他方法保持一致）
+            var schemaName = string.IsNullOrWhiteSpace(schema) ? "public" : schema;
+
+            // 检查指定 schema 下是否存在该表
+            bool exists = Convert.ToInt32(db.ExecSqlString($"select count(*) from pg_tables where tablename='__wayeasyjob' and schemaname='{schemaName}'")) > 0;
+
             if (!exists)
             {
-                db.ExecSqlString("create table  __wayeasyjob (contentConfig VARCHAR(1000) NOT NULL)");
-                db.ExecSqlString("insert into __wayeasyjob (contentConfig) values (@p0)", new DataBaseConfig().ToJsonString());
+                // 使用双引号引用 schema 和表名，保证带大写或特殊字符的 schema 正确创建
+                var quotedSchema = string.Format(GetObjectFormat(), schemaName);
+                var quotedTable = string.Format(GetObjectFormat(), "__wayeasyjob");
+                db.ExecSqlString($"create table {quotedSchema}.{quotedTable} (contentConfig VARCHAR(1000) NOT NULL)");
+                db.ExecSqlString($"insert into {quotedSchema}.{quotedTable} (contentConfig) values (@p0)", new DataBaseConfig().ToJsonString());
             }
         }
 

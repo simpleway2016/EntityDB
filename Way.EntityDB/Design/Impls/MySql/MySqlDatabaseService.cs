@@ -24,6 +24,11 @@ namespace Way.EntityDB.Design.Database.MySql
         }
         public void Create(EJ.Databases database)
         {
+           Create(database , null);
+        }
+
+        public void Create(EJ.Databases database,string schema)
+        {
             Pomelo.Data.MySql.MySqlConnectionStringBuilder conStrBuilder = new Pomelo.Data.MySql.MySqlConnectionStringBuilder(database.conStr);
             var dbname = conStrBuilder.Database;
             conStrBuilder.Database = null;
@@ -187,6 +192,16 @@ AND c.TABLE_NAME = '" + tablename +@"'
             }, $"SELECT TABLE_NAME,TABLE_COMMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='{dbname}' and TABLE_NAME<>'__wayeasyjob'  ORDER  BY  TABLE_NAME");
 
             return result;
+        }
+        public string GetEasyJobTableFullName(EntityDB.IDatabaseService db)
+        {
+            var schema = db.DBContext.Schema;
+            if (!string.IsNullOrWhiteSpace(schema))
+            {
+                return $"`{schema}`.__wayeasyjob";
+            }
+            else
+                return "__wayeasyjob";
         }
         public void CreateEasyJobTable(EntityDB.IDatabaseService db)
         {

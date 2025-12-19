@@ -53,6 +53,19 @@ namespace Way.EntityDB
         {
             return $"\"{name}\"";
         }
+
+        public virtual string FormatTableName(string name)
+        {
+            if (!string.IsNullOrWhiteSpace(DBContext.Schema))
+            {
+                return $"\"{DBContext.Schema}\".\"{name}\"";
+            }
+            else
+            {
+                return $"\"{name}\"";
+            }
+        }
+
         protected override bool GetInsertIDValueSqlStringInOneSql()
         {
             return true;

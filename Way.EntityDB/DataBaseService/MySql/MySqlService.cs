@@ -43,6 +43,19 @@ namespace Way.EntityDB
                 return name;
             return string.Format("`{0}`", name);
         }
+
+
+        public virtual string FormatTableName(string name)
+        {
+            if (!string.IsNullOrWhiteSpace(DBContext.Schema))
+            {
+                return $"`{DBContext.Schema}`.`{name}`";
+            }
+            else
+            {
+                return $"`{name}`";
+            }
+        }
         protected override string GetInsertIDValueSqlString(string pkColumnName)
         {
             return "SELECT LAST_INSERT_ID()";

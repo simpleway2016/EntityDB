@@ -109,6 +109,7 @@ namespace Way.EntityDB
         #region 属性
         public DatabaseType DatabaseType { get; set; }
         public string ConnectionString { get; internal set; }
+        public string Schema { get; private set; }
 
         IDatabaseService _databaseService;
         static object GlobalLockObj = new object();
@@ -861,6 +862,12 @@ namespace Way.EntityDB
             return context.Database;
         }
 
+        public static IDatabaseService CreateDatabaseService(string connectionString, string schema, DatabaseType dbType)
+        {
+            DBContext context = new DBContext(connectionString, schema, dbType, true);
+            return context.Database;
+        }
+
         ~DBContext()
         {
             this.Dispose();
@@ -874,15 +881,21 @@ namespace Way.EntityDB
         {
 
         }
+
+        public DBContext(string conStr,  DatabaseType dbType, bool upgradeDatabase):this(conStr,null,dbType, upgradeDatabase)
+        {
+
+        }
         /// <summary>
         /// 
         /// </summary>
         /// <param name="conStr">连接字符串</param>
         /// <param name="dbType">数据库类型</param>
         /// <param name="upgradeDatabase">是否自动更新数据库结构到最新</param>
-        public DBContext(string conStr, DatabaseType dbType, bool upgradeDatabase)
+        public DBContext(string conStr,string schema, DatabaseType dbType, bool upgradeDatabase)
         {
             this.DatabaseType = dbType;
+            this.Schema = schema;
 
 
             Type type = DatabaseServiceTypes[this.DatabaseType];

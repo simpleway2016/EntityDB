@@ -26,6 +26,10 @@ namespace Way.EntityDB.Design.Database.SqlServer
         }
         public void Create(EJ.Databases database)
         {
+            Create(database, null);
+        }
+        public void Create(EJ.Databases database,string schema )
+        {
             SqlConnectionStringBuilder conStrBuilder = new SqlConnectionStringBuilder(database.conStr);
             var mydbName = conStrBuilder.InitialCatalog;
             conStrBuilder.InitialCatalog = "master";
@@ -50,7 +54,7 @@ namespace Way.EntityDB.Design.Database.SqlServer
 
             }
            
-            db = EntityDB.DBContext.CreateDatabaseService(database.conStr, EntityDB.DatabaseType.SqlServer);
+            db = EntityDB.DBContext.CreateDatabaseService(database.conStr, schema , EntityDB.DatabaseType.SqlServer);
             CreateEasyJobTable(db);
             //ado.ExecCommandTextUseSameCon("if not exists(select [dbid] from sysdatabases where [name]='" + txt_databasename.Text + "') create database " + txt_databasename.Text);
         }
@@ -224,14 +228,36 @@ namespace Way.EntityDB.Design.Database.SqlServer
             }
          
         }
-
+        public string GetEasyJobTableFullName(EntityDB.IDatabaseService db)
+        {
+            var schema = db.DBContext.Schema;
+            if (!string.IsNullOrWhiteSpace(schema))
+            {
+                return $"[{schema}].__wayeasyjob";
+            }
+            else
+                return "__wayeasyjob";
+        }
 
         public void CreateEasyJobTable(EntityDB.IDatabaseService db)
         {
+            var schema = db.DBContext.Schema;
+            string schemaStr = "";
+            //检查是否存在schema
+            if(!string.IsNullOrWhiteSpace(schema))
+            {
+                int count = Convert.ToInt32( db.ExecSqlString($"SELECT count(*) FROM sys.schemas WHERE name=@p0" , schema));
+                if(count == 0)
+                {
+                    db.ExecSqlString($"create schema [{schema}]");
+                }
+                schemaStr = $"[{schema}].";
+            } 
+
             bool exists = true;
             try
             {
-                db.ExecSqlString("select * from __wayeasyjob");
+                db.ExecSqlString($"select * from {schemaStr}__wayeasyjob");
             }
             catch
             {
@@ -239,16 +265,9 @@ namespace Way.EntityDB.Design.Database.SqlServer
             }
             if (!exists)
             {
-                db.ExecSqlString("CREATE TABLE [__wayeasyjob](contentConfig varchar(1000) NOT NULL)");
+                db.ExecSqlString($"CREATE TABLE {schemaStr}[__wayeasyjob](contentConfig varchar(1000) NOT NULL)");
                 var dbconfig = new DataBaseConfig();
-                try
-                {
-                    dbconfig.LastUpdatedID = Convert.ToInt32(db.ExecSqlString("select lastID from __EasyJob"));
-                }
-                catch
-                {
-                }
-                db.ExecSqlString("insert into __wayeasyjob (contentConfig) values (@p0)", dbconfig.ToJsonString());
+                db.ExecSqlString($"insert into {schemaStr}__wayeasyjob (contentConfig) values (@p0)", dbconfig.ToJsonString());
             }
         }
 
