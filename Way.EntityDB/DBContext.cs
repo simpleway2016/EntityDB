@@ -1158,6 +1158,12 @@ namespace Way.EntityDB
         /// <param name="condition">指定更新条件，如：m=&gt;m.age &gt; 16 &amp;&amp; m.id == dataitem.id，默认使用主键匹配</param>
         public virtual async Task<int> UpdateAsync<T>(T dataitem, Expression<Func<T, bool>> condition) where T : DataItem
         {
+            if (dataitem.PKValue == null && condition == null && dataitem.KeyName != null)
+            {
+                await InsertAsync(dataitem);
+                return 1;
+            }
+
             if (AutoBeginTransaction && this.CurrentTransaction == null)
                 await this.BeginTransactionAsync();
 
