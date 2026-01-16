@@ -15,13 +15,178 @@ using System.IO;
 using Microsoft.Data.SqlClient;
 
 namespace Way.EntityDB.Test
-{ 
+{
+    class SqlServerDBContext : DbContext
+    {
+        private readonly string _conStr;
+
+        public SqlServerDBContext(string conStr)
+        {
+            _conStr = conStr;
+        }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer(_conStr);
+            base.OnConfiguring(optionsBuilder);
+        }
+    }
+
     [TestClass]
     public class TestAllDatabaseType
     {
-        const string SqlServerConstr = "Data Source=8.219.191.213;User ID=sa;Password=NAM121R7E2Y2198UMCVKX6Iq;Initial Catalog=TestDB";
+        const string SqlServerConstr = "Data Source=8.219.191.213;User ID=sa;Password=NAM121R7E2Y2198UMCVKX6Iq;Encrypt=False;Initial Catalog=TestDB";
         const string PostgreSqlConStr = "Server=47.250.182.178;Port=15432;UserId=postgres;Password=gis;Database=TestDB;";
         const string MySqlConStr = "server=192.168.136.137;User Id=user1;password=User.123456;Database=TestDB";
+
+        [TestMethod]
+        public void testSqlServer()
+        {
+            using (var dbContext = new SqlServerDBContext(SqlServerConstr))
+            {
+                // var migrationBuilder = MigrationInitializer.CreateMigrationBuilder(dbContext, this.DatabaseOptions, "SqlServer:Identity", "1, 1");
+                var schema = "MQ";
+                MigrationBuilder migrationBuilder = new MigrationBuilder(dbContext.Database.ProviderName);
+                migrationBuilder.EnsureSchema(schema);
+
+                migrationBuilder.DropTable("received", schema);
+
+                Dictionary<string, string> columns = new Dictionary<string, string> ();
+                columns["id"] = "varchar";
+                columns["machinecode"] = "varchar";
+
+                //
+
+
+
+
+                migrationBuilder.CreateTable(
+                name: "received",
+                schema: schema,
+                columns: table => new
+                {
+                    id = table.Column<string>(nullable: false, maxLength: 100),
+                    machinecode = table.Column<string>(nullable: false, maxLength: 50),
+                    createtime = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_received", x => x.id); // 主键约束
+                });
+
+                // 创建索引
+                migrationBuilder.CreateIndex(
+                    name: "IX_received_machinecode",
+                     schema: schema,
+                    table: "received",
+                    column: "machinecode");
+
+                migrationBuilder.RenameColumn(
+                   name: "machinecode",
+                   schema: schema,
+                   table: "received",
+                   newName: "machine_code");
+
+                //删除PK_received主键约束
+                migrationBuilder.DropPrimaryKey(
+                    name: "PK_received",
+                    schema: schema,
+                    table: "received");
+
+
+                var generator = dbContext.GetService<IMigrationsSqlGenerator>();
+                var commands = generator.Generate(migrationBuilder.Operations);
+
+
+               
+
+
+                foreach (var cmd in commands)
+                {
+                    dbContext.Database.ExecuteSqlRaw(cmd.CommandText);
+                }
+            }
+        }
+
+        private static void CreateTableFromColumns(MigrationBuilder migrationBuilder, string schema, string tableName, Dictionary<string, string> columns, string pkColumn = null)
+        {
+            if (migrationBuilder == null) throw new ArgumentNullException(nameof(migrationBuilder));
+            if (columns == null) throw new ArgumentNullException(nameof(columns));
+            var create = new CreateTableOperation
+            {
+                Name = tableName,
+                Schema = schema
+            };
+
+            foreach (var kv in columns)
+            {
+                var colName = kv.Key;
+                var rawType = (kv.Value ?? string.Empty).Trim();
+                var lowerType = rawType.ToLowerInvariant();
+
+                // 简单的列类型与 CLR 类型映射与默认 ColumnType 处理
+                string columnType;
+                Type clrType;
+                if (lowerType.StartsWith("varchar"))
+                {
+                    columnType = rawType.Length > 0 ? rawType : "varchar(50)";
+                    clrType = typeof(string);
+                }
+                else if (lowerType == "text")
+                {
+                    columnType = "text";
+                    clrType = typeof(string);
+                }
+                else if (lowerType == "int" || lowerType == "integer")
+                {
+                    columnType = "int";
+                    clrType = typeof(int);
+                }
+                else if (lowerType.StartsWith("datetime") || lowerType == "datetime")
+                {
+                    columnType = "datetime";
+                    clrType = typeof(DateTime);
+                }
+                else if (lowerType == "bigint")
+                {
+                    columnType = "bigint";
+                    clrType = typeof(long);
+                }
+                else
+                {
+                    // 默认当作字符串类型
+                    columnType = rawType.Length > 0 ? rawType : "varchar(50)";
+                    clrType = typeof(string);
+                }
+
+                var addCol = new AddColumnOperation
+                {
+                    Name = colName,
+                    Table = tableName,
+                    Schema = schema,
+                    ClrType = clrType,
+                    ColumnType = columnType,
+                    // 默认不可空（根据需要调整）
+                    IsNullable = false,
+                    
+                    
+                };
+
+                create.Columns.Add(addCol);
+            }
+
+            if (!string.IsNullOrEmpty(pkColumn) && columns.ContainsKey(pkColumn))
+            {
+                create.PrimaryKey = new AddPrimaryKeyOperation
+                {
+                    Name = $"PK_{tableName}",
+                    Table = tableName,
+                    Schema = schema,
+                    Columns = new[] { pkColumn }
+                };
+            }
+
+            migrationBuilder.Operations.Add(create);
+        }
 
         [TestMethod]
         public void ConnectionString_Check()
