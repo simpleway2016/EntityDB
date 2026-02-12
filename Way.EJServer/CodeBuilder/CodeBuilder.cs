@@ -542,15 +542,16 @@ namespace Way.EJServer
                     caption = caption.Substring(0, caption.IndexOf("，"));
                 }
 
-                string dataType = column.ClassFullName;
+                string dataType = column.ClassFullName;//jsonb的字段类型
                 if (string.IsNullOrWhiteSpace(dataType))
                 {
                     dataType = GetLinqTypeString(column.dbType, column.CanNull.GetValueOrDefault() || column.IsAutoIncrement == true);
                 }
                 if (column.dbType == "jsonb" && column.CanNull == true)
                 {
-                    if (dataType.EndsWith("?") == false)
-                        dataType += "?";
+                    //jsonb类型不用加？号
+                    //if (dataType.EndsWith("?") == false)
+                    //    dataType += "?";
                 }
 
                 string eqString = "";
