@@ -549,9 +549,9 @@ namespace Way.EJServer
                 }
                 if (column.dbType == "jsonb" && column.CanNull == true)
                 {
-                    //jsonb类型不用加？号
-                    //if (dataType.EndsWith("?") == false)
-                    //    dataType += "?";
+                    //jsonb类型必须加？，不然数据如果有null会query报错
+                    if (dataType.EndsWith("?") == false)
+                        dataType += "?";
                 }
 
                 string eqString = "";
