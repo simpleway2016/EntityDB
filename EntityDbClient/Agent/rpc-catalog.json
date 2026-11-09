@@ -1,0 +1,656 @@
+{
+  "GetUsers": {
+    "parameters": [],
+    "returns": "EJ.User[]"
+  },
+  "UpdateUser": {
+    "parameters": [
+      {
+        "name": "user",
+        "type": "EJ.User"
+      }
+    ],
+    "returns": "int"
+  },
+  "DeleteUsers": {
+    "parameters": [
+      {
+        "name": "userids",
+        "type": "int[]"
+      }
+    ],
+    "returns": "void"
+  },
+  "CreateProject": {
+    "parameters": [
+      {
+        "name": "name",
+        "type": "string"
+      }
+    ],
+    "returns": "EJ.Project"
+  },
+  "DeleteProject": {
+    "parameters": [
+      {
+        "name": "id",
+        "type": "int"
+      }
+    ],
+    "returns": "void"
+  },
+  "UpdateProject": {
+    "parameters": [
+      {
+        "name": "id",
+        "type": "int"
+      },
+      {
+        "name": "name",
+        "type": "string"
+      }
+    ],
+    "returns": "void"
+  },
+  "GetUserNameByID": {
+    "parameters": [
+      {
+        "name": "id",
+        "type": "int"
+      }
+    ],
+    "returns": "string"
+  },
+  "ChangeModuleParent": {
+    "parameters": [
+      {
+        "name": "moduleid",
+        "type": "int"
+      },
+      {
+        "name": "parentid",
+        "type": "int"
+      }
+    ],
+    "returns": "void"
+  },
+  "GetProjectNameByColumnId": {
+    "parameters": [
+      {
+        "name": "columnid",
+        "type": "int"
+      }
+    ],
+    "returns": "string"
+  },
+  "GetNamespacePathByColumnId": {
+    "parameters": [
+      {
+        "name": "columnId",
+        "type": "int"
+      }
+    ],
+    "returns": "string[]"
+  },
+  "ChangePassword": {
+    "parameters": [
+      {
+        "name": "oldpwd",
+        "type": "string"
+      },
+      {
+        "name": "newpwd",
+        "type": "string"
+      }
+    ],
+    "returns": "int"
+  },
+  "GetCurrentUserProjectList": {
+    "parameters": [],
+    "returns": "EJ.Project[]"
+  },
+  "GetCurrentUserProjectToSetPowerList": {
+    "parameters": [
+      {
+        "name": "settingUserId",
+        "type": "int"
+      }
+    ],
+    "returns": "EJ.Project[]"
+  },
+  "GetCurrentUserDatabaseToSetPowerList": {
+    "parameters": [
+      {
+        "name": "settingUserId",
+        "type": "int"
+      },
+      {
+        "name": "projectid",
+        "type": "int"
+      }
+    ],
+    "returns": "EJ.Databases[]"
+  },
+  "GetCurrentUserDBTableToSetPowerList": {
+    "parameters": [
+      {
+        "name": "settingUserId",
+        "type": "int"
+      },
+      {
+        "name": "databaseid",
+        "type": "int"
+      }
+    ],
+    "returns": "EJ.DBTable[]"
+  },
+  "SetProjectPower": {
+    "parameters": [
+      {
+        "name": "projectid",
+        "type": "int"
+      },
+      {
+        "name": "userid",
+        "type": "int"
+      },
+      {
+        "name": "hasPower",
+        "type": "bool"
+      }
+    ],
+    "returns": "int"
+  },
+  "SetDatabasePower": {
+    "parameters": [
+      {
+        "name": "databaseid",
+        "type": "int"
+      },
+      {
+        "name": "userid",
+        "type": "int"
+      },
+      {
+        "name": "hasPower",
+        "type": "bool"
+      }
+    ],
+    "returns": "int"
+  },
+  "SetTablePower": {
+    "parameters": [
+      {
+        "name": "databaseID",
+        "type": "int"
+      },
+      {
+        "name": "tableid",
+        "type": "int"
+      },
+      {
+        "name": "userid",
+        "type": "int"
+      },
+      {
+        "name": "hasPower",
+        "type": "bool"
+      }
+    ],
+    "returns": "int"
+  },
+  "GetTablesInModule": {
+    "parameters": [
+      {
+        "name": "moduleid",
+        "type": "int"
+      }
+    ],
+    "returns": "EJ.TableInModule[]"
+  },
+  "GetPkColumnName": {
+    "parameters": [
+      {
+        "name": "tableid",
+        "type": "int"
+      }
+    ],
+    "returns": "string"
+  },
+  "SaveDataTable": {
+    "parameters": [
+      {
+        "name": "dt",
+        "type": "WayDataTable"
+      },
+      {
+        "name": "tableid",
+        "type": "int"
+      },
+      {
+        "name": "delIds",
+        "type": "List<string>"
+      }
+    ],
+    "returns": "void"
+  },
+  "DeleteDatabase": {
+    "parameters": [
+      {
+        "name": "databaseid",
+        "type": "int"
+      }
+    ],
+    "returns": "void"
+  },
+  "GetActions": {
+    "parameters": [
+      {
+        "name": "databaseid",
+        "type": "int"
+      }
+    ],
+    "returns": "WayDataTable"
+  },
+  "RemoveTableFromModule": {
+    "parameters": [
+      {
+        "name": "tableInModuleId",
+        "type": "int"
+      },
+      {
+        "name": "tableid",
+        "type": "int"
+      }
+    ],
+    "returns": "void"
+  },
+  "GetDataTable": {
+    "parameters": [
+      {
+        "name": "sql",
+        "type": "string"
+      },
+      {
+        "name": "tableid",
+        "type": "int"
+      },
+      {
+        "name": "pageindex",
+        "type": "int"
+      },
+      {
+        "name": "pagesize",
+        "type": "int"
+      }
+    ],
+    "returns": "WayDataTable"
+  },
+  "GetDatabase": {
+    "parameters": [
+      {
+        "name": "databaseid",
+        "type": "int"
+      }
+    ],
+    "returns": "EJ.Databases"
+  },
+  "GetDatabaseList": {
+    "parameters": [
+      {
+        "name": "projectid",
+        "type": "int"
+      }
+    ],
+    "returns": "EJ.Databases[]"
+  },
+  "GetDBModuleID": {
+    "parameters": [
+      {
+        "name": "tableid",
+        "type": "int"
+      }
+    ],
+    "returns": "int"
+  },
+  "UpdateTableInMoudle": {
+    "parameters": [
+      {
+        "name": "tableInModule",
+        "type": "EJ.TableInModule"
+      }
+    ],
+    "returns": "int"
+  },
+  "GetTableNames": {
+    "parameters": [
+      {
+        "name": "databaseid",
+        "type": "int"
+      }
+    ],
+    "returns": "string[]"
+  },
+  "GetColumnNames": {
+    "parameters": [
+      {
+        "name": "databaseid",
+        "type": "int"
+      },
+      {
+        "name": "tableName",
+        "type": "string"
+      }
+    ],
+    "returns": "string[]"
+  },
+  "GetColumnNameAndIds": {
+    "parameters": [
+      {
+        "name": "tableid",
+        "type": "int"
+      }
+    ],
+    "returns": "EJ.DBColumn[]"
+  },
+  "GetColumns": {
+    "parameters": [
+      {
+        "name": "tableid",
+        "type": "int"
+      }
+    ],
+    "returns": "EJ.DBColumn[]"
+  },
+  "GetColumnNamesByTableName": {
+    "parameters": [
+      {
+        "name": "tablename",
+        "type": "string"
+      },
+      {
+        "name": "databaseid",
+        "type": "int"
+      }
+    ],
+    "returns": "string[]"
+  },
+  "GetDBModuleList": {
+    "parameters": [
+      {
+        "name": "databaseid",
+        "type": "int"
+      },
+      {
+        "name": "parentid",
+        "type": "int"
+      }
+    ],
+    "returns": "EJ.DBModule[]"
+  },
+  "GetTableIDXIndexList": {
+    "parameters": [
+      {
+        "name": "tableid",
+        "type": "int"
+      }
+    ],
+    "returns": "EJ.IDXIndex[]"
+  },
+  "GetTableList": {
+    "parameters": [
+      {
+        "name": "databaseid",
+        "type": "int"
+      }
+    ],
+    "returns": "EJ.DBTable[]"
+  },
+  "GetObjectFormat": {
+    "parameters": [
+      {
+        "name": "tableid",
+        "type": "int"
+      }
+    ],
+    "returns": "string"
+  },
+  "GetTableInfo": {
+    "parameters": [
+      {
+        "name": "tableid",
+        "type": "int"
+      }
+    ],
+    "returns": "object"
+  },
+  "GetColumnList": {
+    "parameters": [
+      {
+        "name": "tableid",
+        "type": "int"
+      }
+    ],
+    "returns": "EJ.DBColumn[]"
+  },
+  "GetClassPropertyList": {
+    "parameters": [
+      {
+        "name": "tableid",
+        "type": "int"
+      }
+    ],
+    "returns": "EJ.classproperty[]"
+  },
+  "DeleteModule": {
+    "parameters": [
+      {
+        "name": "module",
+        "type": "EJ.DBModule"
+      }
+    ],
+    "returns": "void"
+  },
+  "GetDBTablePath": {
+    "parameters": [
+      {
+        "name": "tableid",
+        "type": "int"
+      }
+    ],
+    "returns": "string"
+  },
+  "GetDBModulePath": {
+    "parameters": [
+      {
+        "name": "moduleid",
+        "type": "int"
+      }
+    ],
+    "returns": "string"
+  },
+  "UpdateDBModule": {
+    "parameters": [
+      {
+        "name": "module",
+        "type": "EJ.DBModule"
+      }
+    ],
+    "returns": "int"
+  },
+  "DeleteTable": {
+    "parameters": [
+      {
+        "name": "databaseID",
+        "type": "int"
+      },
+      {
+        "name": "tableName",
+        "type": "string"
+      }
+    ],
+    "returns": "void"
+  },
+  "GetDatabaseCurrentColumns": {
+    "parameters": [
+      {
+        "name": "config",
+        "type": "EJ.Databases"
+      },
+      {
+        "name": "table",
+        "type": "string"
+      }
+    ],
+    "returns": "EJ.DBColumn[]"
+  },
+  "GetDatabaseCurrentIndexes": {
+    "parameters": [
+      {
+        "name": "config",
+        "type": "EJ.Databases"
+      },
+      {
+        "name": "table",
+        "type": "string"
+      }
+    ],
+    "returns": "IndexInfo[]"
+  },
+  "GetDatabaseCurrentTableNames": {
+    "parameters": [
+      {
+        "name": "config",
+        "type": "EJ.Databases"
+      }
+    ],
+    "returns": "string[]"
+  },
+  "CreateTables": {
+    "parameters": [
+      {
+        "name": "databaseid",
+        "type": "int"
+      },
+      {
+        "name": "tableinfos",
+        "type": "TableInfo[]"
+      }
+    ],
+    "returns": "int"
+  },
+  "RebuildDatabaseActions": {
+    "parameters": [
+      {
+        "name": "databaseid",
+        "type": "int"
+      }
+    ],
+    "returns": "bool"
+  },
+  "UpdateDatabase": {
+    "parameters": [
+      {
+        "name": "dataitem",
+        "type": "EJ.Databases"
+      }
+    ],
+    "returns": "int"
+  },
+  "GetDtoCode": {
+    "parameters": [
+      {
+        "name": "table",
+        "type": "EJ.DBTable"
+      }
+    ],
+    "returns": "string"
+  },
+  "SubmitBug": {
+    "parameters": [
+      {
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "name": "textContent",
+        "type": "byte[]"
+      },
+      {
+        "name": "picContent",
+        "type": "byte[]"
+      }
+    ],
+    "returns": "void"
+  },
+  "GetMyBugListCount": {
+    "parameters": [],
+    "returns": "int"
+  },
+  "GetMyBugs": {
+    "parameters": [],
+    "returns": "BugItem[]"
+  },
+  "GetBugHistories": {
+    "parameters": [
+      {
+        "name": "bugid",
+        "type": "int"
+      }
+    ],
+    "returns": "BugHistoryItem[]"
+  },
+  "GetBugPicture": {
+    "parameters": [
+      {
+        "name": "bugid",
+        "type": "int"
+      }
+    ],
+    "returns": "string"
+  },
+  "BugFinish": {
+    "parameters": [
+      {
+        "name": "bugid",
+        "type": "int"
+      }
+    ],
+    "returns": "void"
+  },
+  "SubmitHistory": {
+    "parameters": [
+      {
+        "name": "bugid",
+        "type": "int"
+      },
+      {
+        "name": "txtContent",
+        "type": "byte[]"
+      }
+    ],
+    "returns": "void"
+  },
+  "GetUpdateFileList": {
+    "parameters": [],
+    "returns": "FileInfo[]"
+  },
+  "GetUpdateFileListV2": {
+    "parameters": [
+      {
+        "name": "clientVersion",
+        "type": "string"
+      }
+    ],
+    "returns": "FileInfo[]"
+  },
+  "DownLoadFile": {
+    "parameters": [
+      {
+        "name": "savepath",
+        "type": "string"
+      }
+    ],
+    "returns": "string"
+  }
+}

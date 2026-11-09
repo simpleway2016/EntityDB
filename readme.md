@@ -15,7 +15,16 @@ dotnet Way.EJServer.dll 6060
 
 # 运行客户端
 
-运行EJClient\bin\Debug\EJClient.exe程序,连接到服务器6060工作空间  
+使用 Avalonia 12.1.4 客户端 EntityDbClient：
+
+```powershell
+dotnet run --project EntityDbClient/EntityDbClient.csproj
+```
+
+支持多服务器独立 Tab、记住服务器和加密保存用户名密码，以及供 AI Agent 直接操作的本机 HTTP API。
+详见 [客户端说明](EntityDbClient/README.md) 和 [Agent 接口说明](EntityDbClient/Agent/AGENT_API.md)。
+
+连接到服务器6060工作空间：
 server url:https://localhost:6060  
 user name: sa  
 password:  1  
