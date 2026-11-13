@@ -1,6 +1,7 @@
 ﻿using EJ;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
@@ -55,8 +56,11 @@ namespace Way.EJServer
                 server.RegisterHandler(new ImportDataHandler());
                 server.RegisterHandler(new ImportCSFileHandler());
 
-                server.UseHttps(new X509Certificate2("./EJServerCert.pfx", "123456") , System.Security.Authentication.SslProtocols.None , true);
-                Console.WriteLine($"use ssl EJServerCert.pfx");
+                if (File.Exists("./EJServerCert.pfx"))
+                {
+                    server.UseHttps(new X509Certificate2("./EJServerCert.pfx", "123456"), System.Security.Authentication.SslProtocols.None, true);
+                    Console.WriteLine($"use ssl EJServerCert.pfx");
+                }
 
                 server.SessionTimeout = 60 * 24;
 
